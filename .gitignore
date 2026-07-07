@@ -15,3 +15,17 @@ Thumbs.db
 
 # Git
 .git/
+
+# WordPress 上传和缓存
+wp-content/uploads/*
+wp-content/cache/*
+wp-content/wflogs/*
+wp-content/upgrade/*
+wp-content/backup/*
+
+# 日志
+*.log
+
+# 敏感配置
+wp-config.php
+.htaccess
