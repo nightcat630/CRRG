@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         $author_id = get_post_field('post_author', $target_id);
         $is_news = get_post_meta($target_id, 'crrg_is_news', true);
         crrg_add_xp($author_id, $is_news ? 10 : 15);
-        $message = '文章已审核通过，作者获得 15 经验。';
+        $message = '文章已审核通过，作者获得 15 资历。';
     } elseif ($action === 'reject_post') {
         wp_update_post(['ID' => $target_id, 'post_status' => 'draft']);
         $message = '文章已退回。';
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         $amount = (int)($_POST['xp_amount'] ?? 0);
         if ($amount > 0 && $amount <= 1000) {
             crrg_add_xp($target_id, $amount);
-            $message = "已为用户增加 {$amount} 经验值。";
+            $message = "已为用户增加 {$amount} 资历。";
         }
     } elseif ($action === 'set_rank') {
         $new_rank = sanitize_text_field($_POST['new_rank'] ?? '');
@@ -175,7 +175,7 @@ get_header();
                             <span><?php echo $app['current_rank']['icon'] . ' ' . $app['current_rank']['name']; ?></span>
                             <span style="color:#999;">→</span>
                             <span style="color:#C41230;"><?php echo $app['rank']['icon'] . ' ' . $app['rank']['name']; ?></span>
-                            <span style="color:#999;font-size:12px;">· <?php echo $app['xp']; ?>XP</span>
+                            <span style="color:#999;font-size:12px;">· <?php echo $app['xp']; ?>资历</span>
                             <br><span style="font-size:11px;color:#bbb;"><?php echo $app['time']; ?></span>
                         </div>
                         <div style="display:flex;gap:8px;">
@@ -372,7 +372,7 @@ get_header();
                     <tr style="background:#f5f5f5;text-align:left;">
                         <th style="padding:8px 12px;border:1px solid #e0e0e0;">用户</th>
                         <th style="padding:8px 12px;border:1px solid #e0e0e0;">等级</th>
-                        <th style="padding:8px 12px;border:1px solid #e0e0e0;">经验</th>
+                        <th style="padding:8px 12px;border:1px solid #e0e0e0;">资历</th>
                         <th style="padding:8px 12px;border:1px solid #e0e0e0;">操作</th>
                     </tr>
                 </thead>
@@ -395,7 +395,7 @@ get_header();
                                 <input type="hidden" name="user_id" value="<?php echo $u->ID; ?>">
                                 <input type="hidden" name="admin_action" value="add_xp">
                                 <input type="number" name="xp_amount" value="10" min="1" max="1000" style="width:60px;padding:3px 6px;border:1px solid #d5d5d5;border-radius:3px;font-size:12px;">
-                                <button type="submit" style="background:#1B3A5C;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;font-size:12px;">加经验</button>
+                                <button type="submit" style="background:#1B3A5C;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;font-size:12px;">加资历</button>
                             </form>
                             <?php if ($rank === 'chairman'): ?>
                             <form method="post" style="display:inline;margin:0 0 0 4px;">

@@ -129,7 +129,7 @@ get_header();
         <div style="background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:24px;">
             <div style="font-size:14px;">
                 当前等级：<strong><?php echo $current_data['icon'] . ' ' . $current_data['name']; ?></strong>
-                &nbsp;|&nbsp; 经验值：<strong><?php echo $xp; ?></strong>
+                &nbsp;|&nbsp; 资历：<strong><?php echo $xp; ?></strong>
             </div>
         </div>
 
@@ -152,7 +152,7 @@ get_header();
                     <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
                         <div>
                             <strong><?php echo $r['icon'] . ' ' . $r['name']; ?></strong>
-                            <span style="color:#999;font-size:12px;margin-left:8px;">需要 <?php echo $r['xp']; ?> 经验</span>
+                            <span style="color:#999;font-size:12px;margin-left:8px;">需要 <?php echo $r['xp']; ?> 资历</span>
                         </div>
                         <form method="post" style="margin:0;">
                             <?php wp_nonce_field('crrg_apply_promotion'); ?>
@@ -163,7 +163,7 @@ get_header();
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <p style="color:#999;">暂无可申请的等级。达到更高等级所需经验值后可在此申请。</p>
+            <p style="color:#999;">暂无可申请的等级。达到更高等级所需资历后可在此申请。</p>
         <?php endif; ?>
 
         <!-- Review queue -->
@@ -205,7 +205,7 @@ get_header();
             <div class="widget-title">等级说明</div>
             <div style="font-size:12px;line-height:2.2;">
                 <?php foreach (CRRG_RANKS as $r): ?>
-                    <div><?php echo $r['icon'] . ' ' . $r['name']; ?> — <?php echo $r['xp']; ?>exp<?php echo !empty($r['apply']) ? ' (需申请)' : ''; ?></div>
+                    <div><?php echo $r['icon'] . ' ' . $r['name']; ?> — <?php echo $r['xp']; ?>资历<?php echo !empty($r['apply']) ? ' (需申请)' : ''; ?></div>
                 <?php endforeach; ?>
             </div>
         </div>

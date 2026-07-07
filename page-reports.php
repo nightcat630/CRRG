@@ -34,10 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             update_post_meta($post_id, 'crrg_report_type', $category);
             update_post_meta($post_id, 'crrg_report_type_name', $cat_name);
             
-            // Add XP (only for submitted, not drafts)
-            // XP on approval only
+            // Add 资历 (only for submitted, not drafts)
+            // 资历 on approval only
             
-            $message = $status === 'pending' ? '报告已提交审核！待审批后发布 +15 经验' : '草稿已保存';
+            $message = $status === 'pending' ? '报告已提交审核！待审批后发布 +15 资历' : '草稿已保存';
         } else {
             $error = '发布失败，请重试';
         }
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_draft']) && wp
         update_post_meta($draft_id, 'crrg_report_type', $category);
         update_post_meta($draft_id, 'crrg_report_type_name', $cat_map[$category] ?? '其他');
         
-        // XP on approval only
+        // 资历 on approval only
         $message = $new_status === 'pending' ? '报告已提交审核！' : '草稿已更新';
         $editing_draft = null;
         $show_form = false;

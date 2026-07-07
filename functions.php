@@ -3,7 +3,7 @@
  * 中央重生抵御小组 - Astra 子主题
  * 
  * 模块化结构:
- *   includes/rank-system.php     - 等级与经验系统
+ *   includes/rank-system.php     - 等级与资历系统
  *   includes/favorites.php       - 收藏功能
  *   includes/announcements.php   - 公告系统
  *   includes/emergency-alert.php - 紧急预警
@@ -247,7 +247,7 @@ add_action('wp_footer', function () {
     <?php
 }, 999);
 
-// ─── 每日登录 XP 提示 ───
+// ─── 每日登录资历提示 ───
 add_action('wp_footer', function () {
     if (!is_user_logged_in()) return;
     $uid = get_current_user_id();
@@ -255,7 +255,7 @@ add_action('wp_footer', function () {
         delete_user_meta($uid, 'crrg_xp_toast');
         $xp = crrg_get_xp($uid);
         $rank = crrg_get_rank_data(crrg_get_rank($uid));
-        echo '<div id="xp-toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B3A5C;color:#fff;padding:12px 24px;border-radius:6px;font-size:14px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);animation:xpToastIn 0.4s ease,xpToastOut 0.4s ease 2.5s forwards;">🎉 每日签到 +2 经验！当前：'.$rank['icon'].' '.$rank['name'].' · '.$xp.' XP</div>';
+        echo '<div id="xp-toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B3A5C;color:#fff;padding:12px 24px;border-radius:6px;font-size:14px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);animation:xpToastIn 0.4s ease,xpToastOut 0.4s ease 2.5s forwards;">🎉 每日签到 +2 资历！当前：'.$rank['icon'].' '.$rank['name'].' · '.$xp.' 资历</div>';
         echo '<style>@keyframes xpToastIn{from{opacity:0;transform:translateX(-50%) translateY(20px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}@keyframes xpToastOut{from{opacity:1;}to{opacity:0;}}</style>';
     }
 }, 999);

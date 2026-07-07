@@ -141,10 +141,10 @@ get_header();
                 <div>用户角色：<?php echo implode(', ', $user->roles); ?></div>
                 <?php $rank = crrg_get_rank_data(crrg_get_rank($user->ID)); $xp = crrg_get_xp($user->ID); ?>
                 <div>当前等级：<?php echo $rank['icon'] . ' ' . $rank['name']; ?></div>
-                <div>经验值：<?php echo $xp; ?></div>
+                <div>资历：<?php echo $xp; ?></div>
                 <?php $next = null; foreach (CRRG_RANKS as $r) { if ($xp < $r['xp'] && !$next) $next = $r; } ?>
                 <?php if ($next): ?>
-                <div style="margin-top:4px;color:#999;">下一级：<?php echo $next['name']; ?>（还需 <?php echo $next['xp'] - $xp; ?> 经验）</div>
+                <div style="margin-top:4px;color:#999;">下一级：<?php echo $next['name']; ?>（还需 <?php echo $next['xp'] - $xp; ?> 资历）</div>
                 <?php endif; ?>
             </div>
         </div>

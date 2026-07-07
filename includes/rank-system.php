@@ -10,12 +10,12 @@ define('CRRG_RANKS', [
     ['id' => 'chairman',     'name' => '委员长',     'xp' => 99999,'icon' => '🛡️'],
 ]);
 
-// Get user XP
+// 获取用户资历
 function crrg_get_xp($user_id) {
     return (int) get_user_meta($user_id, 'crrg_xp', true);
 }
 
-// Add XP
+// 增加资历
 function crrg_add_xp($user_id, $amount) {
     $xp = crrg_get_xp($user_id) + $amount;
     update_user_meta($user_id, 'crrg_xp', $xp);
@@ -63,7 +63,7 @@ function crrg_auto_promote($user_id, $xp) {
     }
 }
 
-// Daily login XP
+// 每日登录资历
 add_action('init', function () {
     if (!is_user_logged_in()) return;
     $user_id = get_current_user_id();
