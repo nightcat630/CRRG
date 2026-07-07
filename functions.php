@@ -32,7 +32,7 @@ function crrg_custom_header() {
         <div class="container">
             <span>中央重生抵御小组 · 官方信息平台</span>
             <form class="top-search" action="/" method="get">
-                <input type="text" name="s" placeholder="搜索档案、事件、人物...">
+                <input type="text" name="s" placeholder="搜索档案、事件、人物..." required pattern=".*[a-zA-Z0-9\u4e00-\u9fff].*" title="请至少输入一个字母、数字或中文">
                 <button type="submit">搜索</button>
             </form>
             <span id="gov-date"></span>
@@ -196,10 +196,33 @@ add_filter('registration_errors', function ($errors, $user, $email) {
     return $errors;
 }, 10, 3);
 
+// ─── 搜索范围：文章 + 论坛话题 ───
+add_action('pre_get_posts', function ($query) {
+    if (!is_admin() && $query->is_main_query() && $query->is_search()) {
+        $type = $_GET['type'] ?? 'all';
+        if ($type === 'post') {
+            $query->set('post_type', 'post');
+        } elseif ($type === 'topic') {
+            $query->set('post_type', 'topic');
+        } else {
+            $query->set('post_type', ['post', 'topic']);
+        }
+    }
+});
+
 // ─── 搜索 CRRG-917 → 管理面板 ───
 add_action('template_redirect', function () {
-    if (is_search() && isset($_GET['s']) && strtolower(trim($_GET['s'])) === 'crrg-917') {
-        wp_redirect(home_url('/admin/')); exit;
+    if (is_search() && isset($_GET['s'])) {
+        $s = trim($_GET['s']);
+        if ($s === '') {
+            wp_redirect(home_url('/')); exit;
+        }
+        if (strtolower($s) === 'crrg-917') {
+            wp_redirect(home_url('/admin/')); exit;
+        }
+        if (!preg_match('/[a-zA-Z0-9\x{4e00}-\x{9fff}]/u', $s)) {
+            wp_redirect(home_url('/')); exit;
+        }
     }
     if (is_404() && $_SERVER['REQUEST_URI'] === '/register') {
         wp_redirect('/wp-login.php?action=register'); exit;
