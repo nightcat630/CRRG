@@ -22,26 +22,83 @@ $top = crrg_get_top_member();
             <h2 style="font-size:20px;color:#1B3A5C;margin:0;font-weight:bold;">📰 今日要闻</h2>
             <p style="color:#999;margin:4px 0 0;font-size:13px;">超自然现象每日简报</p>
         </div>
-        <?php if ($news_items): $first = array_shift($news_items); $thumb = ''; preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"]/', $first->post_content, $m); if($m) $thumb=$m[1]; ?>
-            <div style="display:flex;gap:20px;margin-bottom:20px;background:#fff;border:1px solid #e0e0e0;border-radius:4px;overflow:hidden;">
-                <?php if($thumb): ?><img src="<?php echo esc_url($thumb); ?>" style="width:300px;height:200px;object-fit:cover;flex-shrink:0;" alt=""><?php endif; ?>
-                <div style="padding:20px 20px 20px <?php echo $thumb?'0':'20px'; ?>;flex:1;">
-                    <a href="<?php echo get_permalink($first); ?>" style="font-size:18px;font-weight:bold;color:#1B3A5C;text-decoration:none;"><?php echo esc_html($first->post_title); ?></a>
-                    <div style="font-size:12px;color:#999;margin:8px 0;"><?php echo get_the_date('Y-m-d H:i',$first); ?> · <?php $a=get_userdata($first->post_author); echo $a?esc_html($a->display_name):'未知'; ?></div>
-                    <div style="font-size:13px;color:#666;line-height:1.8;"><?php echo wp_trim_words(strip_tags($first->post_content),60); ?></div>
+        <?php if ($news_items): array_unshift($news_items, $first); ?>
+            <div id="news-carousel" style="position:relative;margin-bottom:20px;">
+                <style>#news-track::-webkit-scrollbar{display:none;}</style>
+                <!-- 新闻卡片容器 -->
+                <div id="news-track" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;gap:0;border:1px solid #e0e0e0;border-radius:4px;background:#fff;scrollbar-width:none;-ms-overflow-style:none;">
+                    <?php foreach ($news_items as $idx => $n):
+                        $thumb = '';
+                        preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"]/', $n->post_content, $m);
+                        if($m) $thumb=$m[1];
+                        $author = get_userdata($n->post_author);
+                    ?>
+                    <div class="news-slide" data-index="<?php echo $idx; ?>" style="flex:0 0 100%;scroll-snap-align:start;display:flex;min-height:200px;">
+                        <?php if($thumb): ?><img src="<?php echo esc_url($thumb); ?>" style="width:300px;min-height:200px;object-fit:cover;flex-shrink:0;" alt=""><?php endif; ?>
+                        <div style="padding:20px 24px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+                            <a href="<?php echo get_permalink($n); ?>" style="font-size:18px;font-weight:bold;color:#1B3A5C;text-decoration:none;"><?php echo esc_html($n->post_title); ?></a>
+                            <div style="font-size:12px;color:#999;margin:8px 0;"><?php echo get_the_date('Y-m-d H:i',$n); ?> · <?php echo $author?esc_html($author->display_name):'未知'; ?></div>
+                            <div style="font-size:13px;color:#666;line-height:1.8;"><?php echo wp_trim_words(strip_tags($n->post_content),60); ?></div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <!-- 左箭头 -->
+                <button id="news-prev" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);border:none;color:rgba(255,255,255,0.85);font-size:28px;width:44px;height:64px;cursor:pointer;border-radius:0 6px 6px 0;display:flex;align-items:center;justify-content:center;z-index:10;transition:background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.65)'" onmouseout="this.style.background='rgba(0,0,0,0.45)'">◀</button>
+                <!-- 右箭头 -->
+                <button id="news-next" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);border:none;color:rgba(255,255,255,0.85);font-size:28px;width:44px;height:64px;cursor:pointer;border-radius:6px 0 0 6px;display:flex;align-items:center;justify-content:center;z-index:10;transition:background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.65)'" onmouseout="this.style.background='rgba(0,0,0,0.45)'">▶</button>
+                <!-- 指示点 -->
+                <div style="display:flex;justify-content:center;gap:8px;padding:10px 0;" id="news-dots">
+                    <?php foreach ($news_items as $idx => $n): ?>
+                    <span class="news-dot" data-index="<?php echo $idx; ?>" style="width:8px;height:8px;border-radius:50%;background:<?php echo $idx===0?'#C41230':'#d5d5d5'; ?>;cursor:pointer;transition:background 0.2s;"></span>
+                    <?php endforeach; ?>
                 </div>
             </div>
-            <?php if ($news_items): ?>
-                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
-                <?php foreach ($news_items as $n): ?>
-                    <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:14px;">
-                        <a href="<?php echo get_permalink($n); ?>" style="font-size:14px;font-weight:bold;color:#1B3A5C;text-decoration:none;"><?php echo esc_html($n->post_title); ?></a>
-                        <div style="font-size:11px;color:#999;margin-top:4px;"><?php echo get_the_date('m-d H:i',$n); ?></div>
-                        <div style="font-size:12px;color:#666;margin-top:6px;"><?php echo wp_trim_words(strip_tags($n->post_content),25); ?></div>
-                    </div>
-                <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+            <script>
+            (function(){
+                var track = document.getElementById('news-track');
+                var slides = track.querySelectorAll('.news-slide');
+                var dots = document.querySelectorAll('.news-dot');
+                var total = slides.length;
+                var current = 0;
+                function goTo(idx) {
+                    if (idx < 0) idx = total - 1;
+                    if (idx >= total) idx = 0;
+                    current = idx;
+                    track.scrollTo({left: slides[idx].offsetLeft, behavior: 'smooth'});
+                    dots.forEach(function(d,i){ d.style.background = i===idx ? '#C41230' : '#d5d5d5'; });
+                }
+                document.getElementById('news-prev').addEventListener('click', function(){ goTo(current - 1); });
+                document.getElementById('news-next').addEventListener('click', function(){ goTo(current + 1); });
+                dots.forEach(function(d){ d.addEventListener('click', function(){ goTo(parseInt(this.dataset.index)); }); });
+                // 监听手动滚动同步指示点
+                var scrolling = false;
+                track.addEventListener('scroll', function(){
+                    if (scrolling) return;
+                    scrolling = true;
+                    setTimeout(function(){
+                        var sw = slides[0].offsetWidth;
+                        var idx = Math.round(track.scrollLeft / sw);
+                        if (idx >= 0 && idx < total && idx !== current) {
+                            current = idx;
+                            dots.forEach(function(d,i){ d.style.background = i===idx ? '#C41230' : '#d5d5d5'; });
+                        }
+                        scrolling = false;
+                    }, 150);
+                });
+                // 触屏滑动也同步
+                track.addEventListener('touchend', function(){
+                    setTimeout(function(){
+                        var sw = slides[0].offsetWidth;
+                        var idx = Math.round(track.scrollLeft / sw);
+                        if (idx >= 0 && idx < total && idx !== current) {
+                            current = idx;
+                            dots.forEach(function(d,i){ d.style.background = i===idx ? '#C41230' : '#d5d5d5'; });
+                        }
+                    }, 100);
+                });
+            })();
+            </script>
         <?php else: ?>
             <p style="color:#999;text-align:center;padding:40px;">暂无要闻</p>
         <?php endif; ?>
