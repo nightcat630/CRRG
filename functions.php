@@ -87,7 +87,7 @@ function crrg_custom_header() {
     </div>
     </div><!-- end gov-header-wrap -->
     <div class="gov-news-carousel">
-        <div class="container"><div class="carousel-header"><span class="carousel-label">央视新闻</span></div><div class="carousel-track" id="carousel-track">正在加载新闻...</div></div>
+        <div class="container"><div class="carousel-header"><span class="carousel-label">央视新闻</span></div><div class="carousel-outer"><div class="carousel-track" id="carousel-track">正在加载新闻...</div><button class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="上一条">◀</button><button class="carousel-arrow carousel-next" id="carousel-next" aria-label="下一条">▶</button></div></div>
     </div>
     <?php
 }
@@ -310,7 +310,7 @@ add_action('wp_footer', function () {
     <script>
     (function(){var d=new Date();var w=['日','一','二','三','四','五','六'];var s=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+w[d.getDay()];var e=document.getElementById('gov-date');if(e)e.textContent=s;})();
     (function(){var b=document.querySelector('.gov-brand');if(!b)return;var m=160;function u(){var s=window.pageYOffset,p=Math.min(s/m,1);b.style.clipPath='inset(0 0 '+(p*100)+'% 0)';b.style.opacity=1-p;}u();b.classList.add('ready');var t=false;window.addEventListener('scroll',function(){if(!t){requestAnimationFrame(function(){u();t=false;});t=true;}},{passive:true});})();
-    (function(){var t=document.getElementById('carousel-track');if(!t)return;fetch('/cctv-news.php').then(r=>r.json()).then(d=>{if(!d.length){t.innerHTML='暂无新闻';return;}t.innerHTML=d.map(i=>{var img=i.image?'<img class="news-img" src="'+i.image+'" alt="" loading="lazy">':'<div class="news-placeholder">央视</div>';return'<a class="carousel-item" href="'+(i.url||'#')+'" target="_blank">'+img+'<div class="news-text"><div class="news-title">'+i.title+'</div>'+(i.brief?'<div class="news-brief">'+i.brief+'</div>':'')+'</div></a>';}).join('');}).catch(function(){t.innerHTML='新闻加载失败';});})();
+    (function(){var t=document.getElementById('carousel-track');if(!t)return;fetch('/cctv-news.php').then(r=>r.json()).then(d=>{if(!d.length){t.innerHTML='暂无新闻';return;}t.innerHTML=d.map(i=>{var img=i.image?'<img class="news-img" src="'+i.image+'" alt="" loading="lazy">':'<div class="news-placeholder">央视</div>';return'<a class="carousel-item" href="'+(i.url||'#')+'" target="_blank">'+img+'<div class="news-text"><div class="news-title">'+i.title+'</div>'+(i.brief?'<div class="news-brief">'+i.brief+'</div>':'')+'</div></a>';}).join('');var p=document.getElementById('carousel-prev'),n=document.getElementById('carousel-next');if(p&&n){function g(){var w=t.querySelector('.carousel-item');return w?w.offsetWidth+16:320;}p.addEventListener('click',function(){t.scrollBy({left:-g(),behavior:'smooth'});});n.addEventListener('click',function(){t.scrollBy({left:g(),behavior:'smooth'});});}}).catch(function(){t.innerHTML='新闻加载失败';});})();
     </script>
     <?php
 }, 997);
