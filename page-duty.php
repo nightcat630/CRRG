@@ -63,13 +63,12 @@ $today_duty = $schedule['schedule'][$today] ?? [];
 </div>
 <div class="gov-sidebar">
     <div class="widget">
-        <div class="widget-title">📋 值班人员</div>
-        <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2;">
-            <?php foreach (crrg_get_duty_pool() as $u):
-                $rk = crrg_get_rank_data(crrg_get_rank($u->ID));
-                $on_today = in_array($u->display_name, $today_duty);
+        <div class="widget-title">📋 今日值班</div>
+        <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2.2;">
+            <?php foreach ($today_duty as $rid => $person):
+                $role = CRRG_DUTY_ROLES[$rid];
             ?>
-                <li><?php echo $on_today?'🟢':'·'; ?> <?php echo esc_html($u->display_name); ?> <?php echo $rk['icon']; ?></li>
+                <li><?php echo $role['icon']; ?> <?php echo $role['name']; ?>：<strong><?php echo esc_html($person); ?></strong></li>
             <?php endforeach; ?>
         </ul>
     </div>
