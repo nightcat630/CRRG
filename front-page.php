@@ -77,7 +77,7 @@ $top = crrg_get_top_member();
         <div class="widget">
             <div class="widget-title">📊 数据统计</div>
             <div style="font-size:13px;line-height:2.2;">
-                <?php global $wpdb; $counts=[]; $types=['镇物','事件','人物','组织','研究发现','祂们','秘术'];
+                <?php global $wpdb; $counts=[]; $types=['镇物','事件','人物','组织','研究发现','祂们','秘术','优秀员工'];
                 foreach ($types as $t) { $c=$wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->postmeta} pm JOIN {$wpdb->posts} p ON p.ID=pm.post_id WHERE pm.meta_key='crrg_report_type_name' AND pm.meta_value=%s AND p.post_status='publish'",$t)); $counts[$t]=(int)$c; }
                 $user_count=count_users(); $total_users=$user_count['total_users']??0; ?>
                 <div>镇物：<b><?php echo $counts['镇物']; ?></b> 件</div>
@@ -135,6 +135,7 @@ $top = crrg_get_top_member();
                 ['name'=>'研究发现','slug'=>'research','icon'=>'🔬','desc'=>'研究成果汇编','color'=>'#E65100'],
                 ['name'=>'祂们','slug'=>'entities','icon'=>'👁️','desc'=>'高维存在名录','color'=>'#880E4F'],
                 ['name'=>'秘术','slug'=>'esoterica','icon'=>'📜','desc'=>'秘术与仪轨','color'=>'#004D40'],
+                ['name'=>'优秀员工','slug'=>'outstanding','icon'=>'🏅','desc'=>'优秀员工表彰','color'=>'#F0A500'],
             ];
             foreach ($archive_types as $at):
                 $atype_posts = get_posts([
