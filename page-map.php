@@ -22,10 +22,11 @@ $markers = [];
 foreach ($location_posts as $p) {
     $loc = get_post_meta($p->ID, 'crrg_location', true);
     $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
-    $coord = $coord_map[$loc] ?? null;
-    if ($coord) {
+    $lat = get_post_meta($p->ID, 'crrg_lat', true);
+    $lng = get_post_meta($p->ID, 'crrg_lng', true);
+    if ($lat && $lng) {
         $markers[] = [
-            'lat' => $coord[0], 'lng' => $coord[1],
+            'lat' => (float)$lat, 'lng' => (float)$lng,
             'title' => $p->post_title,
             'loc' => $loc,
             'threat' => $threat,

@@ -47,7 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             
             // 事件地点
             $location = sanitize_text_field($_POST['report_location'] ?? '');
-            if ($location) update_post_meta($post_id, 'crrg_location', $location);
+            if (!$location) $location = sanitize_text_field($_POST['report_city'] ?? '');
+            if ($location && $location !== '__other__') update_post_meta($post_id, 'crrg_location', $location);
+            // 坐标
+            $lat = $_POST['report_lat'] ?? '';
+            $lng = $_POST['report_lng'] ?? '';
+            if ($lat && $lng) { update_post_meta($post_id, 'crrg_lat', $lat); update_post_meta($post_id, 'crrg_lng', $lng); }
             
             // 处理标签
             $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
@@ -369,7 +374,40 @@ get_header();
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>
-                    <input type="text" name="report_location" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="如：广西横州市云表镇">
+                    <select name="report_city" id="report_city" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                        <option value="">选择城市（自动标点）</option>
+                        <?php
+                        $cities = include __DIR__ . '/includes/cities.php';
+                        $provinces = [];
+                        foreach ($cities as $city => $data) $provinces[$data[0]][] = [$city, $data[2], $data[3]];
+                        ksort($provinces);
+                        foreach ($provinces as $prov => $list):
+                        ?>
+                            <optgroup label="<?php echo $prov; ?>">
+                                <?php foreach ($list as $c): ?>
+                                    <option value="<?php echo $c[0]; ?>" data-lat="<?php echo $c[1]; ?>" data-lng="<?php echo $c[2]; ?>"><?php echo $c[0]; ?></option>
+                                <?php endforeach; ?>
+                            </optgroup>
+                        <?php endforeach; ?>
+                        <option value="__other__">其他（手动输入）</option>
+                    </select>
+                    <input type="text" name="report_location" id="report_location_manual" style="display:none;width:100%;margin-top:8px;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="手动输入地点...">
+                    <input type="hidden" name="report_lat" id="report_lat">
+                    <input type="hidden" name="report_lng" id="report_lng">
+                    <script>
+                    (function(){
+                        var sel=document.getElementById('report_city'), man=document.getElementById('report_location_manual');
+                        var lat=document.getElementById('report_lat'), lng=document.getElementById('report_lng');
+                        if(sel) sel.addEventListener('change',function(){
+                            if(this.value==='__other__'){ man.style.display=''; man.required=true; lat.value=''; lng.value=''; }
+                            else {
+                                man.style.display='none'; man.required=false;
+                                var opt=this.selectedOptions[0];
+                                lat.value=opt.dataset.lat||''; lng.value=opt.dataset.lng||'';
+                            }
+                        });
+                    })();
+                    </script>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔，如：调查报告,始源实体）</span></label>
