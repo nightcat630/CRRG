@@ -6,7 +6,7 @@ get_header();
 $cat_map = [
     'artifacts' => '镇物', 'events' => '事件', 'personnel' => '人物',
     'organizations' => '组织', 'research' => '研究发现', 'entities' => '祂们',
-    'esoterica' => '秘术',
+    'esoterica' => '秘术', 'outstanding' => '优秀员工',
 ];
 $slug = get_post_field('post_name', get_the_ID());
 $cat_name = $cat_map[$slug] ?? '';

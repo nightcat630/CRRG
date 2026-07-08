@@ -55,6 +55,7 @@ function crrg_custom_header() {
                         <li><a href="/personnel/">人物</a></li><li><a href="/organizations/">组织</a></li>
                         <li><a href="/research/">研究发现</a></li><li><a href="/entities/">祂们</a></li>
                         <li><a href="/esoterica/">秘术（仅登记）</a></li>
+                        <li><a href="/outstanding/">优秀员工</a></li>
                     </ul>
                 </li>
                 <li><a href="/forum/">会议厅</a></li>
@@ -547,7 +548,7 @@ add_filter('the_content', function ($content) {
     $cat_name = get_post_meta($post_id, 'crrg_report_type_name', true);
     $breadcrumb = '<div style="margin-bottom:16px;font-size:12px;color:#999;"><a href="/" style="color:#999;">首页</a> › ';
     if ($cat_name) {
-        $slug_map = ['镇物'=>'artifacts','事件'=>'events','人物'=>'personnel','组织'=>'organizations','研究发现'=>'research','祂们'=>'entities','秘术'=>'esoterica'];
+        $slug_map = ['镇物'=>'artifacts','事件'=>'events','人物'=>'personnel','组织'=>'organizations','研究发现'=>'research','祂们'=>'entities','秘术'=>'esoterica','优秀员工'=>'outstanding'];
         $slug = $slug_map[$cat_name] ?? '';
         if ($slug) $breadcrumb .= '<a href="/'.$slug.'/" style="color:#999;">'.$cat_name.'</a> › ';
         else $breadcrumb .= $cat_name . ' › ';

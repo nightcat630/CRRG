@@ -252,7 +252,7 @@ get_header();
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">档案类型</label>
                     <select name="report_category" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
-                        <?php $types=['artifacts'=>'镇物','events'=>'事件','personnel'=>'人物','organizations'=>'组织','research'=>'研究发现','entities'=>'祂们','esoterica'=>'秘术','other'=>'其他']; $cur = get_post_meta($editing_draft->ID,'crrg_report_type',true) ?: 'other'; foreach($types as $k=>$v) echo '<option value=\"'.$k.'\"'.($k===$cur?' selected':'').'>'.$v.'</option>'; ?>
+                        <?php $types=['artifacts'=>'镇物','events'=>'事件','personnel'=>'人物','organizations'=>'组织','research'=>'研究发现','entities'=>'祂们','esoterica'=>'秘术','outstanding'=>'优秀员工','other'=>'其他']; $cur = get_post_meta($editing_draft->ID,'crrg_report_type',true) ?: 'other'; foreach($types as $k=>$v) echo '<option value=\"'.$k.'\"'.($k===$cur?' selected':'').'>'.$v.'</option>'; ?>
                     </select>
                     <div id="artifact-naming-hint-edit" style="<?php echo $cur==='artifacts'?'':'display:none;'; ?>margin-top:10px;padding:12px 14px;background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;font-size:12px;color:#555;line-height:1.7;">
                         <strong style="color:#1B3A5C;">📐 镇物命名：X-x-y-z</strong><br>
@@ -414,7 +414,7 @@ get_header();
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">档案类型</label>
                     <select name="report_category" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
-                        <option value="artifacts">镇物</option><option value="events">事件</option><option value="personnel">人物</option><option value="organizations">组织</option><option value="research">研究发现</option><option value="entities">祂们</option><option value="esoterica">秘术</option><option value="other">其他</option>
+                        <option value="artifacts">镇物</option><option value="events">事件</option><option value="personnel">人物</option><option value="organizations">组织</option><option value="research">研究发现</option><option value="entities">祂们</option><option value="esoterica">秘术</option><option value="outstanding">优秀员工</option><option value="other">其他</option>
                     </select>
                     <div id="artifact-naming-hint" style="display:none;margin-top:10px;padding:12px 14px;background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;font-size:12px;color:#555;line-height:1.7;">
                         <strong style="color:#1B3A5C;">📐 镇物命名：X-x-y-z</strong><br>

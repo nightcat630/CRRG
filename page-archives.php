@@ -11,6 +11,7 @@ $sections = [
     'research' => ['name' => '研究发现', 'page' => '/research/', 'icon' => '📄'],
     'entities' => ['name' => '祂们', 'page' => '/entities/', 'icon' => '⚡'],
     'esoterica' => ['name' => '秘术（仅登记）', 'page' => '/esoterica/', 'icon' => '🔮'],
+    'outstanding' => ['name' => '优秀员工', 'page' => '/outstanding/', 'icon' => '🏅'],
 ];
 ?>
 <div class="gov-main">
