@@ -8,75 +8,65 @@ $location_posts = get_posts([
     'meta_query' => [crrg_get_access_meta_query()],
 ]);
 
-// 地点坐标映射
 $coord_map = [
-    '广西横州市云表镇' => [22.68, 109.27],
-    '新疆克拉玛依' => [45.58, 84.89],
-    '中原地区（传说）' => [34.75, 113.66],
+    '广西横州市云表镇' => [72, 78, '广西'],
+    '新疆克拉玛依' => [22, 22, '新疆'],
+    '中原地区（传说）' => [58, 48, '中原'],
+    '全球范围' => [30, 65, '全球'],
+    '宇宙学范畴' => [35, 55, ''],
+    '不明' => [55, 62, ''],
+    '未知城市' => [62, 55, ''],
 ];
-
-$markers = [];
-foreach ($location_posts as $p) {
-    $loc = get_post_meta($p->ID, 'crrg_location', true);
-    $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
-    $coord = $coord_map[$loc] ?? null;
-    if ($coord) {
-        $markers[] = [
-            'lat' => $coord[0], 'lng' => $coord[1],
-            'title' => $p->post_title,
-            'loc' => $loc,
-            'threat' => $threat,
-            'url' => get_permalink($p),
-            'date' => get_the_date('Y-m-d', $p),
-        ];
-    }
-}
 ?>
 <div class="gov-main">
 <div class="gov-content">
     <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">🗺️ 事件态势图</h1>
     <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">中央重生抵御小组 · 地理信息</div>
 
-    <div id="china-map" style="width:100%;height:500px;border:1px solid #e0e0e0;border-radius:4px;background:#f0f2f5;"></div>
-    <link rel="stylesheet" href="/wp-content/themes/astra-child/assets/leaflet/leaflet.css" />
-    <script src="/wp-content/themes/astra-child/assets/leaflet/leaflet.js"></script>
-    <script>
-    var map = L.map('china-map').setView([35, 105], 4);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
-        maxZoom: 10,
-    }).addTo(map);
-
-    var threatColors = {ren:'#16a34a',gui:'#8B5CF6',mo:'#C41230',shen:'#F0A500'};
-    var markers = <?php echo json_encode($markers, JSON_UNESCAPED_UNICODE); ?>;
-    markers.forEach(function(m){
-        var color = threatColors[m.threat] || '#999';
-        var icon = L.divIcon({
-            className: 'threat-marker',
-            html: '<div style="width:14px;height:14px;background:'+color+';border:2px solid #fff;border-radius:50%;box-shadow:0 0 6px '+color+';"></div>',
-            iconSize: [18,18],
-        });
-        L.marker([m.lat, m.lng], {icon:icon}).addTo(map)
-            .bindPopup('<strong>'+m.title+'</strong><br>📍 '+m.loc+'<br>'+m.date+'<br><a href="'+m.url+'">查看报告 →</a>');
-    });
-    </script>
+    <div style="position:relative;max-width:600px;margin:0 auto 20px;background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;padding:10px;">
+        <svg viewBox="0 0 100 100" style="width:100%;height:auto;">
+            <!-- 简化中国轮廓 -->
+            <path d="M85 20 L88 22 L90 28 L88 32 L92 38 L90 45 L95 48 L98 52 L96 58 L90 60 L88 55 L85 52 L82 58 L78 60 L75 65 L72 70 L68 72 L65 75 L60 73 L55 78 L50 80 L45 78 L42 75 L38 78 L35 75 L32 72 L28 68 L25 65 L22 62 L20 58 L18 52 L15 48 L12 42 L10 38 L8 35 L10 30 L15 28 L20 25 L25 22 L30 20 L35 18 L40 20 L45 22 L50 20 L55 18 L60 20 L65 22 L70 20 L75 18 L80 17 Z"
+                fill="#e8e8e8" stroke="#bbb" stroke-width="0.5"/>
+            <!-- 南海诸岛示意 -->
+            <rect x="78" y="85" width="8" height="6" rx="1" fill="#e8e8e8" stroke="#bbb" stroke-width="0.3"/>
+            
+            <?php foreach ($location_posts as $p):
+                $loc = get_post_meta($p->ID, 'crrg_location', true);
+                $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
+                $coord = $coord_map[$loc] ?? [50, 50, ''];
+                $colors = ['ren'=>'#16a34a','gui'=>'#8B5CF6','mo'=>'#C41230','shen'=>'#F0A500'];
+                $color = $colors[$threat] ?? '#999';
+                $x = $coord[0]; $y = $coord[1];
+            ?>
+                <circle cx="<?php echo $x; ?>" cy="<?php echo $y; ?>" r="1.5" fill="<?php echo $color; ?>" stroke="#fff" stroke-width="0.3">
+                    <title><?php echo esc_html($p->post_title); ?> — <?php echo esc_html($loc); ?></title>
+                </circle>
+                <circle cx="<?php echo $x; ?>" cy="<?php echo $y; ?>" r="2.5" fill="none" stroke="<?php echo $color; ?>" stroke-width="0.2" opacity="0.4">
+                    <animate attributeName="r" from="2.5" to="4.5" dur="2s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" from="0.4" to="0" dur="2s" repeatCount="indefinite"/>
+                </circle>
+            <?php endforeach; ?>
+        </svg>
+        <div style="display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:11px;color:#999;">
+            <span>🟢 人</span><span>🟣 鬼</span><span>🔴 魔</span><span>🟡 神</span>
+        </div>
+    </div>
 
     <?php if ($location_posts): ?>
-    <div style="margin-top:20px;">
-        <h3 style="font-size:15px;color:#1B3A5C;margin-bottom:10px;">📋 地点清单</h3>
-        <?php foreach ($location_posts as $p):
-            $loc = get_post_meta($p->ID, 'crrg_location', true);
-            $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
-            $colors = ['ren'=>'#16a34a','gui'=>'#8B5CF6','mo'=>'#C41230','shen'=>'#F0A500'];
-            $dot = $colors[$threat] ?? '#999';
-        ?>
-            <div style="background:#fff;border:1px solid #e0e0e0;border-left:4px solid <?php echo $dot; ?>;border-radius:4px;padding:10px 14px;margin-bottom:6px;">
-                <span style="font-size:13px;font-weight:600;color:#1B3A5C;">📍 <?php echo esc_html($loc); ?></span>
-                <a href="<?php echo get_permalink($p); ?>" style="font-size:13px;color:#555;text-decoration:none;margin-left:8px;"><?php echo esc_html($p->post_title); ?></a>
-                <span style="float:right;font-size:11px;color:#999;"><?php echo get_the_date('Y-m-d', $p); ?></span>
-            </div>
-        <?php endforeach; ?>
-    </div>
+    <h3 style="font-size:15px;color:#1B3A5C;margin-bottom:10px;">📋 地点清单</h3>
+    <?php foreach ($location_posts as $p):
+        $loc = get_post_meta($p->ID, 'crrg_location', true);
+        $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
+        $colors = ['ren'=>'#16a34a','gui'=>'#8B5CF6','mo'=>'#C41230','shen'=>'#F0A500'];
+        $dot = $colors[$threat] ?? '#999';
+    ?>
+        <div style="background:#fff;border:1px solid #e0e0e0;border-left:4px solid <?php echo $dot; ?>;border-radius:4px;padding:10px 14px;margin-bottom:6px;">
+            <span style="font-size:13px;font-weight:600;color:#1B3A5C;">📍 <?php echo esc_html($loc); ?></span>
+            <a href="<?php echo get_permalink($p); ?>" style="font-size:13px;color:#555;text-decoration:none;margin-left:8px;"><?php echo esc_html($p->post_title); ?></a>
+            <span style="float:right;font-size:11px;color:#999;"><?php echo get_the_date('Y-m-d', $p); ?></span>
+        </div>
+    <?php endforeach; ?>
     <?php endif; ?>
 </div>
 <div class="gov-sidebar">
