@@ -10,33 +10,36 @@ define('CRRG_DUTY_ROLES', [
     'field'    => ['name' => '外勤值班',  'icon' => '🚨', 'desc' => '现场处置与应急响应'],
 ]);
 
-// 值班人员池
+// 值班人员池：所有用户
 function crrg_get_duty_pool() {
-    return get_users(['role__in'=>['author','administrator','editor'], 'orderby'=>'ID', 'order'=>'ASC']);
+    return get_users(['orderby'=>'ID', 'order'=>'ASC']);
 }
 
-// 生成排班：轮转确保公平
+// 生成排班：从全员随机选5人
 function crrg_generate_schedule() {
     $pool = crrg_get_duty_pool();
     if (count($pool) < 5) return false;
     
     $roles = array_keys(CRRG_DUTY_ROLES);
     $days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    $names = [];
-    foreach ($pool as $u) $names[] = $u->display_name;
     
-    // 用周数做随机种子保证每周不同但可复现
-    $seed = (int)date('W') * 7 + (int)date('Y');
-    mt_srand($seed);
-    $order = $names;
-    shuffle($order);
-    mt_srand(); // 恢复随机
+    // 每周从全员随机抽7人（每人负责一周的排班轮转）
+    $week = (int)date('W');
+    $year = (int)date('Y');
+    mt_srand($week * 53 + $year);
+    $keys = array_rand($pool, min(7, count($pool)));
+    if (!is_array($keys)) $keys = [$keys];
+    shuffle($keys);
+    $selected = [];
+    foreach ($keys as $k) $selected[] = $pool[$k]->display_name;
+    while (count($selected) < 5) $selected[] = $pool[array_rand($pool)]->display_name;
+    mt_srand();
     
     $schedule = [];
     foreach ($days as $di => $day) {
         foreach ($roles as $ri => $role) {
-            $idx = ($di + $ri) % count($order);
-            $schedule[$day][$role] = $order[$idx];
+            $idx = ($di * 5 + $ri) % count($selected);
+            $schedule[$day][$role] = $selected[$idx];
         }
     }
     
