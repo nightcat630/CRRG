@@ -46,9 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             if ($threat) update_post_meta($post_id, 'crrg_threat_level', $threat); else delete_post_meta($post_id, 'crrg_threat_level');
             
             // 事件地点
-            $location = sanitize_text_field($_POST['report_location'] ?? '');
-            if (!$location) $location = sanitize_text_field($_POST['report_city'] ?? '');
-            if ($location && $location !== '__other__') update_post_meta($post_id, 'crrg_location', $location);
+            $loc_parts = array_filter([
+                sanitize_text_field($_POST['addr_country'] ?? ''),
+                sanitize_text_field($_POST['addr_province'] ?? ''),
+                sanitize_text_field($_POST['addr_city'] ?? ''),
+                sanitize_text_field($_POST['addr_county'] ?? ''),
+            ]);
+            $loc_manual = sanitize_text_field($_POST['report_location'] ?? '');
+            $location = $loc_manual ?: implode(' ', $loc_parts);
+            if ($location && ($_POST['addr_country'] ?? '') !== '__other__') update_post_meta($post_id, 'crrg_location', $location);
             // 坐标
             $lat = $_POST['report_lat'] ?? '';
             $lng = $_POST['report_lng'] ?? '';
@@ -374,39 +380,63 @@ get_header();
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>
-                    <select name="report_city" id="report_city" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
-                        <option value="">选择城市（自动标点）</option>
-                        <?php
-                        $cities = include __DIR__ . '/includes/cities.php';
-                        $provinces = [];
-                        foreach ($cities as $city => $data) $provinces[$data[0]][] = [$city, $data[2], $data[3]];
-                        ksort($provinces);
-                        foreach ($provinces as $prov => $list):
-                        ?>
-                            <optgroup label="<?php echo $prov; ?>">
-                                <?php foreach ($list as $c): ?>
-                                    <option value="<?php echo $c[0]; ?>" data-lat="<?php echo $c[1]; ?>" data-lng="<?php echo $c[2]; ?>"><?php echo $c[0]; ?></option>
-                                <?php endforeach; ?>
-                            </optgroup>
-                        <?php endforeach; ?>
-                        <option value="__other__">其他（手动输入）</option>
-                    </select>
-                    <input type="text" name="report_location" id="report_location_manual" style="display:none;width:100%;margin-top:8px;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="手动输入地点...">
+                    <?php $addr = include __DIR__ . '/includes/addresses.php'; $countries = array_keys($addr); ?>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <select id="addr_country" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;">
+                            <option value="">国家</option>
+                            <?php foreach($countries as $c): ?><option value="<?php echo $c; ?>"><?php echo $c; ?></option><?php endforeach; ?>
+                            <option value="__other__">其他</option>
+                        </select>
+                        <select id="addr_province" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;" disabled>
+                            <option value="">省/自治区</option>
+                        </select>
+                        <select id="addr_city" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;" disabled>
+                            <option value="">市/州</option>
+                        </select>
+                        <select id="addr_county" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;" disabled>
+                            <option value="">区/县</option>
+                        </select>
+                    </div>
+                    <input type="text" name="report_location" id="report_location_manual" style="display:none;width:100%;margin-top:8px;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="手动输入完整地点...">
                     <input type="hidden" name="report_lat" id="report_lat">
                     <input type="hidden" name="report_lng" id="report_lng">
                     <script>
-                    (function(){
-                        var sel=document.getElementById('report_city'), man=document.getElementById('report_location_manual');
-                        var lat=document.getElementById('report_lat'), lng=document.getElementById('report_lng');
-                        if(sel) sel.addEventListener('change',function(){
-                            if(this.value==='__other__'){ man.style.display=''; man.required=true; lat.value=''; lng.value=''; }
-                            else {
-                                man.style.display='none'; man.required=false;
-                                var opt=this.selectedOptions[0];
-                                lat.value=opt.dataset.lat||''; lng.value=opt.dataset.lng||'';
-                            }
-                        });
-                    })();
+                    var addrData = <?php echo json_encode($addr, JSON_UNESCAPED_UNICODE); ?>;
+                    var cp=document.getElementById('addr_country'), pp=document.getElementById('addr_province');
+                    var cc=document.getElementById('addr_city'), ct=document.getElementById('addr_county');
+                    var man=document.getElementById('report_location_manual'), lat=document.getElementById('report_lat'), lng=document.getElementById('report_lng');
+                    function clearLoc(){lat.value='';lng.value='';}
+                    function setLoc(la,ln){lat.value=la;lng.value=ln;}
+                    var selCountry='', selProvince='', selCity='';
+                    cp.addEventListener('change',function(){
+                        selCountry=this.value; pp.innerHTML='<option value="">省/自治区</option>'; cc.innerHTML='<option value="">市/州</option>'; ct.innerHTML='<option value="">区/县</option>';
+                        pp.disabled=true;cc.disabled=true;ct.disabled=true;clearLoc();
+                        if(this.value==='__other__'){man.style.display='';man.required=true;return;}
+                        man.style.display='none';man.required=false;
+                        if(!addrData[this.value])return;
+                        var provs=Object.keys(addrData[this.value]); pp.disabled=false;
+                        provs.forEach(function(p){pp.add(new Option(p,p));});
+                    });
+                    pp.addEventListener('change',function(){
+                        selProvince=this.value; cc.innerHTML='<option value="">市/州</option>'; ct.innerHTML='<option value="">区/县</option>';
+                        cc.disabled=true;ct.disabled=true;clearLoc();
+                        if(!this.value||!addrData[selCountry]||!addrData[selCountry][this.value])return;
+                        var arr=addrData[selCountry][this.value];
+                        var capital=arr[0], cities=arr[1];
+                        cc.disabled=false;
+                        Object.keys(cities).forEach(function(c){cc.add(new Option(c,c));});
+                        if(capital) cc.value=capital;
+                    });
+                    cc.addEventListener('change',function(){
+                        selCity=this.value; ct.innerHTML='<option value="">区/县</option>';
+                        ct.disabled=true;clearLoc();
+                        if(!this.value||!addrData[selCountry][selProvince]||!addrData[selCountry][selProvince][1][this.value])return;
+                        var cityData=addrData[selCountry][selProvince][1][this.value];
+                        var la=cityData[0], ln=cityData[1]; setLoc(la,ln);
+                        var districts=cityData.slice(2);
+                        if(districts.length>0){ct.disabled=false; districts.forEach(function(d){ct.add(new Option(d,d));});}
+                    });
+                    ct.addEventListener('change',function(){if(this.value) setLoc(addrData[selCountry][selProvince][1][selCity][0],addrData[selCountry][selProvince][1][selCity][1]);});
                     </script>
                 </div>
                 <div style="margin-bottom:16px;">
