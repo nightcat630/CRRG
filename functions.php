@@ -161,6 +161,10 @@ add_filter('get_avatar_url', function ($url, $id_or_email) {
         if (is_file(str_replace(home_url(), ABSPATH, $url))) $url .= '?ts=' . filemtime(str_replace(home_url(), ABSPATH, $url));
         return $url;
     }
+    // 无自定义头像时使用站点图标
+    if ($user_id) {
+        return get_stylesheet_directory_uri() . '/assets/emblem.png';
+    }
     return $url;
 }, 10, 2);
 
