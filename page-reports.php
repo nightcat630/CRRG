@@ -264,6 +264,11 @@ get_header();
                     </div>
                 </div>
                 <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件时间</label>
+                    <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                    <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
+                </div>
+                <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">访问等级 <span style="font-weight:normal;color:#999;font-size:12px;">（不超过自身等级）</span></label>
                     <select name="access_level" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
                         <?php $cur_access = get_post_meta($editing_draft->ID, 'crrg_access_level', true) ?: 'observer'; $my_rank2 = crrg_get_rank($user_id); foreach (crrg_get_accessible_ranks($my_rank2) as $r): ?>
