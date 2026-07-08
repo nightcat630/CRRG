@@ -196,6 +196,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit']) && wp_
         if ($edit_threat !== '') update_post_meta($post_id, 'crrg_edit_threat', $edit_threat);
         $edit_location = sanitize_text_field($_POST['edit_location'] ?? '');
         if ($edit_location !== '') update_post_meta($post_id, 'crrg_edit_location', $edit_location);
+        $edit_lat = $_POST['edit_lat'] ?? '';
+        $edit_lng = $_POST['edit_lng'] ?? '';
+        if ($edit_lat && $edit_lng) { update_post_meta($post_id, 'crrg_edit_lat', $edit_lat); update_post_meta($post_id, 'crrg_edit_lng', $edit_lng); }
         $message = '修改申请已提交，等待管理员审核。';
         wp_redirect(add_query_arg('msg', urlencode($message), remove_query_arg(['edit_post','msg'])));
         exit;
@@ -331,7 +334,55 @@ get_header();
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改事件地点</label>
-                    <input type="text" name="edit_location" value="<?php echo esc_attr(get_post_meta($edit_post->ID, 'crrg_location', true)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="如：广西横州市云表镇">
+                    <?php $addr = json_decode(file_get_contents(__DIR__ . '/includes/addresses.json'), true); $countries = array_keys($addr); ?>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <select id="addr_country_edit" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;">
+                            <option value="">国家</option>
+                            <?php foreach($countries as $c): ?><option value="<?php echo $c; ?>"><?php echo $c; ?></option><?php endforeach; ?>
+                            <option value="__other__">其他</option>
+                        </select>
+                        <select id="addr_province_edit" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;" disabled><option value="">省/自治区</option></select>
+                        <select id="addr_city_edit" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;" disabled><option value="">市/州</option></select>
+                        <select id="addr_county_edit" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;" disabled><option value="">区/县</option></select>
+                    </div>
+                    <input type="text" name="edit_location" id="edit_location_manual" style="display:none;width:100%;margin-top:8px;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="手动输入完整地点...">
+                    <input type="hidden" name="edit_lat" id="edit_lat">
+                    <input type="hidden" name="edit_lng" id="edit_lng">
+                    <script>
+                    (function(){
+                        var P='_edit',addr=addrData,cp=document.getElementById('addr_country'+P),pp=document.getElementById('addr_province'+P),
+                        cc=document.getElementById('addr_city'+P),ct=document.getElementById('addr_county'+P),
+                        man=document.getElementById('edit_location_manual'),lat=document.getElementById('edit_lat'),lng=document.getElementById('edit_lng');
+                        var sc='',sp='',sci='';
+                        var cl=function(){lat.value='';lng.value='';};
+                        var sl=function(la,ln){lat.value=la;lng.value=ln;};
+                        cp.addEventListener('change',function(){
+                            sc=this.value;pp.innerHTML='<option value=\"\">省/自治区</option>';cc.innerHTML='<option value=\"\">市/州</option>';ct.innerHTML='<option value=\"\">区/县</option>';
+                            pp.disabled=true;cc.disabled=true;ct.disabled=true;cl();
+                            if(this.value==='__other__'){man.style.display='';return;}
+                            man.style.display='none';
+                            if(!addr[this.value])return;
+                            Object.keys(addr[this.value]).forEach(function(p){pp.add(new Option(p,p));});pp.disabled=false;
+                        });
+                        pp.addEventListener('change',function(){
+                            sp=this.value;cc.innerHTML='<option value=\"\">市/州</option>';ct.innerHTML='<option value=\"\">区/县</option>';
+                            cc.disabled=true;ct.disabled=true;cl();
+                            if(!this.value||!addr[sc]||!addr[sc][this.value])return;
+                            var arr=addr[sc][this.value],capital=arr[0],cities=arr[1];cc.disabled=false;
+                            Object.keys(cities).forEach(function(c){cc.add(new Option(c,c));});
+                            if(capital)cc.value=capital;
+                        });
+                        cc.addEventListener('change',function(){
+                            sci=this.value;ct.innerHTML='<option value=\"\">区/县</option>';ct.disabled=true;cl();
+                            if(!this.value||!addr[sc][sp]||!addr[sc][sp][1][this.value])return;
+                            var cd=addr[sc][sp][1][this.value];sl(cd[0],cd[1]);
+                            cd.slice(2).forEach(function(d){ct.add(new Option(d,d));});ct.disabled=false;
+                        });
+                        ct.addEventListener('change',function(){
+                            if(this.value&&addr[sc]&&addr[sc][sp]&&addr[sc][sp][1][sci])sl(addr[sc][sp][1][sci][0],addr[sc][sp][1][sci][1]);
+                        });
+                    })();
+                    </script>
                 </div>
                 <div style="display:flex;gap:12px;">
                     <button type="submit" name="submit_edit" value="1" style="background:#C41230;color:#fff;border:none;padding:10px 32px;border-radius:4px;font-size:15px;cursor:pointer;">提交修改申请</button>

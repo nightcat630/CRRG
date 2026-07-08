@@ -87,6 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         if ($new_threat !== '') { update_post_meta($target_id, 'crrg_threat_level', $new_threat); delete_post_meta($target_id, 'crrg_edit_threat'); }
         $new_location = get_post_meta($target_id, 'crrg_edit_location', true);
         if ($new_location !== '') { update_post_meta($target_id, 'crrg_location', $new_location); delete_post_meta($target_id, 'crrg_edit_location'); }
+        $new_lat = get_post_meta($target_id, 'crrg_edit_lat', true);
+        if ($new_lat) { update_post_meta($target_id, 'crrg_lat', $new_lat); delete_post_meta($target_id, 'crrg_edit_lat'); }
+        $new_lng = get_post_meta($target_id, 'crrg_edit_lng', true);
+        if ($new_lng) { update_post_meta($target_id, 'crrg_lng', $new_lng); delete_post_meta($target_id, 'crrg_edit_lng'); }
         $message = '修改已批准。';
     } elseif ($action === 'add_announcement') {
         $ann_title = sanitize_text_field($_POST['ann_title'] ?? '');
