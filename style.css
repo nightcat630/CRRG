@@ -129,20 +129,35 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.5);
   border: none;
-  color: rgba(255,255,255,0.8);
-  font-size: 20px;
   width: 36px;
   height: 60px;
   cursor: pointer;
   z-index: 10;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s, background 0.2s;
+  pointer-events: none;
+  /* 隐藏按钮内文字，用伪元素画箭头 */
+  font-size: 0;
+  color: transparent;
 }
-.gov-news-carousel .carousel-arrow:hover { background: rgba(0,0,0,0.65); }
+.gov-news-carousel .carousel-arrow::after {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  margin: auto;
+}
+.gov-news-carousel .carousel-prev::after { transform: rotate(135deg); margin-left: 4px; }
+.gov-news-carousel .carousel-next::after { transform: rotate(-45deg); margin-right: 4px; }
+.gov-news-carousel:hover .carousel-arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+.gov-news-carousel .carousel-arrow:hover { background: rgba(0,0,0,0.7); }
 .gov-news-carousel .carousel-prev { left: 0; border-radius: 0 4px 4px 0; }
 .gov-news-carousel .carousel-next { right: 0; border-radius: 4px 0 0 4px; }
 @media (max-width: 768px) {

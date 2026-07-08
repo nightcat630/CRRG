@@ -34,6 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             update_post_meta($post_id, 'crrg_report_type', $category);
             update_post_meta($post_id, 'crrg_report_type_name', $cat_name);
             
+            // 处理标签
+            $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
+            if (!empty($tag_input)) {
+                $tag_names = array_map('trim', explode(',', $tag_input));
+                $tag_names = array_filter($tag_names);
+                wp_set_post_tags($post_id, $tag_names, false);
+            }
+            
             // Add 资历 (only for submitted, not drafts)
             // 资历 on approval only
             
@@ -96,6 +104,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_draft']) && wp
         $cat_map = ['artifacts'=>'镇物','events'=>'事件','personnel'=>'人物','organizations'=>'组织','research'=>'研究发现','entities'=>'祂们','esoterica'=>'秘术','other'=>'其他'];
         update_post_meta($draft_id, 'crrg_report_type', $category);
         update_post_meta($draft_id, 'crrg_report_type_name', $cat_map[$category] ?? '其他');
+        
+        // 处理标签
+        $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
+        if (!empty($tag_input)) {
+            $tag_names = array_map('trim', explode(',', $tag_input));
+            wp_set_post_tags($draft_id, array_filter($tag_names), false);
+        }
         
         // 资历 on approval only
         $message = $new_status === 'pending' ? '报告已提交审核！' : '草稿已更新';
@@ -172,6 +187,10 @@ get_header();
                     </select>
                 </div>
                 <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔）</span></label>
+                    <input type="text" name="report_tags" value="<?php $tags = wp_get_post_tags($editing_draft->ID, ['fields'=>'names']); echo esc_attr(implode(',', $tags)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="调查报告,始源实体,重生工程">
+                </div>
+                <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">报告内容</label>
                     <?php wp_editor($editing_draft->post_content, 'report_content', ['textarea_name'=>'report_content','textarea_rows'=>12,'media_buttons'=>true,'teeny'=>false]); ?>
                 </div>
@@ -212,6 +231,10 @@ get_header();
                     <select name="report_category" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
                         <option value="artifacts">镇物</option><option value="events">事件</option><option value="personnel">人物</option><option value="organizations">组织</option><option value="research">研究发现</option><option value="entities">祂们</option><option value="esoterica">秘术</option><option value="other">其他</option>
                     </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔，如：调查报告,始源实体）</span></label>
+                    <input type="text" name="report_tags" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="输入标签，逗号分隔...">
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">报告内容</label>

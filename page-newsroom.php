@@ -12,7 +12,7 @@ $news = get_posts(['post_type'=>'post','post_status'=>'publish','meta_key'=>'crr
                 <div style="color:#999;font-size:12px;">中央重生抵御小组 · 要闻列表</div>
             </div>
             <?php if (is_user_logged_in()): ?>
-                <a href="/newsroom/submit/" style="background:#C41230;color:#fff;padding:8px 20px;border-radius:4px;text-decoration:none;font-size:14px;">📝 要闻投稿</a>
+                <a href="/newsroom-submit/" style="background:#C41230;color:#fff;padding:8px 20px;border-radius:4px;text-decoration:none;font-size:14px;">📝 要闻投稿</a>
             <?php endif; ?>
         </div>
         <?php if ($news): foreach ($news as $p): $a=get_userdata($p->post_author); $thumb=''; preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"]/',$p->post_content,$m); if($m)$thumb=$m[1]; ?>

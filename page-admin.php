@@ -34,8 +34,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         crrg_add_xp($author_id, $is_news ? 10 : 15);
         $message = '文章已审核通过，作者获得 15 资历。';
     } elseif ($action === 'reject_post') {
+        $reason = sanitize_text_field(wp_unslash($_POST['reject_reason'] ?? ''));
+        update_post_meta($target_id, 'crrg_reject_reason', $reason);
+        update_post_meta($target_id, 'crrg_rejected_by', $user_id);
         wp_update_post(['ID' => $target_id, 'post_status' => 'draft']);
-        $message = '文章已退回。';
+        // 发送私信通知作者
+        $author_id = (int) get_post_field('post_author', $target_id);
+        $post_title = get_post_field('post_title', $target_id);
+        $reviewer = wp_get_current_user();
+        crrg_send_message($user_id, $author_id,
+            '文章退回通知：「' . $post_title . '」',
+            '您的文章《' . $post_title . '》已被退回。' . "
+
+"
+            . '退回原因：' . ($reason ?: '未填写') . "
+"
+            . '审核人：' . $reviewer->display_name . '（ID: ' . $user_id . '）' . "
+
+"
+            . '请修改后重新提交。'
+        );
+        $message = '文章已退回，已私信通知作者。';
     } elseif ($action === 'delete_post') {
         wp_delete_post($target_id, true);
         $message = '文章已永久删除。';
@@ -61,6 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
     } elseif ($action === 'delete_announcement') {
         crrg_delete_announcement((int)($_POST['ann_index'] ?? -1));
         $message = '公告已删除。';
+    } elseif ($action === 'edit_announcement') {
+        $ann_index = (int)($_POST['ann_index'] ?? -1);
+        $ann_title = sanitize_text_field($_POST['ann_title'] ?? '');
+        $ann_content = wp_kses_post($_POST['ann_content'] ?? '');
+        crrg_update_announcement($ann_index, $ann_title, $ann_content);
+        $message = '公告已更新。';
     } elseif ($action === 'set_alert' && $rank === 'chairman') {
         crrg_set_alert(sanitize_text_field($_POST['alert_title']??''), sanitize_text_field($_POST['alert_content']??''), sanitize_text_field($_POST['alert_color']??'#C41230'));
         $message = '紧急预警已发布。';
@@ -207,7 +232,7 @@ get_header();
                 <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:12px;">
                     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                         <div style="flex:1;">
-                            <strong><?php echo esc_html($p->post_title); ?></strong>
+                            <a href="<?php echo esc_url(get_preview_post_link($p)); ?>" target="_blank" style="color:#1B3A5C;text-decoration:none;font-weight:bold;"><?php echo esc_html($p->post_title); ?></a>
                             <div style="font-size:12px;color:#999;margin:4px 0;">
                                 作者：<?php echo $author ? esc_html($author->display_name) : '未知'; ?>
                                 · <?php echo get_the_date('Y-m-d H:i', $p); ?>
@@ -223,10 +248,11 @@ get_header();
                                 <input type="hidden" name="admin_action" value="approve_post">
                                 <button type="submit" style="background:#16a34a;color:#fff;border:none;padding:6px 16px;border-radius:3px;cursor:pointer;">通过</button>
                             </form>
-                            <form method="post" style="margin:0;">
+                            <form method="post" style="margin:0;" onsubmit="var r=prompt('请输入退回原因（将通知作者）：');if(!r||r.trim()==='')return false;this.reject_reason.value=r.trim();return true;">
                                 <?php wp_nonce_field('crrg_admin'); ?>
                                 <input type="hidden" name="post_id" value="<?php echo $p->ID; ?>">
                                 <input type="hidden" name="admin_action" value="reject_post">
+                                <input type="hidden" name="reject_reason" value="">
                                 <button type="submit" style="background:#dc2626;color:#fff;border:none;padding:6px 16px;border-radius:3px;cursor:pointer;">退回</button>
                             </form>
                         </div>
@@ -337,18 +363,23 @@ get_header();
         <?php endif; ?>
         <form method="post" style="margin-bottom:20px;"><?php wp_nonce_field("crrg_admin"); ?><input type="hidden" name="admin_action" value="set_alert"><div style="margin-bottom:8px;"><input type="text" name="alert_title" placeholder="预警标题" style="width:100%;padding:8px 12px;border:1px solid #d5d5d5;border-radius:3px;font-size:14px;"></div><div style="margin-bottom:8px;"><input type="text" name="alert_content" placeholder="预警内容" style="width:100%;padding:8px 12px;border:1px solid #d5d5d5;border-radius:3px;font-size:14px;"></div><div style="margin-bottom:8px;"><select name="alert_color" style="padding:8px 12px;border:1px solid #d5d5d5;border-radius:3px;"><option value="#C41230">红色（紧急）</option><option value="#E67E22">橙色（警告）</option><option value="#F1C40F">黄色（注意）</option><option value="#1B3A5C">蓝色（通知）</option></select></div><button type="submit" style="background:#C41230;color:#fff;border:none;padding:8px 24px;border-radius:4px;cursor:pointer;">发布预警</button></form>
         <?php endif; ?>
-        <h3 style="font-size:16px;color:#1B3A5C;margin:32px 0 12px;">📢 发布公告 (<?php echo count($announcements); ?> 条)</h3>
+        <h3 style="font-size:16px;color:#1B3A5C;margin:32px 0 12px;">📢 <?php $edit_ann = isset($_GET['edit_ann']) ? (int)$_GET['edit_ann'] : null; $edit_ann_data = ($edit_ann !== null && isset($announcements[$edit_ann])) ? $announcements[$edit_ann] : null; echo $edit_ann_data ? '编辑公告' : '发布公告'; ?> (<?php echo count($announcements); ?> 条)</h3>
         <form method="post" style="margin-bottom:20px;">
             <?php wp_nonce_field('crrg_admin'); ?>
-            <input type="hidden" name="admin_action" value="add_announcement">
-            <div style="margin-bottom:12px;"><input type="text" name="ann_title" placeholder="公告标题" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;"></div>
-            <div style="margin-bottom:12px;"><?php wp_editor('', 'ann_content', ['textarea_name'=>'ann_content','textarea_rows'=>5,'media_buttons'=>false,'teeny'=>true]); ?></div>
-            <button type="submit" style="background:#C41230;color:#fff;border:none;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:14px;">发布公告</button>
+            <input type="hidden" name="admin_action" value="<?php echo $edit_ann_data ? 'edit_announcement' : 'add_announcement'; ?>">
+            <?php if ($edit_ann_data): ?><input type="hidden" name="ann_index" value="<?php echo $edit_ann; ?>"><?php endif; ?>
+            <div style="margin-bottom:12px;"><input type="text" name="ann_title" placeholder="公告标题" value="<?php echo $edit_ann_data ? esc_attr($edit_ann_data['title']) : ''; ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;"></div>
+            <div style="margin-bottom:12px;"><?php wp_editor($edit_ann_data ? $edit_ann_data['content'] : '', 'ann_content', ['textarea_name'=>'ann_content','textarea_rows'=>5,'media_buttons'=>false,'teeny'=>true]); ?></div>
+            <button type="submit" style="background:#C41230;color:#fff;border:none;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:14px;"><?php echo $edit_ann_data ? '更新公告' : '发布公告'; ?></button>
+            <?php if ($edit_ann_data): ?><a href="/admin/" style="color:#999;font-size:13px;text-decoration:none;margin-left:10px;">取消编辑</a><?php endif; ?>
         </form>
         <?php if ($announcements): foreach ($announcements as $i => $ann): ?>
             <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
                 <div><strong><?php echo esc_html($ann['title']); ?></strong><span style="color:#999;font-size:12px;margin-left:8px;"><?php echo $ann['time']; ?></span></div>
-                <form method="post" style="margin:0;"><?php wp_nonce_field('crrg_admin'); ?><input type="hidden" name="admin_action" value="delete_announcement"><input type="hidden" name="ann_index" value="<?php echo $i; ?>"><button type="submit" style="background:#dc2626;color:#fff;border:none;padding:4px 12px;border-radius:3px;cursor:pointer;font-size:12px;">删除</button></form>
+                <div style="display:flex;gap:6px;">
+                    <a href="/admin/?edit_ann=<?php echo $i; ?>" style="color:#1B3A5C;text-decoration:none;font-size:12px;padding:4px 12px;border:1px solid #d5d5d5;border-radius:3px;">编辑</a>
+                    <form method="post" style="margin:0;"><?php wp_nonce_field('crrg_admin'); ?><input type="hidden" name="admin_action" value="delete_announcement"><input type="hidden" name="ann_index" value="<?php echo $i; ?>"><button type="submit" style="background:#dc2626;color:#fff;border:none;padding:4px 12px;border-radius:3px;cursor:pointer;font-size:12px;">删除</button></form>
+                </div>
             </div>
         <?php endforeach; else: ?><p style="color:#999;">暂无公告。</p><?php endif; ?>
 

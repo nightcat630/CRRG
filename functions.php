@@ -15,13 +15,14 @@ add_filter('show_admin_bar', '__return_false');
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('astra-parent', get_template_directory_uri() . '/style.css');
     wp_enqueue_style('astra-child', get_stylesheet_uri(), ['astra-parent'], '1.0');
-});
+}, 999);
 
 // ─── 加载功能模块 ───
 require_once __DIR__ . '/includes/rank-system.php';
 require_once __DIR__ . '/includes/favorites.php';
 require_once __DIR__ . '/includes/announcements.php';
 require_once __DIR__ . '/includes/emergency-alert.php';
+require_once __DIR__ . '/includes/messages.php';
 
 // ─── 自定义头部（红条+导航+品牌+新闻） ───
 add_action('astra_header', 'crrg_custom_header', 5);
@@ -68,6 +69,7 @@ function crrg_custom_header() {
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a href="/profile/">修改个人资料</a></li>
                                 <li><a href="/promotion/">晋升申请</a></li>
+                                <li><a href="/messages/">✉️ 私信 <?php $ur = function_exists('crrg_unread_count') ? crrg_unread_count($u->ID) : 0; if($ur): ?><span style="color:#C41230;font-weight:bold;">(<?php echo $ur; ?>)</span><?php endif; ?></a></li>
                                 <li><a href="<?php echo wp_logout_url(home_url()); ?>">登出</a></li>
                             </ul>
                         </div>
@@ -113,7 +115,7 @@ function crrg_custom_footer() {
             <a href="https://www.chinafxj.cn/" target="_blank">中国反邪教网</a>
         </div>
         <p>中央重生抵御小组 © 2026 | 仅供内部人员查阅 | 未经授权禁止传播</p>
-        <p>备案号：CRRG-2026-001 · 信息安全管理等级：机密 · <a href="/contact/" style="color:rgba(255,255,255,0.5);">联系我们 / 举报信箱</a></p>
+        <p>备案号：CRRG-2026-001 · 信息安全管理等级：机密 · <a href="/contact/" style="color:rgba(255,255,255,0.5);">联系我们 / 举报信箱</a> · <a href="/feed/" style="color:rgba(255,255,255,0.5);">📡 RSS 订阅</a> <span style="color:rgba(255,255,255,0.3);font-size:10px;">（建议使用 RSS 阅读器打开）</span></p>
     </div>
     <?php
 }
@@ -196,9 +198,38 @@ add_filter('registration_errors', function ($errors, $user, $email) {
     return $errors;
 }, 10, 3);
 
-// ─── 搜索范围：文章 + 论坛话题 ───
+// ─── 注册 report_type 查询变量 ───
+add_filter('query_vars', function ($vars) {
+    $vars[] = 'report_type';
+    return $vars;
+});
+
+// ─── 禁止 report_type 页面的规范重定向 ───
+add_filter('redirect_canonical', function ($redirect_url, $requested_url) {
+    if (!empty($_GET['report_type'])) {
+        return false;
+    }
+    return $redirect_url;
+}, 10, 2);
+
+// ─── 搜索范围：文章 + 论坛话题 + 档案馆导航 ───
 add_action('pre_get_posts', function ($query) {
-    if (!is_admin() && $query->is_main_query() && $query->is_search()) {
+    if (is_admin() || !$query->is_main_query()) return;
+
+    // ─── 档案馆：按报告类型过滤（/?s=archive&type=post&report_type=xxx）───
+    if (!empty($_GET['report_type'])) {
+        $query->set('s', '');  // 清掉 s=archive，避免关键字搜索覆盖 meta 过滤
+        $query->set('post_type', 'post');
+        $query->set('meta_key', 'crrg_report_type_name');
+        $query->set('meta_value', sanitize_text_field($_GET['report_type']));
+        $query->set('posts_per_page', 20);
+        $query->set('orderby', 'date');
+        $query->set('order', 'DESC');
+        return;
+    }
+
+    // ─── 搜索范围：文章 + 论坛话题 ───
+    if ($query->is_search()) {
         $type = $_GET['type'] ?? 'all';
         if ($type === 'post') {
             $query->set('post_type', 'post');
@@ -214,7 +245,8 @@ add_action('pre_get_posts', function ($query) {
 add_action('template_redirect', function () {
     if (is_search() && isset($_GET['s'])) {
         $s = trim($_GET['s']);
-        if ($s === '') {
+        // 档案馆导航：允许空搜索 + report_type
+        if ($s === '' && empty($_GET['report_type'])) {
             wp_redirect(home_url('/')); exit;
         }
         if (strtolower($s) === 'crrg-917') {
@@ -370,3 +402,60 @@ add_action('wp_ajax_crrg_toggle_fav', function () {
     update_user_meta($uid, 'crrg_favorites', array_values($favs)); wp_die();
 });
 add_action('wp_ajax_nopriv_crrg_toggle_fav', function(){wp_die('0');});
+
+// ─── RSS Feed XSL 样式表 ───
+add_action('rss_tag_pre', function () {
+    echo '<?xml-stylesheet type="text/xsl" href="' . get_stylesheet_directory_uri() . '/rss-style.xsl"?>' . "
+";
+});
+
+// RSS 自动发现标签
+add_action('wp_head', function () {
+    echo '<link rel="alternate" type="application/rss+xml" title="中央重生抵御小组 RSS" href="' . home_url('/feed/') . '">' . "
+";
+});
+
+// 改 feed Content-Type 为 text/xml，避免 Firefox 直接下载
+add_filter('feed_content_type', function ($content_type, $type) {
+    return 'text/xml';
+}, 10, 2);
+
+// ─── 文章标签展示 + 相关文章 ───
+add_filter('the_content', function ($content) {
+    if (!is_single() || !is_main_query() || !in_the_loop()) return $content;
+    $post_id = get_the_ID();
+    $tags = get_the_tags($post_id);
+    if (!$tags || empty($tags)) return $content;
+    ob_start();
+    ?>
+    <div class="crrg-post-tags" style="margin:24px 0;padding:16px;background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;">
+        <span style="font-weight:600;color:#1e293b;margin-right:8px;">🏷️ 标签：</span>
+        <?php foreach ($tags as $tag): ?>
+            <a href="<?php echo get_tag_link($tag); ?>" style="display:inline-block;margin:2px 4px;padding:4px 12px;background:#1B3A5C;color:#fff;border-radius:3px;font-size:13px;text-decoration:none;"><?php echo esc_html($tag->name); ?></a>
+        <?php endforeach; ?>
+    </div>
+    <?php
+    $first_tag = $tags[0];
+    $related = new WP_Query([
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 3,
+        'post__not_in' => [$post_id],
+        'tag_id' => $first_tag->term_id,
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ]);
+    if ($related->have_posts()):
+        ?>
+        <div class="crrg-related-posts" style="margin:20px 0;padding:16px;background:#f0f5fa;border:1px solid #d1d5db;border-radius:4px;">
+            <h4 style="margin:0 0 12px;color:#1e293b;">📎 相关报告</h4>
+            <ul style="margin:0;padding:0;list-style:none;">
+                <?php while ($related->have_posts()): $related->the_post(); ?>
+                    <li style="margin-bottom:6px;">→ <a href="<?php the_permalink(); ?>" style="color:#046bd2;"><?php the_title(); ?></a></li>
+                <?php endwhile; wp_reset_postdata(); ?>
+            </ul>
+        </div>
+    <?php endif;
+    $tags_html = ob_get_clean();
+    return $content . $tags_html;
+});

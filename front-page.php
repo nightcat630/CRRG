@@ -119,6 +119,58 @@ $top = crrg_get_top_member();
     </div>
 </div>
 
+
+<!-- 档案馆导航 -->
+<div style="max-width:1200px;margin:30px auto 0;padding:0 20px;">
+    <div style="padding:24px;background:#fff;border:1px solid #e0e0e0;border-radius:4px;">
+        <h2 style="font-size:20px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">📂 档案馆导航</h2>
+        <p style="color:#999;margin:0 0 20px;font-size:13px;">按报告类型分类检索 · 点击类型名查看全部</p>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+            <?php
+            $archive_types = [
+                ['name'=>'镇物','slug'=>'artifacts','icon'=>'🔮','desc'=>'遗蜕与玄造','color'=>'#6B3FA0'],
+                ['name'=>'事件','slug'=>'events','icon'=>'⚡','desc'=>'异常事件记录','color'=>'#C41230'],
+                ['name'=>'人物','slug'=>'personnel','icon'=>'👤','desc'=>'关键人物档案','color'=>'#1B3A5C'],
+                ['name'=>'组织','slug'=>'organizations','icon'=>'🏢','desc'=>'相关组织情报','color'=>'#2E7D32'],
+                ['name'=>'研究发现','slug'=>'research','icon'=>'🔬','desc'=>'研究成果汇编','color'=>'#E65100'],
+                ['name'=>'祂们','slug'=>'entities','icon'=>'👁️','desc'=>'高维存在名录','color'=>'#880E4F'],
+                ['name'=>'秘术','slug'=>'esoterica','icon'=>'📜','desc'=>'秘术与仪轨','color'=>'#004D40'],
+            ];
+            foreach ($archive_types as $at):
+                $atype_posts = get_posts([
+                    'post_type'=>'post','post_status'=>'publish',
+                    'meta_key'=>'crrg_report_type_name','meta_value'=>$at['name'],
+                    'posts_per_page'=>3,'orderby'=>'date','order'=>'DESC'
+                ]);
+                $atype_count = count(get_posts([
+                    'post_type'=>'post','post_status'=>'publish',
+                    'meta_key'=>'crrg_report_type_name','meta_value'=>$at['name'],
+                    'posts_per_page'=>-1,'orderby'=>'date','order'=>'DESC',
+                    'fields'=>'ids'
+                ]));
+            ?>
+            <div style="border:1px solid #e8e8e8;border-radius:4px;overflow:hidden;transition:box-shadow 0.2s;">
+                <div style="background:<?php echo $at['color']; ?>;color:#fff;padding:10px 14px;display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:18px;"><?php echo $at['icon']; ?></span>
+                    <a href="/<?php echo $at['slug']; ?>/" style="color:#fff;text-decoration:none;font-weight:bold;font-size:14px;flex:1;"><?php echo $at['name']; ?></a>
+                    <span style="background:rgba(255,255,255,0.25);padding:2px 8px;border-radius:10px;font-size:11px;"><?php echo $atype_count; ?>篇</span>
+                </div>
+                <div style="padding:8px 14px 10px;min-height:60px;">
+                    <?php if ($atype_posts): foreach ($atype_posts as $ap): ?>
+                        <div style="padding:3px 0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            <a href="<?php echo get_permalink($ap); ?>" style="color:#555;text-decoration:none;">· <?php echo esc_html($ap->post_title); ?></a>
+                        </div>
+                    <?php endforeach; else: ?>
+                        <div style="font-size:12px;color:#ccc;padding:8px 0;text-align:center;">暂无报告</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+
 <!-- 最新文章 + 组员热议 双列 -->
 <div style="max-width:1200px;margin:30px auto;padding:0 20px;display:flex;gap:24px;">
     <div style="flex:1;background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:20px;">
