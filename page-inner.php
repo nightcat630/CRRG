@@ -12,15 +12,26 @@ $slug = get_post_field('post_name', get_the_ID());
 $cat_name = $cat_map[$slug] ?? '';
 
 $posts = [];
+$date_filter = '';
+$year = $_GET['year'] ?? '';
+$month = $_GET['month'] ?? '';
+
 if ($cat_name) {
-    $posts = get_posts([
+    $args = [
         'post_type' => 'post', 'post_status' => 'publish',
-        'posts_per_page' => 20,
+        'posts_per_page' => 50,
         'meta_query' => [
             ['key' => 'crrg_report_type_name', 'value' => $cat_name],
             crrg_get_access_meta_query(),
         ],
-    ]);
+    ];
+    // 日期筛选
+    if ($year) {
+        $args['date_query'] = [['year' => (int)$year]];
+        if ($month) $args['date_query'][0]['month'] = (int)$month;
+    }
+    $posts = get_posts($args);
+    if ($year) $date_filter = $year . '年' . ($month ? $month . '月' : '');
 }
 ?>
 <div class="gov-main">
@@ -88,7 +99,27 @@ if ($cat_name) {
 
         <?php if ($posts): ?>
             <div style="margin-top:32px;border-top:1px solid #eee;padding-top:20px;">
-                <h3 style="font-size:16px;color:#1B3A5C;margin-bottom:12px;">📋 归档报告 (<?php echo count($posts); ?>)</h3>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <h3 style="font-size:16px;color:#1B3A5C;margin:0;">📋 归档报告 (<?php echo count($posts); ?><?php echo $date_filter ? ' · ' . $date_filter : ''; ?>)</h3>
+                    <form method="get" style="display:flex;gap:6px;align-items:center;">
+                        <select name="year" style="padding:4px 8px;border:1px solid #d5d5d5;border-radius:3px;font-size:12px;background:#fff;">
+                            <option value="">全部年份</option>
+                            <?php for($y=2026;$y>=2024;$y--): ?>
+                                <option value="<?php echo $y; ?>" <?php echo $year==$y?'selected':''; ?>><?php echo $y; ?></option>
+                            <?php endfor; ?>
+                        </select>
+                        <select name="month" style="padding:4px 8px;border:1px solid #d5d5d5;border-radius:3px;font-size:12px;background:#fff;">
+                            <option value="">全部月份</option>
+                            <?php for($m=1;$m<=12;$m++): ?>
+                                <option value="<?php echo $m; ?>" <?php echo $month==$m?'selected':''; ?>><?php echo $m; ?>月</option>
+                            <?php endfor; ?>
+                        </select>
+                        <button type="submit" style="background:#1B3A5C;color:#fff;border:none;padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;">筛选</button>
+                        <?php if($date_filter): ?>
+                            <a href="?" style="font-size:11px;color:#C41230;text-decoration:none;">清除</a>
+                        <?php endif; ?>
+                    </form>
+                </div>
                 <?php foreach ($posts as $p): $a=get_userdata($p->post_author); $cc=get_comments_number($p->ID); 
                     $thumb = '';
                     $img_match = preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"]/', $p->post_content, $m);

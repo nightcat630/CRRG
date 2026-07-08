@@ -438,6 +438,35 @@ add_action('wp_head', function () {
 ";
 });
 
+// ─── 文章机密等级水印 ───
+add_action('wp_head', function () {
+    if (!is_single() || !is_main_query()) return;
+    $post_id = get_the_ID();
+    $access = get_post_meta($post_id, 'crrg_access_level', true) ?: 'observer';
+    $rank = crrg_get_rank_data($access);
+    if ($access === 'observer') return; // 公开级别不显示水印
+    $levels = ['observer'=>'','operative'=>'内部','tl'=>'秘密','chief'=>'机密','advisor'=>'绝密','deputy'=>'绝密','chairman'=>'绝密'];
+    $label = $levels[$access] ?? '内部';
+    $opacity = $access === 'chairman' ? '0.08' : '0.05';
+    ?>
+    <style>
+    body.single .gov-content::before {
+        content: "<?php echo $label; ?>";
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%,-50%) rotate(-30deg);
+        font-size: 120px;
+        font-weight: 900;
+        color: rgba(196,18,48,<?php echo $opacity; ?>);
+        pointer-events: none;
+        z-index: 0;
+        white-space: nowrap;
+        letter-spacing: 0.3em;
+    }
+    </style>
+    <?php
+});
+
 // 改 feed Content-Type 为 text/xml，避免 Firefox 直接下载
 add_filter('feed_content_type', function ($content_type, $type) {
     return 'text/xml';
