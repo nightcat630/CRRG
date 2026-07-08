@@ -42,7 +42,7 @@ foreach ($location_posts as $p) {
     <script src="/wp-content/themes/astra-child/assets/leaflet/leaflet.js"></script>
     <script>
     var map = L.map('china-map').setView([35, 105], 4);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('/tile-proxy.php?z={z}&x={x}&y={y}', {
         attribution: '&copy; OpenStreetMap',
         maxZoom: 10,
     }).addTo(map);
