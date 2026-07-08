@@ -2,40 +2,81 @@
 /* Template Name: 事件地图 */
 get_header();
 
-// 获取有地点的报告
 $location_posts = get_posts([
     'post_type' => 'post', 'post_status' => 'publish',
     'meta_key' => 'crrg_location', 'posts_per_page' => 50,
     'meta_query' => [crrg_get_access_meta_query()],
 ]);
+
+// 地点坐标映射
+$coord_map = [
+    '广西横州市云表镇' => [22.68, 109.27],
+    '新疆克拉玛依' => [45.58, 84.89],
+    '中原地区（传说）' => [34.75, 113.66],
+];
+
+$markers = [];
+foreach ($location_posts as $p) {
+    $loc = get_post_meta($p->ID, 'crrg_location', true);
+    $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
+    $coord = $coord_map[$loc] ?? null;
+    if ($coord) {
+        $markers[] = [
+            'lat' => $coord[0], 'lng' => $coord[1],
+            'title' => $p->post_title,
+            'loc' => $loc,
+            'threat' => $threat,
+            'url' => get_permalink($p),
+            'date' => get_the_date('Y-m-d', $p),
+        ];
+    }
+}
 ?>
 <div class="gov-main">
 <div class="gov-content">
     <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">🗺️ 事件态势图</h1>
     <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">中央重生抵御小组 · 地理信息</div>
 
+    <div id="china-map" style="width:100%;height:500px;border:1px solid #e0e0e0;border-radius:4px;background:#f0f2f5;"></div>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+    var map = L.map('china-map').setView([35, 105], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap',
+        maxZoom: 10,
+    }).addTo(map);
+
+    var threatColors = {ren:'#16a34a',gui:'#8B5CF6',mo:'#C41230',shen:'#F0A500'};
+    var markers = <?php echo json_encode($markers, JSON_UNESCAPED_UNICODE); ?>;
+    markers.forEach(function(m){
+        var color = threatColors[m.threat] || '#999';
+        var icon = L.divIcon({
+            className: 'threat-marker',
+            html: '<div style="width:14px;height:14px;background:'+color+';border:2px solid #fff;border-radius:50%;box-shadow:0 0 6px '+color+';"></div>',
+            iconSize: [18,18],
+        });
+        L.marker([m.lat, m.lng], {icon:icon}).addTo(map)
+            .bindPopup('<strong>'+m.title+'</strong><br>📍 '+m.loc+'<br>'+m.date+'<br><a href="'+m.url+'">查看报告 →</a>');
+    });
+    </script>
+
     <?php if ($location_posts): ?>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;">
+    <div style="margin-top:20px;">
+        <h3 style="font-size:15px;color:#1B3A5C;margin-bottom:10px;">📋 地点清单</h3>
         <?php foreach ($location_posts as $p):
             $loc = get_post_meta($p->ID, 'crrg_location', true);
-            $coords = get_post_meta($p->ID, 'crrg_coords', true);
             $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
             $colors = ['ren'=>'#16a34a','gui'=>'#8B5CF6','mo'=>'#C41230','shen'=>'#F0A500'];
             $dot = $colors[$threat] ?? '#999';
         ?>
-            <div style="background:#fff;border:1px solid #e0e0e0;border-left:4px solid <?php echo $dot; ?>;border-radius:4px;padding:12px 16px;">
-                <div style="font-size:14px;font-weight:600;color:#1B3A5C;">📍 <?php echo esc_html($loc); ?></div>
-                <a href="<?php echo get_permalink($p); ?>" style="font-size:13px;color:#555;text-decoration:none;"><?php echo esc_html($p->post_title); ?></a>
-                <div style="font-size:11px;color:#999;margin-top:2px;"><?php echo get_the_date('Y-m-d', $p); ?></div>
+            <div style="background:#fff;border:1px solid #e0e0e0;border-left:4px solid <?php echo $dot; ?>;border-radius:4px;padding:10px 14px;margin-bottom:6px;">
+                <span style="font-size:13px;font-weight:600;color:#1B3A5C;">📍 <?php echo esc_html($loc); ?></span>
+                <a href="<?php echo get_permalink($p); ?>" style="font-size:13px;color:#555;text-decoration:none;margin-left:8px;"><?php echo esc_html($p->post_title); ?></a>
+                <span style="float:right;font-size:11px;color:#999;"><?php echo get_the_date('Y-m-d', $p); ?></span>
             </div>
         <?php endforeach; ?>
-        </div>
-    <?php else: ?>
-        <div style="text-align:center;padding:60px;color:#999;">
-            <div style="font-size:48px;margin-bottom:12px;">🗺️</div>
-            <p>暂无标注地点的报告</p>
-            <p style="font-size:12px;">提交报告时可添加地点信息，将在此处显示</p>
-        </div>
+    </div>
     <?php endif; ?>
 </div>
 <div class="gov-sidebar">
