@@ -45,6 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             $threat = sanitize_text_field($_POST['threat_level'] ?? '');
             if ($threat) update_post_meta($post_id, 'crrg_threat_level', $threat); else delete_post_meta($post_id, 'crrg_threat_level');
             
+            // 事件时间
+            $event_date = sanitize_text_field($_POST['event_date'] ?? '');
+            if ($event_date) update_post_meta($post_id, 'crrg_event_date', $event_date);
+            
             // 事件地点
             $loc_parts = array_filter([
                 sanitize_text_field($_POST['addr_country'] ?? ''),
@@ -277,6 +281,11 @@ get_header();
                         <option value="mo" <?php echo $cur_threat==='mo'?'selected':''; ?>>👿 魔 — 对次级旧日支配者/旧日支配者/古神产生影响</option>
                         <option value="shen" <?php echo $cur_threat==='shen'?'selected':''; ?>>👼 神 — 对旧神产生影响</option>
                     </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件时间</label>
+                    <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                    <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>

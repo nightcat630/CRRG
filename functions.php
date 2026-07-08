@@ -474,7 +474,20 @@ add_filter('feed_content_type', function ($content_type, $type) {
     return 'text/xml';
 }, 10, 2);
 
-// ─── 访问等级过滤 ───
+// ─── 显示日期（优先事件时间） ───
+add_filter('get_the_date', function($the_date, $format, $post) {
+    $post_id = is_object($post) ? $post->ID : ($post ?: get_the_ID());
+    $event = get_post_meta($post_id, 'crrg_event_date', true);
+    if ($event) return date($format ?: 'Y-m-d', strtotime($event));
+    return $the_date;
+}, 10, 3);
+
+add_filter('get_the_time', function($the_time, $format, $post) {
+    $post_id = is_object($post) ? $post->ID : ($post ?: get_the_ID());
+    $event = get_post_meta($post_id, 'crrg_event_date', true);
+    if ($event) return date($format ?: 'H:i', strtotime($event));
+    return $the_time;
+}, 10, 3);
 function crrg_get_access_meta_query() {
     $user_rank = is_user_logged_in() ? crrg_get_rank(get_current_user_id()) : 'observer';
     $user_level = crrg_get_rank_level($user_rank);
