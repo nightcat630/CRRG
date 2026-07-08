@@ -8,9 +8,17 @@ add_action('wp_ajax_crrg_toggle_fav', function () {
     $favs = get_user_meta($user_id, 'crrg_favorites', true) ?: [];
     if (in_array($post_id, $favs)) {
         $favs = array_diff($favs, [$post_id]);
+        // 从文章收藏列表移除
+        $post_favs = get_post_meta($post_id, 'crrg_favorited_by', true) ?: [];
+        $post_favs = array_diff($post_favs, [$user_id]);
+        update_post_meta($post_id, 'crrg_favorited_by', array_values($post_favs));
         echo 'removed';
     } else {
         $favs[] = $post_id;
+        // 加入文章收藏列表
+        $post_favs = get_post_meta($post_id, 'crrg_favorited_by', true) ?: [];
+        if (!in_array($user_id, $post_favs)) $post_favs[] = $user_id;
+        update_post_meta($post_id, 'crrg_favorited_by', array_values($post_favs));
         echo 'added';
     }
     update_user_meta($user_id, 'crrg_favorites', array_values($favs));
