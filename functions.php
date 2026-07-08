@@ -163,7 +163,7 @@ add_filter('get_avatar_url', function ($url, $id_or_email) {
     }
     // 无自定义头像时使用站点图标
     if ($user_id) {
-        return get_stylesheet_directory_uri() . '/assets/emblem.png';
+        return home_url('/wp-content/uploads/2026/07/icon-150x150.png');
     }
     return $url;
 }, 10, 2);
