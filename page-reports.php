@@ -357,9 +357,9 @@ get_header();
     document.querySelectorAll('select[name="report_category"]').forEach(function(s){
         var targetId = s.closest('form').querySelector('[id^="artifact-naming-hint"]');
         if (!targetId) return;
-        s.addEventListener('change', function(){
-            targetId.style.display = this.value === 'artifacts' ? '' : 'none';
-        });
+        var toggle = function(){ targetId.style.display = s.value === 'artifacts' ? '' : 'none'; };
+        s.addEventListener('change', toggle);
+        toggle(); // 初始加载时触发
     });
 })();
 </script>
