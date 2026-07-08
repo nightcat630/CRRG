@@ -186,8 +186,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit']) && wp_
         $edit_location = sanitize_text_field($_POST['edit_location'] ?? '');
         if ($edit_location !== '') update_post_meta($post_id, 'crrg_edit_location', $edit_location);
         $message = '修改申请已提交，等待管理员审核。';
+        wp_redirect(add_query_arg('msg', urlencode($message), remove_query_arg(['edit_post','msg'])));
+        exit;
     }
 }
+
+// POST 后统一重定向
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($message)) {
+    wp_redirect(add_query_arg('msg', urlencode($message), remove_query_arg(['new','edit_draft','edit_post','msg'])));
+    exit;
+}
+$get_msg = sanitize_text_field($_GET['msg'] ?? '');
+if ($get_msg) $message = $get_msg;
 
 get_header();
 ?>
