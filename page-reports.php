@@ -144,6 +144,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit']) && wp_
         update_post_meta($post_id, 'crrg_edit_title', $new_title);
         update_post_meta($post_id, 'crrg_edit_content', $new_content);
         update_post_meta($post_id, 'crrg_edit_time', current_time('mysql'));
+        // 标签修改
+        $edit_tags = sanitize_text_field($_POST['edit_tags'] ?? '');
+        update_post_meta($post_id, 'crrg_edit_tags', $edit_tags);
         $message = '修改申请已提交，等待管理员审核。';
     }
 }
@@ -220,6 +223,10 @@ get_header();
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改后内容</label>
                     <?php wp_editor($edit_post->post_content, 'edit_content', ['textarea_name'=>'edit_content','textarea_rows'=>12,'media_buttons'=>true,'teeny'=>false]); ?>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔）</span></label>
+                    <input type="text" name="edit_tags" value="<?php $etags = wp_get_post_tags($edit_post->ID, ['fields'=>'names']); echo esc_attr(implode(',', $etags)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="调查报告,始源实体">
                 </div>
                 <div style="display:flex;gap:12px;">
                     <button type="submit" name="submit_edit" value="1" style="background:#C41230;color:#fff;border:none;padding:10px 32px;border-radius:4px;font-size:15px;cursor:pointer;">提交修改申请</button>

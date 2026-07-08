@@ -66,9 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         $new_title = get_post_meta($target_id, 'crrg_edit_title', true);
         $new_content = get_post_meta($target_id, 'crrg_edit_content', true);
         wp_update_post(['ID' => $target_id, 'post_title' => $new_title, 'post_content' => $new_content]);
+        // 应用标签修改
+        $new_tags = get_post_meta($target_id, 'crrg_edit_tags', true);
+        if ($new_tags !== '') {
+            $tag_names = array_map('trim', explode(',', $new_tags));
+            wp_set_post_tags($target_id, array_filter($tag_names), false);
+        }
         delete_post_meta($target_id, 'crrg_edit_request');
         delete_post_meta($target_id, 'crrg_edit_title');
         delete_post_meta($target_id, 'crrg_edit_content');
+        delete_post_meta($target_id, 'crrg_edit_tags');
         $message = '修改已批准。';
     } elseif ($action === 'add_announcement') {
         $ann_title = sanitize_text_field($_POST['ann_title'] ?? '');
