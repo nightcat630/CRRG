@@ -26,6 +26,61 @@ if ($cat_name) {
         <?php global $post; if ($post): ?>
             <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 8px;font-weight:bold;"><?php echo esc_html($post->post_title); ?></h1>
             <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">中央重生抵御小组 · 内部档案</div>
+
+            <?php if ($slug === 'artifacts'): ?>
+            <details style="background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;padding:16px 20px;margin-bottom:20px;">
+                <summary style="font-size:15px;font-weight:bold;color:#1B3A5C;cursor:pointer;user-select:none;">📐 镇物命名规范</summary>
+                <div style="margin-top:12px;font-size:13px;color:#555;line-height:1.8;">
+                    <p style="margin:0 0 8px;"><strong>格式：X-x-y-z</strong></p>
+                    <p style="margin:0 0 4px;"><strong>X</strong> — 所属区域：<code>E</code> 东方 · <code>W</code> 西方 · <code>O</code> 其他</p>
+                    <p style="margin:0 0 4px;"><strong>x</strong> — 神话体系编号</p>
+                    <p style="margin:0 0 4px;"><strong>y</strong> — 所属项目编号</p>
+                    <p style="margin:0 0 12px;"><strong>z</strong> — 个体编号</p>
+                    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                        <thead><tr style="background:#1B3A5C;color:#fff;"><th style="padding:6px 10px;text-align:left;width:44px;">区域</th><th style="padding:6px 10px;text-align:left;width:40px;">编号</th><th style="padding:6px 10px;text-align:left;">神话体系</th><th style="padding:6px 10px;text-align:left;width:80px;">地区</th></tr></thead>
+                        <tbody>
+                            <tr><td style="padding:4px 10px;font-weight:bold;color:#C41230;text-align:center;" rowspan="16">E</td><td style="padding:4px 10px;">01</td><td style="padding:4px 10px;">中原河洛神系</td><td style="padding:4px 10px;color:#888;font-size:11px;" rowspan="11">中国地区</td></tr>
+                            <tr><td style="padding:4px 10px;">02</td><td style="padding:4px 10px;">南方楚神系</td></tr>
+                            <tr><td style="padding:4px 10px;">03</td><td style="padding:4px 10px;">西方昆仑神系</td></tr>
+                            <tr><td style="padding:4px 10px;">04</td><td style="padding:4px 10px;">东方蓬莱神系</td></tr>
+                            <tr><td style="padding:4px 10px;">05</td><td style="padding:4px 10px;">东方鸟夷系</td></tr>
+                            <tr><td style="padding:4px 10px;">06</td><td style="padding:4px 10px;">苗蛮及百越系</td></tr>
+                            <tr><td style="padding:4px 10px;">07</td><td style="padding:4px 10px;">道教神系</td></tr>
+                            <tr><td style="padding:4px 10px;">08</td><td style="padding:4px 10px;">佛教神系</td></tr>
+                            <tr><td style="padding:4px 10px;">09</td><td style="padding:4px 10px;">蒙古长生天神系</td></tr>
+                            <tr><td style="padding:4px 10px;">10</td><td style="padding:4px 10px;">满族萨满神系</td></tr>
+                            <tr><td style="padding:4px 10px;">11</td><td style="padding:4px 10px;">民间神系</td></tr>
+                            <tr><td style="padding:4px 10px;">12</td><td style="padding:4px 10px;">记纪神话</td><td style="padding:4px 10px;color:#888;font-size:11px;" rowspan="3">日本地区</td></tr>
+                            <tr><td style="padding:4px 10px;">13</td><td style="padding:4px 10px;">民俗神</td></tr>
+                            <tr><td style="padding:4px 10px;">14</td><td style="padding:4px 10px;">人神</td></tr>
+                            <tr><td style="padding:4px 10px;">15</td><td style="padding:4px 10px;">吠陀神话</td><td style="padding:4px 10px;color:#888;font-size:11px;" rowspan="2">印度神话</td></tr>
+                            <tr><td style="padding:4px 10px;">16</td><td style="padding:4px 10px;">往世书神话</td></tr>
+                            <tr style="background:#f5f5f5;"><td style="padding:4px 10px;font-weight:bold;color:#1B3A5C;text-align:center;" rowspan="11">W</td><td style="padding:4px 10px;">01</td><td style="padding:4px 10px;">希腊神话</td><td style="padding:4px 10px;color:#888;font-size:11px;" rowspan="11">西方神话</td></tr>
+                            <tr><td style="padding:4px 10px;">02</td><td style="padding:4px 10px;">北欧神话</td></tr>
+                            <tr><td style="padding:4px 10px;">03</td><td style="padding:4px 10px;">凯尔特神话</td></tr>
+                            <tr><td style="padding:4px 10px;">04</td><td style="padding:4px 10px;">斯拉夫神话</td></tr>
+                            <tr><td style="padding:4px 10px;">05</td><td style="padding:4px 10px;">芬兰神话</td></tr>
+                            <tr><td style="padding:4px 10px;">06</td><td style="padding:4px 10px;">美索不达米亚神话</td></tr>
+                            <tr><td style="padding:4px 10px;">07</td><td style="padding:4px 10px;">犹太教神话</td></tr>
+                            <tr><td style="padding:4px 10px;">08</td><td style="padding:4px 10px;">基督教神话</td></tr>
+                            <tr><td style="padding:4px 10px;">09</td><td style="padding:4px 10px;">伊斯兰教神话</td></tr>
+                            <tr><td style="padding:4px 10px;">10</td><td style="padding:4px 10px;">阿尔冈昆神话</td></tr>
+                            <tr><td style="padding:4px 10px;">11</td><td style="padding:4px 10px;">因纽特神话</td></tr>
+                            <tr style="background:#f5f5f5;"><td style="padding:4px 10px;font-weight:bold;color:#C41230;text-align:center;" rowspan="8">O</td><td style="padding:4px 10px;">01</td><td style="padding:4px 10px;">古埃及神话</td><td style="padding:4px 10px;color:#888;font-size:11px;" rowspan="8">其他神话</td></tr>
+                            <tr><td style="padding:4px 10px;">02</td><td style="padding:4px 10px;">两河流域神话</td></tr>
+                            <tr><td style="padding:4px 10px;">03</td><td style="padding:4px 10px;">波斯神话</td></tr>
+                            <tr><td style="padding:4px 10px;">04</td><td style="padding:4px 10px;">阿依努神话</td></tr>
+                            <tr><td style="padding:4px 10px;">05</td><td style="padding:4px 10px;">菲律宾/印尼神话</td></tr>
+                            <tr><td style="padding:4px 10px;">06</td><td style="padding:4px 10px;">冈瓦纳型神话</td></tr>
+                            <tr><td style="padding:4px 10px;">07</td><td style="padding:4px 10px;">克苏鲁神话</td></tr>
+                            <tr><td style="padding:4px 10px;">08</td><td style="padding:4px 10px;">都市传说</td></tr>
+                        </tbody>
+                    </table>
+                    <p style="margin:10px 0 0;font-size:11px;color:#999;">示例：<code>E-01-001-003</code> = 东方 · 中原河洛 · 001号项目 · 003号个体</p>
+                </div>
+            </details>
+            <?php endif; ?>
+
             <?php the_content(); ?>
         <?php endif; ?>
 
