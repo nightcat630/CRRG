@@ -38,8 +38,8 @@ foreach ($location_posts as $p) {
     <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">中央重生抵御小组 · 地理信息</div>
 
     <div id="china-map" style="width:100%;height:500px;border:1px solid #e0e0e0;border-radius:4px;background:#f0f2f5;"></div>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="/wp-content/themes/astra-child/assets/leaflet/leaflet.css" />
+    <script src="/wp-content/themes/astra-child/assets/leaflet/leaflet.js"></script>
     <script>
     var map = L.map('china-map').setView([35, 105], 4);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
