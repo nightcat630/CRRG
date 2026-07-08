@@ -417,7 +417,7 @@ get_header();
         </form>
         <?php if ($announcements): foreach ($announcements as $i => $ann): ?>
             <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-                <div><strong><?php echo esc_html($ann['title']); ?></strong><span style="color:#999;font-size:12px;margin-left:8px;"><?php echo $ann['time']; ?></span></div>
+                <div><strong><?php echo esc_html($ann['title']); ?></strong><span style="color:#999;font-size:12px;margin-left:8px;"><?php echo date('n/j H:i', strtotime($ann['time'])); ?></span></div>
                 <div style="display:flex;gap:6px;">
                     <a href="/admin/?edit_ann=<?php echo $i; ?>" style="color:#1B3A5C;text-decoration:none;font-size:12px;padding:4px 12px;border:1px solid #d5d5d5;border-radius:3px;">编辑</a>
                     <form method="post" style="margin:0;"><?php wp_nonce_field('crrg_admin'); ?><input type="hidden" name="admin_action" value="delete_announcement"><input type="hidden" name="ann_index" value="<?php echo $i; ?>"><button type="submit" style="background:#dc2626;color:#fff;border:none;padding:4px 12px;border-radius:3px;cursor:pointer;font-size:12px;">删除</button></form>
