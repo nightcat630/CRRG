@@ -95,8 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
     } elseif ($action === 'add_announcement') {
         $ann_title = sanitize_text_field($_POST['ann_title'] ?? '');
         $ann_content = wp_kses_post($_POST['ann_content'] ?? '');
+        $ann_time = sanitize_text_field($_POST['ann_time'] ?? '');
         if ($ann_title && $ann_content) {
-            crrg_add_announcement($ann_title, $ann_content);
+            crrg_add_announcement($ann_title, $ann_content, $ann_time);
             $message = '公告已发布。';
         }
     } elseif ($action === 'delete_announcement') {
@@ -106,7 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         $ann_index = (int)($_POST['ann_index'] ?? -1);
         $ann_title = sanitize_text_field($_POST['ann_title'] ?? '');
         $ann_content = wp_kses_post($_POST['ann_content'] ?? '');
-        crrg_update_announcement($ann_index, $ann_title, $ann_content);
+        $ann_time = sanitize_text_field($_POST['ann_time'] ?? '');
+        crrg_update_announcement($ann_index, $ann_title, $ann_content, $ann_time);
         $message = '公告已更新。';
     } elseif ($action === 'set_alert' && $rank === 'chairman') {
         crrg_set_alert(sanitize_text_field($_POST['alert_title']??''), sanitize_text_field($_POST['alert_content']??''), sanitize_text_field($_POST['alert_color']??'#C41230'));
@@ -405,6 +407,10 @@ get_header();
             <input type="hidden" name="admin_action" value="<?php echo $edit_ann_data ? 'edit_announcement' : 'add_announcement'; ?>">
             <?php if ($edit_ann_data): ?><input type="hidden" name="ann_index" value="<?php echo $edit_ann; ?>"><?php endif; ?>
             <div style="margin-bottom:12px;"><input type="text" name="ann_title" placeholder="公告标题" value="<?php echo $edit_ann_data ? esc_attr($edit_ann_data['title']) : ''; ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;"></div>
+            <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center;">
+                <input type="datetime-local" name="ann_time" value="<?php echo $edit_ann_data ? esc_attr(date('Y-m-d\TH:i', strtotime($edit_ann_data['time'] ?? 'now'))) : ''; ?>" style="padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;flex:1;">
+                <span style="font-size:11px;color:#999;white-space:nowrap;">留空用当前时间</span>
+            </div>
             <div style="margin-bottom:12px;"><?php wp_editor($edit_ann_data ? $edit_ann_data['content'] : '', 'ann_content', ['textarea_name'=>'ann_content','textarea_rows'=>5,'media_buttons'=>false,'teeny'=>true]); ?></div>
             <button type="submit" style="background:#C41230;color:#fff;border:none;padding:8px 24px;border-radius:4px;cursor:pointer;font-size:14px;"><?php echo $edit_ann_data ? '更新公告' : '发布公告'; ?></button>
             <?php if ($edit_ann_data): ?><a href="/admin/" style="color:#999;font-size:13px;text-decoration:none;margin-left:10px;">取消编辑</a><?php endif; ?>
