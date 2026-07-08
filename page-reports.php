@@ -41,6 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             if (!in_array($access, $allowed)) $access = 'observer';
             update_post_meta($post_id, 'crrg_access_level', $access);
             
+            // 威胁等级
+            $threat = sanitize_text_field($_POST['threat_level'] ?? '');
+            if ($threat) update_post_meta($post_id, 'crrg_threat_level', $threat);
+            
             // 处理标签
             $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
             if (!empty($tag_input)) {
@@ -118,6 +122,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_draft']) && wp
         $allowed = array_column(crrg_get_accessible_ranks($my_rank), 'id');
         if (!in_array($access, $allowed)) $access = 'observer';
         update_post_meta($draft_id, 'crrg_access_level', $access);
+        
+        // 威胁等级
+        $threat = sanitize_text_field($_POST['threat_level'] ?? '');
+        if ($threat) update_post_meta($draft_id, 'crrg_threat_level', $threat); else delete_post_meta($draft_id, 'crrg_threat_level');
         
         // 处理标签
         $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
@@ -294,6 +302,16 @@ get_header();
                         <?php $my_rank = crrg_get_rank($user_id); foreach (crrg_get_accessible_ranks($my_rank) as $r): ?>
                             <option value="<?php echo $r['id']; ?>"><?php echo $r['icon']; ?> <?php echo $r['name']; ?> 及以上可阅</option>
                         <?php endforeach; ?>
+                    </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">威胁等级</label>
+                    <select name="threat_level" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                        <option value="">未评级</option>
+                        <option value="ren">👤 人 — 人类相关事件</option>
+                        <option value="gui">👻 鬼 — 超自然灵异事件</option>
+                        <option value="mo">👿 魔 — 重生/污染/高位威胁</option>
+                        <option value="shen">👼 神 — 涉及始源及高位实体</option>
                     </select>
                 </div>
                 <div style="margin-bottom:16px;">

@@ -74,6 +74,9 @@ $rank_color = $rank_colors[$rank_id] ?? '#999';
                 <?php endif; ?>
                 <div style="flex:1;min-width:0;">
                     <a href="<?php echo get_permalink($p); ?>" style="font-size:15px;font-weight:bold;color:#1B3A5C;text-decoration:none;"><?php echo esc_html($p->post_title); ?></a>
+                    <?php $threat = get_post_meta($p->ID, 'crrg_threat_level', true); $threat_map = ['ren'=>['人','👤','#16a34a'],'gui'=>['鬼','👻','#8B5CF6'],'mo'=>['魔','👿','#C41230'],'shen'=>['神','👼','#F0A500']]; if ($threat && isset($threat_map[$threat])): ?>
+                        <span style="display:inline-block;margin-left:6px;padding:1px 8px;border-radius:2px;font-size:11px;font-weight:600;background:<?php echo $threat_map[$threat][2]; ?>;color:#fff;"><?php echo $threat_map[$threat][1]; ?> <?php echo $threat_map[$threat][0]; ?></span>
+                    <?php endif; ?>
                     <div style="font-size:12px;color:#999;margin:4px 0;"><?php echo get_the_date('Y-m-d', $p); ?> · 💬 <?php echo $comments; ?></div>
                     <?php if ($tags): ?>
                         <div style="margin-bottom:4px;">

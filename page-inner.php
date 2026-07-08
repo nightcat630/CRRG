@@ -131,6 +131,9 @@ if ($cat_name) {
                         <?php endif; ?>
                         <div style="flex:1;">
                             <a href="<?php echo get_permalink($p); ?>" style="font-size:15px;font-weight:bold;color:#1B3A5C;text-decoration:none;"><?php echo esc_html($p->post_title); ?></a>
+                            <?php $threat = get_post_meta($p->ID, 'crrg_threat_level', true); $threat_map = ['ren'=>['人','👤','#16a34a'],'gui'=>['鬼','👻','#8B5CF6'],'mo'=>['魔','👿','#C41230'],'shen'=>['神','👼','#F0A500']]; if ($threat && isset($threat_map[$threat])): ?>
+                                <span style="display:inline-block;margin-left:6px;padding:1px 8px;border-radius:2px;font-size:11px;font-weight:600;background:<?php echo $threat_map[$threat][2]; ?>;color:#fff;"><?php echo $threat_map[$threat][1]; ?> <?php echo $threat_map[$threat][0]; ?></span>
+                            <?php endif; ?>
                             <div style="font-size:12px;color:#999;margin-top:4px;"><?php echo get_the_date('Y-m-d',$p); ?> · <a href="/author/<?php echo $a ? $a->user_nicename : ''; ?>/" style="color:#1B3A5C;text-decoration:none;"><?php echo $a?esc_html($a->display_name):'未知'; ?></a> · 💬 <?php echo $cc; ?> · <a href="#" class="fav-btn" data-post="<?php echo $p->ID; ?>" style="color:<?php echo (is_user_logged_in()&&crrg_is_favorited(get_current_user_id(),$p->ID))?'#e8b800':'#999'; ?>;text-decoration:none;font-size:12px;"><?php echo (is_user_logged_in()&&crrg_is_favorited(get_current_user_id(),$p->ID))?'⭐':'☆'; ?> 收藏</a></div>
                             <div style="font-size:13px;color:#666;margin-top:6px;"><?php echo wp_trim_words(strip_tags($p->post_content),50); ?></div>
                         </div>
