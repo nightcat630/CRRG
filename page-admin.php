@@ -108,6 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
     }
 }
 
+// POST 后重定向
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($message)) {
+    wp_redirect(add_query_arg('msg', urlencode($message), remove_query_arg('msg')));
+    exit;
+}
+
 // Search
 $search_query = sanitize_text_field($_GET['search'] ?? '');
 $search_results = [];
@@ -178,6 +184,14 @@ foreach ($results as $r) {
     }
 }
 
+// 待审核计数
+$pending_count = (int) wp_count_posts('post')->pending;
+
+// GET 方式显示消息
+if (!empty($_GET['msg'])) {
+    $message = sanitize_text_field($_GET['msg']);
+}
+
 // User search
 $user_search = trim($_GET['user_search'] ?? '');
 if ($user_search) {
@@ -191,7 +205,7 @@ get_header();
 
 <div class="gov-main">
     <div class="gov-content">
-        <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">🛡️ 管理面板</h1>
+        <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">🛡️ 管理面板<?php if ($pending_count > 0): ?> <span style="background:#C41230;color:#fff;padding:2px 10px;border-radius:10px;font-size:13px;vertical-align:middle;"><?php echo $pending_count; ?> 待审</span><?php endif; ?></h1>
         <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">机密 · 仅限首席顾问及以上</div>
 
         <?php if ($message): ?>
