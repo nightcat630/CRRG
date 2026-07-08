@@ -254,6 +254,11 @@ add_action('pre_get_posts', function ($query) {
         } else {
             $query->set('post_type', ['post', 'topic']);
         }
+        // 访问等级过滤
+        $access_mq = crrg_get_access_meta_query();
+        $existing = $query->get('meta_query') ?: [];
+        $existing[] = $access_mq;
+        $query->set('meta_query', $existing);
     }
 });
 
@@ -435,6 +440,34 @@ add_action('wp_head', function () {
 add_filter('feed_content_type', function ($content_type, $type) {
     return 'text/xml';
 }, 10, 2);
+
+// ─── 访问等级过滤 ───
+function crrg_get_access_meta_query() {
+    $user_rank = is_user_logged_in() ? crrg_get_rank(get_current_user_id()) : 'observer';
+    $user_level = crrg_get_rank_level($user_rank);
+    $allowed = [];
+    foreach (CRRG_RANKS as $r) {
+        if (crrg_get_rank_level($r['id']) >= $user_level) $allowed[] = $r['id'];
+    }
+    return [
+        'key' => 'crrg_access_level',
+        'value' => $allowed,
+        'compare' => 'IN',
+    ];
+}
+
+// 单篇文章访问拦截
+add_action('template_redirect', function () {
+    if (!is_single() || !is_main_query()) return;
+    $post_id = get_the_ID();
+    $access = get_post_meta($post_id, 'crrg_access_level', true) ?: 'observer';
+    $user_rank = is_user_logged_in() ? crrg_get_rank(get_current_user_id()) : 'observer';
+    $user_level = crrg_get_rank_level($user_rank);
+    $access_level = crrg_get_rank_level($access);
+    if ($access_level < $user_level) {
+        wp_die('<div style="text-align:center;padding:60px 20px;font-family:Microsoft YaHei,sans-serif;"><h1 style="color:#C41230;">🔒 访问受限</h1><p>此报告需要 <strong>' . esc_html(CRRG_RANKS[$access_level]['name'] ?? $access) . '</strong> 及以上等级方可查阅。</p><p>当前等级：' . esc_html(CRRG_RANKS[$user_level]['name'] ?? $user_rank) . '</p><a href="/" style="color:#1B3A5C;">← 返回首页</a></div>', '访问受限', ['response' => 403]);
+    }
+});
 
 // ─── 文章标签展示 + 相关文章 ───
 add_filter('the_content', function ($content) {

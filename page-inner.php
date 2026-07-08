@@ -15,9 +15,11 @@ $posts = [];
 if ($cat_name) {
     $posts = get_posts([
         'post_type' => 'post', 'post_status' => 'publish',
-        'meta_key' => 'crrg_report_type_name',
-        'meta_value' => $cat_name,
         'posts_per_page' => 20,
+        'meta_query' => [
+            ['key' => 'crrg_report_type_name', 'value' => $cat_name],
+            crrg_get_access_meta_query(),
+        ],
     ]);
 }
 ?>

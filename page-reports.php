@@ -34,6 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             update_post_meta($post_id, 'crrg_report_type', $category);
             update_post_meta($post_id, 'crrg_report_type_name', $cat_name);
             
+            // 访问等级（不超过作者等级）
+            $access = sanitize_text_field($_POST['access_level'] ?? 'observer');
+            $my_rank = crrg_get_rank($user_id);
+            $allowed = array_column(crrg_get_accessible_ranks($my_rank), 'id');
+            if (!in_array($access, $allowed)) $access = 'observer';
+            update_post_meta($post_id, 'crrg_access_level', $access);
+            
             // 处理标签
             $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
             if (!empty($tag_input)) {
@@ -105,6 +112,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_draft']) && wp
         update_post_meta($draft_id, 'crrg_report_type', $category);
         update_post_meta($draft_id, 'crrg_report_type_name', $cat_map[$category] ?? '其他');
         
+        // 访问等级
+        $access = sanitize_text_field($_POST['access_level'] ?? 'observer');
+        $my_rank = crrg_get_rank($user_id);
+        $allowed = array_column(crrg_get_accessible_ranks($my_rank), 'id');
+        if (!in_array($access, $allowed)) $access = 'observer';
+        update_post_meta($draft_id, 'crrg_access_level', $access);
+        
         // 处理标签
         $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
         if (!empty($tag_input)) {
@@ -147,6 +161,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit']) && wp_
         // 标签修改
         $edit_tags = sanitize_text_field($_POST['edit_tags'] ?? '');
         update_post_meta($post_id, 'crrg_edit_tags', $edit_tags);
+        // 访问等级
+        $edit_access = sanitize_text_field($_POST['edit_access'] ?? '');
+        if ($edit_access) update_post_meta($post_id, 'crrg_edit_access', $edit_access);
         $message = '修改申请已提交，等待管理员审核。';
     }
 }
@@ -198,6 +215,14 @@ get_header();
                     </div>
                 </div>
                 <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">访问等级 <span style="font-weight:normal;color:#999;font-size:12px;">（不超过自身等级）</span></label>
+                    <select name="access_level" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                        <?php $cur_access = get_post_meta($editing_draft->ID, 'crrg_access_level', true) ?: 'observer'; $my_rank2 = crrg_get_rank($user_id); foreach (crrg_get_accessible_ranks($my_rank2) as $r): ?>
+                            <option value="<?php echo $r['id']; ?>" <?php echo $r['id']===$cur_access?'selected':''; ?>><?php echo $r['icon']; ?> <?php echo $r['name']; ?> 及以上可阅</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔）</span></label>
                     <input type="text" name="report_tags" value="<?php $tags = wp_get_post_tags($editing_draft->ID, ['fields'=>'names']); echo esc_attr(implode(',', $tags)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="调查报告,始源实体,重生工程">
                 </div>
@@ -228,6 +253,14 @@ get_header();
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔）</span></label>
                     <input type="text" name="edit_tags" value="<?php $etags = wp_get_post_tags($edit_post->ID, ['fields'=>'names']); echo esc_attr(implode(',', $etags)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="调查报告,始源实体">
                 </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改访问等级 <span style="font-weight:normal;color:#999;font-size:12px;">（不超过自身等级）</span></label>
+                    <select name="edit_access" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                        <?php $cur_acc = get_post_meta($edit_post->ID, 'crrg_access_level', true) ?: 'observer'; $my_rk = crrg_get_rank($user_id); foreach (crrg_get_accessible_ranks($my_rk) as $r): ?>
+                            <option value="<?php echo $r['id']; ?>" <?php echo $r['id']===$cur_acc?'selected':''; ?>><?php echo $r['icon']; ?> <?php echo $r['name']; ?> 及以上可阅</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
                 <div style="display:flex;gap:12px;">
                     <button type="submit" name="submit_edit" value="1" style="background:#C41230;color:#fff;border:none;padding:10px 32px;border-radius:4px;font-size:15px;cursor:pointer;">提交修改申请</button>
                     <a href="?" style="background:#f0f0f0;color:#555;border:1px solid #d5d5d5;padding:10px 24px;border-radius:4px;font-size:14px;text-decoration:none;">取消</a>
@@ -254,6 +287,14 @@ get_header();
                         <span style="color:#999;">示例：<code>E-01-001-003</code>（东方·中原河洛·001号·003号）</span><br>
                         <a href="/artifacts/" target="_blank" style="font-size:11px;color:#1B3A5C;">→ 查看完整编号表</a>
                     </div>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">访问等级 <span style="font-weight:normal;color:#999;font-size:12px;">（不超过自身等级）</span></label>
+                    <select name="access_level" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                        <?php $my_rank = crrg_get_rank($user_id); foreach (crrg_get_accessible_ranks($my_rank) as $r): ?>
+                            <option value="<?php echo $r['id']; ?>"><?php echo $r['icon']; ?> <?php echo $r['name']; ?> 及以上可阅</option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔，如：调查报告,始源实体）</span></label>

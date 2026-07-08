@@ -76,6 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         delete_post_meta($target_id, 'crrg_edit_title');
         delete_post_meta($target_id, 'crrg_edit_content');
         delete_post_meta($target_id, 'crrg_edit_tags');
+        // 应用访问等级
+        $new_access = get_post_meta($target_id, 'crrg_edit_access', true);
+        if ($new_access) {
+            update_post_meta($target_id, 'crrg_access_level', $new_access);
+            delete_post_meta($target_id, 'crrg_edit_access');
+        }
         $message = '修改已批准。';
     } elseif ($action === 'add_announcement') {
         $ann_title = sanitize_text_field($_POST['ann_title'] ?? '');

@@ -84,3 +84,23 @@ if ($chairman_user) {
     update_user_meta($chairman_user->ID, 'crrg_is_chairman', '1');
 }
 
+// 获取等级数字（越小越高）
+function crrg_get_rank_level($rank_id) {
+    $ids = array_column(CRRG_RANKS, 'id');
+    $pos = array_search($rank_id, $ids);
+    return $pos !== false ? $pos : 0;
+}
+
+// 获取某等级及以下的所有等级列表
+function crrg_get_accessible_ranks($user_rank_id) {
+    $level = crrg_get_rank_level($user_rank_id);
+    $all = CRRG_RANKS;
+    $accessible = [];
+    foreach ($all as $r) {
+        if (crrg_get_rank_level($r['id']) >= $level) {
+            $accessible[] = $r;
+        }
+    }
+    return $accessible;
+}
+

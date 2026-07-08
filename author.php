@@ -20,6 +20,7 @@ $joined = strtotime($author->user_registered);
 $reports = get_posts([
     'post_type' => 'post', 'post_status' => 'publish',
     'author' => $user_id, 'posts_per_page' => 20,
+    'meta_query' => [crrg_get_access_meta_query()],
 ]);
 $report_count = count($reports);
 
