@@ -97,7 +97,7 @@ function crrg_get_accessible_ranks($user_rank_id) {
     $all = CRRG_RANKS;
     $accessible = [];
     foreach ($all as $r) {
-        if (crrg_get_rank_level($r['id']) >= $level) {
+        if (crrg_get_rank_level($r['id']) <= $level) {
             $accessible[] = $r;
         }
     }
