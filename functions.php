@@ -57,7 +57,7 @@ function crrg_custom_header() {
                 </li>
                 <li><a href="/forum/">会议厅</a></li>
                 <li><a href="/newsroom/">新闻社</a></li>
-                <li><a href="/personnel/">人员名录</a></li>
+                <li><a href="/members/">人员名录</a></li>
                 <li class="nav-auth">
                     <?php if (is_user_logged_in()): $u=wp_get_current_user(); $rk=crrg_get_rank_data(crrg_get_rank($u->ID)); ?>
                         <div class="nav-user-dropdown">
