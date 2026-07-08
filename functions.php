@@ -95,7 +95,7 @@ function crrg_custom_header() {
     </div>
     </div><!-- end gov-header-wrap -->
     <div class="gov-news-carousel">
-        <div class="container"><div class="carousel-header"><span class="carousel-label">央视新闻</span></div><div class="carousel-outer"><div class="carousel-track" id="carousel-track">正在加载新闻...</div><button class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="上一条">◀</button><button class="carousel-arrow carousel-next" id="carousel-next" aria-label="下一条">▶</button></div></div>
+        <div class="container"><div class="carousel-header"><span class="carousel-label">央视新闻</span></div><div class="carousel-outer"><div class="carousel-track" id="carousel-track">加载中…</div><button class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="上一条">◀</button><button class="carousel-arrow carousel-next" id="carousel-next" aria-label="下一条">▶</button></div></div>
     </div>
     <?php
 }
@@ -508,6 +508,42 @@ add_action('template_redirect', function () {
 add_filter('the_content', function ($content) {
     if (!is_single() || !is_main_query() || !in_the_loop()) return $content;
     $post_id = get_the_ID();
+    
+    // 威胁等级徽章
+    $threat = get_post_meta($post_id, 'crrg_threat_level', true);
+    $threat_badge = '';
+    if ($threat) {
+        $threat_map = ['ren'=>['人','👤','#16a34a'],'gui'=>['鬼','👻','#8B5CF6'],'mo'=>['魔','👿','#C41230'],'shen'=>['神','👼','#F0A500']];
+        if (isset($threat_map[$threat])) {
+            $t = $threat_map[$threat];
+            $threat_badge = '<div style="margin-bottom:16px;padding:8px 14px;background:'.$t[2].'10;border-left:3px solid '.$t[2].';border-radius:2px;font-size:13px;"><strong>'.$t[1].' '.$t[0].'级威胁</strong> — ';
+            $desc = ['ren'=>'对人类产生影响','gui'=>'对神秘生物/古神眷属产生影响','mo'=>'对次级旧日支配者/旧日支配者/古神产生影响','shen'=>'对旧神产生影响'];
+            $threat_badge .= $desc[$threat] . '</div>';
+        }
+    }
+    
+    // 地图链接
+    $lat = get_post_meta($post_id, 'crrg_lat', true);
+    $map_link = '';
+    if ($lat) {
+        $loc = get_post_meta($post_id, 'crrg_location', true);
+        $map_link = '<div style="margin-bottom:16px;font-size:13px;">📍 <a href="/map/" style="color:#1B3A5C;">在地图上查看：' . esc_html($loc) . '</a></div>';
+    }
+    
+    // 面包屑
+    $cat_name = get_post_meta($post_id, 'crrg_report_type_name', true);
+    $breadcrumb = '<div style="margin-bottom:16px;font-size:12px;color:#999;"><a href="/" style="color:#999;">首页</a> › ';
+    if ($cat_name) {
+        $slug_map = ['镇物'=>'artifacts','事件'=>'events','人物'=>'personnel','组织'=>'organizations','研究发现'=>'research','祂们'=>'entities','秘术'=>'esoterica'];
+        $slug = $slug_map[$cat_name] ?? '';
+        if ($slug) $breadcrumb .= '<a href="/'.$slug.'/" style="color:#999;">'.$cat_name.'</a> › ';
+        else $breadcrumb .= $cat_name . ' › ';
+    }
+    $breadcrumb .= '<span style="color:#666;">正文</span></div>';
+    
+    // 把面包屑、威胁、地图加到正文前面
+    $content = $breadcrumb . $threat_badge . $map_link . $content;
+    
     $tags = get_the_tags($post_id);
     if (!$tags || empty($tags)) return $content;
     ob_start();
