@@ -43,7 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             
             // 威胁等级
             $threat = sanitize_text_field($_POST['threat_level'] ?? '');
-            if ($threat) update_post_meta($post_id, 'crrg_threat_level', $threat);
+            if ($threat) update_post_meta($post_id, 'crrg_threat_level', $threat); else delete_post_meta($post_id, 'crrg_threat_level');
+            
+            // 事件地点
+            $location = sanitize_text_field($_POST['report_location'] ?? '');
+            if ($location) update_post_meta($post_id, 'crrg_location', $location);
             
             // 处理标签
             $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
@@ -127,6 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_draft']) && wp
         $threat = sanitize_text_field($_POST['threat_level'] ?? '');
         if ($threat) update_post_meta($draft_id, 'crrg_threat_level', $threat); else delete_post_meta($draft_id, 'crrg_threat_level');
         
+        // 事件地点
+        $location = sanitize_text_field($_POST['report_location'] ?? '');
+        if ($location) update_post_meta($draft_id, 'crrg_location', $location); else delete_post_meta($draft_id, 'crrg_location');
+        
         // 处理标签
         $tag_input = sanitize_text_field($_POST['report_tags'] ?? '');
         if (!empty($tag_input)) {
@@ -172,6 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit']) && wp_
         // 访问等级
         $edit_access = sanitize_text_field($_POST['edit_access'] ?? '');
         if ($edit_access) update_post_meta($post_id, 'crrg_edit_access', $edit_access);
+        // 威胁等级 + 地点
+        $edit_threat = sanitize_text_field($_POST['edit_threat'] ?? '');
+        if ($edit_threat !== '') update_post_meta($post_id, 'crrg_edit_threat', $edit_threat);
+        $edit_location = sanitize_text_field($_POST['edit_location'] ?? '');
+        if ($edit_location !== '') update_post_meta($post_id, 'crrg_edit_location', $edit_location);
         $message = '修改申请已提交，等待管理员审核。';
     }
 }
@@ -231,6 +244,21 @@ get_header();
                     </select>
                 </div>
                 <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">威胁等级</label>
+                    <select name="threat_level" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                        <?php $cur_threat = get_post_meta($editing_draft->ID, 'crrg_threat_level', true) ?: ''; ?>
+                        <option value="">未评级</option>
+                        <option value="ren" <?php echo $cur_threat==='ren'?'selected':''; ?>>👤 人 — 对人类产生影响</option>
+                        <option value="gui" <?php echo $cur_threat==='gui'?'selected':''; ?>>👻 鬼 — 对神秘生物/古神眷属产生影响</option>
+                        <option value="mo" <?php echo $cur_threat==='mo'?'selected':''; ?>>👿 魔 — 对次级旧日支配者/旧日支配者/古神产生影响</option>
+                        <option value="shen" <?php echo $cur_threat==='shen'?'selected':''; ?>>👼 神 — 对旧神产生影响</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>
+                    <input type="text" name="report_location" value="<?php echo esc_attr(get_post_meta($editing_draft->ID, 'crrg_location', true)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="如：广西横州市云表镇">
+                </div>
+                <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔）</span></label>
                     <input type="text" name="report_tags" value="<?php $tags = wp_get_post_tags($editing_draft->ID, ['fields'=>'names']); echo esc_attr(implode(',', $tags)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="调查报告,始源实体,重生工程">
                 </div>
@@ -268,6 +296,21 @@ get_header();
                             <option value="<?php echo $r['id']; ?>" <?php echo $r['id']===$cur_acc?'selected':''; ?>><?php echo $r['icon']; ?> <?php echo $r['name']; ?> 及以上可阅</option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改威胁等级</label>
+                    <select name="edit_threat" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                        <?php $cur_th2 = get_post_meta($edit_post->ID, 'crrg_threat_level', true) ?: ''; ?>
+                        <option value="">未评级</option>
+                        <option value="ren" <?php echo $cur_th2==='ren'?'selected':''; ?>>👤 人 — 对人类产生影响</option>
+                        <option value="gui" <?php echo $cur_th2==='gui'?'selected':''; ?>>👻 鬼 — 对神秘生物/古神眷属产生影响</option>
+                        <option value="mo" <?php echo $cur_th2==='mo'?'selected':''; ?>>👿 魔 — 对次级旧日支配者/旧日支配者/古神产生影响</option>
+                        <option value="shen" <?php echo $cur_th2==='shen'?'selected':''; ?>>👼 神 — 对旧神产生影响</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改事件地点</label>
+                    <input type="text" name="edit_location" value="<?php echo esc_attr(get_post_meta($edit_post->ID, 'crrg_location', true)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="如：广西横州市云表镇">
                 </div>
                 <div style="display:flex;gap:12px;">
                     <button type="submit" name="submit_edit" value="1" style="background:#C41230;color:#fff;border:none;padding:10px 32px;border-radius:4px;font-size:15px;cursor:pointer;">提交修改申请</button>
@@ -313,6 +356,10 @@ get_header();
                         <option value="mo">👿 魔 — 对次级旧日支配者/旧日支配者/古神产生影响</option>
                         <option value="shen">👼 神 — 对旧神产生影响</option>
                     </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>
+                    <input type="text" name="report_location" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="如：广西横州市云表镇">
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔，如：调查报告,始源实体）</span></label>

@@ -82,6 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
             update_post_meta($target_id, 'crrg_access_level', $new_access);
             delete_post_meta($target_id, 'crrg_edit_access');
         }
+        // 应用威胁等级 + 地点
+        $new_threat = get_post_meta($target_id, 'crrg_edit_threat', true);
+        if ($new_threat !== '') { update_post_meta($target_id, 'crrg_threat_level', $new_threat); delete_post_meta($target_id, 'crrg_edit_threat'); }
+        $new_location = get_post_meta($target_id, 'crrg_edit_location', true);
+        if ($new_location !== '') { update_post_meta($target_id, 'crrg_location', $new_location); delete_post_meta($target_id, 'crrg_edit_location'); }
         $message = '修改已批准。';
     } elseif ($action === 'add_announcement') {
         $ann_title = sanitize_text_field($_POST['ann_title'] ?? '');
