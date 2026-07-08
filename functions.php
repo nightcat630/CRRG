@@ -37,7 +37,6 @@ function crrg_custom_header() {
                 <button type="submit">搜索</button>
             </form>
             <span id="gov-date"></span>
-            <button id="dark-toggle" class="dark-toggle" title="切换深色模式" aria-label="切换深色模式">🌙</button>
         </div>
     </div>
     <div class="gov-nav">
@@ -365,20 +364,6 @@ add_filter('media_view_strings', function ($s) {
 add_action('wp_footer', function () {
     ?>
     <script>
-    /* 深色模式切换 */
-    (function(){
-        var html=document.documentElement,btn=document.getElementById('dark-toggle');
-        var saved=localStorage.getItem('crrg-dark');
-        if(saved==='1' || (!saved && window.matchMedia('(prefers-color-scheme:dark)').matches)){
-            html.classList.add('dark'); btn.textContent='☀️';
-        }
-        if(btn) btn.addEventListener('click',function(){
-            var on=html.classList.toggle('dark');
-            btn.textContent=on?'☀️':'🌙';
-            localStorage.setItem('crrg-dark',on?'1':'0');
-        });
-    })();
-    /* 日期 */
     (function(){var d=new Date();var w=['日','一','二','三','四','五','六'];var s=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+w[d.getDay()];var e=document.getElementById('gov-date');if(e)e.textContent=s;})();
     (function(){var b=document.querySelector('.gov-brand');if(!b)return;var m=160;function u(){var s=window.pageYOffset,p=Math.min(s/m,1);b.style.clipPath='inset(0 0 '+(p*100)+'% 0)';b.style.opacity=1-p;}u();b.classList.add('ready');var t=false;window.addEventListener('scroll',function(){if(!t){requestAnimationFrame(function(){u();t=false;});t=true;}},{passive:true});})();
     (function(){var t=document.getElementById('carousel-track');if(!t)return;fetch('/cctv-news.php').then(r=>r.json()).then(d=>{if(!d.length){t.innerHTML='暂无新闻';return;}t.innerHTML=d.map(i=>{var img=i.image?'<img class="news-img" src="'+i.image+'" alt="" loading="lazy">':'<div class="news-placeholder">央视</div>';return'<a class="carousel-item" href="'+(i.url||'#')+'" target="_blank">'+img+'<div class="news-text"><div class="news-title">'+i.title+'</div>'+(i.brief?'<div class="news-brief">'+i.brief+'</div>':'')+'</div></a>';}).join('');var p=document.getElementById('carousel-prev'),n=document.getElementById('carousel-next');if(p&&n){function g(){var w=t.querySelector('.carousel-item');return w?w.offsetWidth+16:320;}p.addEventListener('click',function(){t.scrollBy({left:-g(),behavior:'smooth'});});n.addEventListener('click',function(){t.scrollBy({left:g(),behavior:'smooth'});});}}).catch(function(){t.innerHTML='新闻加载失败';});})();
