@@ -24,6 +24,8 @@ require_once __DIR__ . '/includes/announcements.php';
 require_once __DIR__ . '/includes/emergency-alert.php';
 require_once __DIR__ . '/includes/messages.php';
 
+add_filter('astra_single_post_navigation_enabled', '__return_false');
+
 // ─── 自定义头部（红条+导航+品牌+新闻） ───
 add_action('astra_header', 'crrg_custom_header', 5);
 function crrg_custom_header() {
