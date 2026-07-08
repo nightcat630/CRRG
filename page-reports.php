@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
     $title = sanitize_text_field($_POST['report_title'] ?? '');
     $content = wp_kses_post($_POST['report_content'] ?? '');
     $category = sanitize_text_field($_POST['report_category'] ?? '');
-    $status = $_POST['save_as'] === 'draft' ? 'draft' : 'pending';
+    $status = ($_POST['save_as'] ?? '') === 'draft' ? 'draft' : 'pending';
     
     if (empty($title)) {
         $error = '请输入标题';
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_draft']) && wp
     $draft_id = (int)$_POST['draft_id'];
     $draft = get_post($draft_id);
     if ($draft && (int)$draft->post_author === $user_id && $draft->post_status === 'draft') {
-        $new_status = $_POST['save_as'] === 'draft' ? 'draft' : 'pending';
+        $new_status = ($_POST['save_as'] ?? '') === 'draft' ? 'draft' : 'pending';
         wp_update_post([
             'ID' => $draft_id,
             'post_title' => sanitize_text_field($_POST['report_title']),
