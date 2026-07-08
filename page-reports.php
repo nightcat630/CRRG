@@ -380,7 +380,7 @@ get_header();
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>
-                    <?php $addr = include __DIR__ . '/includes/addresses.php'; $countries = array_keys($addr); ?>
+                    <?php $addr = json_decode(file_get_contents(__DIR__ . '/includes/addresses.json'), true); $countries = array_keys($addr); ?>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;">
                         <select id="addr_country" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;">
                             <option value="">国家</option>
