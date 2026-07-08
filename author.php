@@ -45,6 +45,10 @@ $rank_color = $rank_colors[$rank_id] ?? '#999';
                 <h1 style="font-size:22px;color:#1B3A5C;margin:0;font-weight:bold;"><?php echo esc_html($author->display_name); ?></h1>
                 <span style="background:<?php echo $rank_color; ?>;color:#fff;padding:3px 12px;border-radius:3px;font-size:13px;font-weight:600;"><?php echo $rank['icon']; ?> <?php echo esc_html($rank['name']); ?></span>
             </div>
+            <?php $bio = get_user_meta($user_id, 'crrg_bio', true); ?>
+            <?php if ($bio): ?>
+                <div style="font-size:14px;color:#555;margin-bottom:12px;line-height:1.7;padding:12px 16px;background:#f8f9fa;border-radius:4px;border-left:3px solid <?php echo $rank_color; ?>;"><?php echo nl2br(esc_html($bio)); ?></div>
+            <?php endif; ?>
             <div style="font-size:13px;color:#999;margin-bottom:10px;line-height:1.8;">
                 📊 资历：<strong style="color:#1B3A5C;"><?php echo $xp; ?></strong>
                 &nbsp;·&nbsp; 📄 报告：<strong style="color:#1B3A5C;"><?php echo $report_count; ?></strong>

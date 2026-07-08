@@ -68,6 +68,7 @@ function crrg_custom_header() {
                                 <span class="nav-arrow">▾</span>
                             </span>
                             <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="/author/<?php echo $u->user_nicename; ?>/">我的主页</a></li>
                                 <li><a href="/profile/">修改个人资料</a></li>
                                 <li><a href="/promotion/">晋升申请</a></li>
                                 <li><a href="/messages/">✉️ 私信 <?php $ur = function_exists('crrg_unread_count') ? crrg_unread_count($u->ID) : 0; if($ur): ?><span style="color:#C41230;font-weight:bold;">(<?php echo $ur; ?>)</span><?php endif; ?></a></li>

@@ -58,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
     
     if (!$error) {
         $uid = wp_update_user($userdata);
+        // 保存简介
+        $bio = sanitize_textarea_field($_POST['bio'] ?? '');
+        update_user_meta($user->ID, 'crrg_bio', $bio);
         if (is_wp_error($uid)) {
             $error = $uid->get_error_message();
         } else {
@@ -114,6 +117,10 @@ get_header();
                     <tr>
                         <td style="padding:10px 12px 10px 0;color:#666;font-size:14px;">邮箱</td>
                         <td style="padding:10px 0;"><input type="email" name="email" value="<?php echo esc_attr($user->user_email); ?>" style="width:100%;padding:8px 12px;border:1px solid #d5d5d5;border-radius:3px;font-size:14px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px 12px 10px 0;color:#666;font-size:14px;vertical-align:top;">简介</td>
+                        <td style="padding:10px 0;"><textarea name="bio" rows="4" placeholder="介绍一下自己……" style="width:100%;padding:8px 12px;border:1px solid #d5d5d5;border-radius:3px;font-size:14px;resize:vertical;"><?php echo esc_textarea(get_user_meta($user->ID, 'crrg_bio', true)); ?></textarea></td>
                     </tr>
                     <tr>
                         <td style="padding:10px 12px 10px 0;color:#666;font-size:14px;">新密码</td>
