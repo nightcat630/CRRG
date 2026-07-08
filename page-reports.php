@@ -308,10 +308,10 @@ get_header();
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">威胁等级</label>
                     <select name="threat_level" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
                         <option value="">未评级</option>
-                        <option value="ren">👤 人 — 人类相关事件</option>
-                        <option value="gui">👻 鬼 — 超自然灵异事件</option>
-                        <option value="mo">👿 魔 — 重生/污染/高位威胁</option>
-                        <option value="shen">👼 神 — 涉及始源及高位实体</option>
+                        <option value="ren">👤 人 — 对人类产生影响</option>
+                        <option value="gui">👻 鬼 — 对神秘生物/古神眷属产生影响</option>
+                        <option value="mo">👿 魔 — 对次级旧日支配者/旧日支配者/古神产生影响</option>
+                        <option value="shen">👼 神 — 对旧神产生影响</option>
                     </select>
                 </div>
                 <div style="margin-bottom:16px;">
