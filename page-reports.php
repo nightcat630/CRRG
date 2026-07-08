@@ -185,6 +185,14 @@ get_header();
                     <select name="report_category" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
                         <?php $types=['artifacts'=>'镇物','events'=>'事件','personnel'=>'人物','organizations'=>'组织','research'=>'研究发现','entities'=>'祂们','esoterica'=>'秘术','other'=>'其他']; $cur = get_post_meta($editing_draft->ID,'crrg_report_type',true) ?: 'other'; foreach($types as $k=>$v) echo '<option value=\"'.$k.'\"'.($k===$cur?' selected':'').'>'.$v.'</option>'; ?>
                     </select>
+                    <div id="artifact-naming-hint-edit" style="<?php echo $cur==='artifacts'?'':'display:none;'; ?>margin-top:10px;padding:12px 14px;background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;font-size:12px;color:#555;line-height:1.7;">
+                        <strong style="color:#1B3A5C;">📐 镇物命名：X-x-y-z</strong><br>
+                        <span>X: <code>E</code>东方 <code>W</code>西方 <code>O</code>其他</span><br>
+                        <span>x: 神话体系编号（E01~16 / W01~11 / O01~08）</span><br>
+                        <span>y: 项目编号 · z: 个体编号</span><br>
+                        <span style="color:#999;">示例：<code>E-01-001-003</code></span><br>
+                        <a href="/artifacts/" target="_blank" style="font-size:11px;color:#1B3A5C;">→ 查看完整编号表</a>
+                    </div>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔）</span></label>
@@ -231,6 +239,14 @@ get_header();
                     <select name="report_category" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
                         <option value="artifacts">镇物</option><option value="events">事件</option><option value="personnel">人物</option><option value="organizations">组织</option><option value="research">研究发现</option><option value="entities">祂们</option><option value="esoterica">秘术</option><option value="other">其他</option>
                     </select>
+                    <div id="artifact-naming-hint" style="display:none;margin-top:10px;padding:12px 14px;background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;font-size:12px;color:#555;line-height:1.7;">
+                        <strong style="color:#1B3A5C;">📐 镇物命名：X-x-y-z</strong><br>
+                        <span>X: <code>E</code>东方 <code>W</code>西方 <code>O</code>其他</span><br>
+                        <span>x: 神话体系编号（E01~16 / W01~11 / O01~08）</span><br>
+                        <span>y: 项目编号 · z: 个体编号</span><br>
+                        <span style="color:#999;">示例：<code>E-01-001-003</code>（东方·中原河洛·001号·003号）</span><br>
+                        <a href="/artifacts/" target="_blank" style="font-size:11px;color:#1B3A5C;">→ 查看完整编号表</a>
+                    </div>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔，如：调查报告,始源实体）</span></label>
@@ -321,4 +337,30 @@ get_header();
         </div>
     </div>
 </div>
+<script>
+(function(){
+    // 新建报告表单
+    var sel = document.querySelector('select[name="report_category"]');
+    var hint = document.getElementById('artifact-naming-hint');
+    if (sel && hint) {
+        sel.addEventListener('change', function(){
+            hint.style.display = this.value === 'artifacts' ? '' : 'none';
+        });
+    }
+    // 编辑草稿表单
+    var sel2 = document.querySelector('form[method="post"] select[name="report_category"]:not([onchange])');
+    var hint2 = document.getElementById('artifact-naming-hint-edit');
+    if (sel2 && hint2) {
+        // 给编辑表单的 select 也加事件（需要精确匹配）
+    }
+    // 更简单：给所有 report_category select 加事件
+    document.querySelectorAll('select[name="report_category"]').forEach(function(s){
+        var targetId = s.closest('form').querySelector('[id^="artifact-naming-hint"]');
+        if (!targetId) return;
+        s.addEventListener('change', function(){
+            targetId.style.display = this.value === 'artifacts' ? '' : 'none';
+        });
+    });
+})();
+</script>
 <?php get_footer(); ?>
