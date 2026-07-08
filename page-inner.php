@@ -98,7 +98,7 @@ if ($cat_name) {
                         <?php endif; ?>
                         <div style="flex:1;">
                             <a href="<?php echo get_permalink($p); ?>" style="font-size:15px;font-weight:bold;color:#1B3A5C;text-decoration:none;"><?php echo esc_html($p->post_title); ?></a>
-                            <div style="font-size:12px;color:#999;margin-top:4px;"><?php echo get_the_date('Y-m-d',$p); ?> · <?php echo $a?esc_html($a->display_name):'未知'; ?> · 💬 <?php echo $cc; ?> · <a href="#" class="fav-btn" data-post="<?php echo $p->ID; ?>" style="color:<?php echo (is_user_logged_in()&&crrg_is_favorited(get_current_user_id(),$p->ID))?'#e8b800':'#999'; ?>;text-decoration:none;font-size:12px;"><?php echo (is_user_logged_in()&&crrg_is_favorited(get_current_user_id(),$p->ID))?'⭐':'☆'; ?> 收藏</a></div>
+                            <div style="font-size:12px;color:#999;margin-top:4px;"><?php echo get_the_date('Y-m-d',$p); ?> · <a href="/author/<?php echo $a ? $a->user_nicename : ''; ?>/" style="color:#1B3A5C;text-decoration:none;"><?php echo $a?esc_html($a->display_name):'未知'; ?></a> · 💬 <?php echo $cc; ?> · <a href="#" class="fav-btn" data-post="<?php echo $p->ID; ?>" style="color:<?php echo (is_user_logged_in()&&crrg_is_favorited(get_current_user_id(),$p->ID))?'#e8b800':'#999'; ?>;text-decoration:none;font-size:12px;"><?php echo (is_user_logged_in()&&crrg_is_favorited(get_current_user_id(),$p->ID))?'⭐':'☆'; ?> 收藏</a></div>
                             <div style="font-size:13px;color:#666;margin-top:6px;"><?php echo wp_trim_words(strip_tags($p->post_content),50); ?></div>
                         </div>
                     </div>

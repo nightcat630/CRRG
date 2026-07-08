@@ -69,7 +69,7 @@ uksort($grouped, function($a, $b) use ($rank_order) {
         <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:16px;display:flex;align-items:center;gap:14px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
             <img src="<?php echo esc_url($u['avatar']); ?>" alt="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid <?php echo $rid === 'chairman' ? '#C41230' : ($rid === 'deputy' ? '#F0A500' : '#e0e0e0'); ?>;flex-shrink:0;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2240%22>👤</text></svg>'">
             <div style="flex:1;min-width:0;">
-                <div style="font-size:15px;font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?php echo esc_html($u['name']); ?></div>
+                <div style="font-size:15px;font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><a href="/author/<?php echo get_the_author_meta('user_nicename', $u['id']); ?>/" style="color:#1e293b;text-decoration:none;"><?php echo esc_html($u['name']); ?></a></div>
                 <div style="font-size:12px;color:#999;margin:3px 0;">
                     <span><?php echo $u['rank_icon']; ?> <?php echo $u['rank_name']; ?></span>
                     <span style="margin-left:8px;">· <?php echo $u['xp']; ?> 资历</span>
