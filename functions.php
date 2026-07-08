@@ -177,7 +177,17 @@ add_action('init', function () {
     if (!$comment) return;
     $uid = get_current_user_id();
     $can = ((int)$comment->user_id === $uid) || in_array(crrg_get_rank($uid), ['advisor','deputy','chairman']);
-    if ($can) { wp_delete_comment($cid, true); wp_redirect(remove_query_arg(['del_comment','_nonce'])); exit; }
+    if ($can) {
+        // 顾问以上删除他人评论，扣除被删者10资历
+        if ((int)$comment->user_id !== $uid && in_array(crrg_get_rank($uid), ['advisor','deputy','chairman'])) {
+            $penalty = 10;
+            $current_xp = crrg_get_xp($comment->user_id);
+            update_user_meta($comment->user_id, 'crrg_xp', max(0, $current_xp - $penalty));
+        }
+        wp_delete_comment($cid, true);
+        wp_redirect(remove_query_arg(['del_comment','_nonce']));
+        exit;
+    }
 });
 
 add_filter('comment_text', function ($text, $comment, $args) {
