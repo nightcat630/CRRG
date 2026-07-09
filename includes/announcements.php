@@ -2,11 +2,15 @@
 // Announcements system
 
 function crrg_get_announcements() {
-    return get_option('crrg_announcements', []);
+    $anns = get_option('crrg_announcements', []);
+    usort($anns, function($a, $b) { return strtotime($b['time']) - strtotime($a['time']); });
+    return $anns;
 }
 function crrg_add_announcement($title, $content, $time = '') {
     $anns = crrg_get_announcements();
-    array_unshift($anns, ['title' => $title, 'content' => $content, 'time' => $time ?: current_time('mysql')]);
+    $anns[] = ['title' => $title, 'content' => $content, 'time' => $time ?: current_time('mysql')];
+    // 按时间降序
+    usort($anns, function($a, $b) { return strtotime($b['time']) - strtotime($a['time']); });
     update_option('crrg_announcements', array_slice($anns, 0, 50));
 }
 function crrg_update_announcement($index, $title, $content, $time = '') {
