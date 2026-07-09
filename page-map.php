@@ -84,7 +84,6 @@ foreach ($location_posts as $p) {
     <?php endif; ?>
 </div>
 <div class="gov-sidebar">
-        <?php echo crrg_announcement_carousel(); ?>
     <div class="widget">
         <div class="widget-title">📊 威胁分布</div>
         <?php

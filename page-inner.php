@@ -143,7 +143,6 @@ if ($cat_name) {
         <?php endif; ?>
     </div>
     <div class="gov-sidebar">
-        <?php echo crrg_announcement_carousel(); ?>
         <div class="widget"><div class="widget-title"><a href="/reports/" style="color:inherit;text-decoration:none;">📝 报告</a></div>
             <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2;"><li><a href="/reports/" style="color:#333;">→ 提交新报告</a></li><li><a href="/reports/" style="color:#333;">→ 我的报告</a></li></ul>
         </div>

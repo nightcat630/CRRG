@@ -63,7 +63,6 @@ $today_duty = $schedule['schedule'][$today] ?? [];
     <p style="font-size:12px;color:#666;background:#fefce8;border:1px solid #fde68a;padding:10px 14px;border-radius:4px;">🌟 <strong>值班激励：</strong>当日值班人员提交报告审批通过后，额外获得 <strong>+8 资历</strong>（报告）或 <strong>+5 资历</strong>（新闻）的加成。</p>
 </div>
 <div class="gov-sidebar">
-        <?php echo crrg_announcement_carousel(); ?>
     <div class="widget">
         <div class="widget-title">📋 今日值班</div>
         <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2.2;">

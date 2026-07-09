@@ -17,6 +17,23 @@ $top = crrg_get_top_member();
 <?php endif; ?>
 <div class="gov-main">
     <div class="gov-content" style="flex: 1;">
+        <!-- 公告轮播 -->
+        <?php $anns = crrg_get_announcements(); if ($anns): ?>
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:4px;padding:8px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+            <span style="color:#C41230;font-weight:bold;font-size:13px;white-space:nowrap;">📢 公告</span>
+            <div id="ann-carousel" style="flex:1;overflow:hidden;position:relative;height:20px;">
+                <?php foreach ($anns as $i => $ann): ?>
+                <div class="ann-item" style="position:absolute;top:0;left:0;right:0;opacity:<?php echo $i===0?1:0; ?>;transition:opacity 0.5s;">
+                    <a href="/notices/" style="color:#991b1b;font-size:12px;text-decoration:none;"><?php echo esc_html($ann['title']); ?></a>
+                    <span style="color:#999;font-size:10px;margin-left:8px;"><?php echo date('m-d', strtotime($ann['time'])); ?></span>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <script>
+        (function(){var c=document.getElementById('ann-carousel');if(!c)return;var items=c.querySelectorAll('.ann-item'),i=0,n=items.length;if(n<2)return;setInterval(function(){items[i].style.opacity=0;i=(i+1)%n;items[i].style.opacity=1;},4000);})();
+        </script>
+        <?php endif; ?>
         <!-- 今日要闻 -->
         <div style="padding:16px 0;border-bottom:1px solid #eee;margin-bottom:24px;">
             <h2 style="font-size:20px;color:#1B3A5C;margin:0;font-weight:bold;">📰 今日要闻</h2>
@@ -48,7 +65,6 @@ $top = crrg_get_top_member();
     </div>
 
     <div class="gov-sidebar">
-        <?php echo crrg_announcement_carousel(); ?>
         <div class="widget">
             <div class="widget-title">⭐ 本周优秀干员</div>
             <div style="font-size:13px;text-align:center;padding:8px 0;">
