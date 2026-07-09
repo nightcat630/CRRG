@@ -269,7 +269,7 @@ get_header();
                     </div>
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件时间</label>
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;"><span class="time-label-text">报告时间</span></label>
                     <span id="event_time_single">
                         <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
                         <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
@@ -304,7 +304,7 @@ get_header();
                     </select>
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件时间</label>
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;"><span class="time-label-text">报告时间</span></label>
                     <span id="event_time_single2">
                         <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
                         <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
@@ -452,7 +452,7 @@ get_header();
                     </div>
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件时间</label>
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;"><span class="time-label-text">报告时间</span></label>
                     <span id="event_time_single3">
                         <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
                         <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
@@ -554,6 +554,9 @@ get_header();
                             var toggle=function(){
                                 if(cat.value==='events'){single.style.display='none';range.style.display='';}
                                 else{single.style.display='';range.style.display='none';}
+                                // 切换标签文字
+                                var label=form.querySelector('.time-label-text');
+                                if(label) label.textContent=cat.value==='events'?'事件时间':'报告时间';
                             };
                             cat.addEventListener('change',toggle);
                             toggle();
