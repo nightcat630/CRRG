@@ -304,8 +304,18 @@ get_header();
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件时间</label>
-                    <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
-                    <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
+                    <span id="event_time_single2">
+                        <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                        <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
+                    </span>
+                    <span id="event_time_range2" style="display:none;">
+                        <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+                            <input type="datetime-local" name="event_start" placeholder="起始时间" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                            <span style="color:#999;">至</span>
+                            <input type="datetime-local" name="event_end" placeholder="终点时间" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                        </div>
+                        <span style="font-size:11px;color:#999;">起始留空=持续至终点；终点留空=起始后持续至今；均留空=常驻事件</span>
+                    </span>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>
@@ -522,19 +532,20 @@ get_header();
                         if(districts.length>0){ct.disabled=false; districts.forEach(function(d){ct.add(new Option(d,d));});}
                     });
                     ct.addEventListener('change',function(){if(this.value) setLoc(addrData[selCountry][selProvince][1][selCity][0],addrData[selCountry][selProvince][1][selCity][1]);});
-                    // 事件类型切换时间字段
+                    // 事件类型切换时间字段（所有表单）
                     (function(){
-                        var cat=document.querySelector('select[name="report_category"]');
-                        var single=document.getElementById('event_time_single');
-                        var range=document.getElementById('event_time_range');
-                        if(cat&&single&&range){
+                        document.querySelectorAll('select[name="report_category"]').forEach(function(cat){
+                            var form=cat.closest('form');
+                            var single=form.querySelector('[id^="event_time_single"]');
+                            var range=form.querySelector('[id^="event_time_range"]');
+                            if(!single||!range)return;
                             var toggle=function(){
                                 if(cat.value==='events'){single.style.display='none';range.style.display='';}
                                 else{single.style.display='';range.style.display='none';}
                             };
                             cat.addEventListener('change',toggle);
                             toggle();
-                        }
+                        });
                     })();
                     </script>
                 </div>
