@@ -447,21 +447,6 @@ get_header();
                     <a href="?" style="background:#f0f0f0;color:#555;border:1px solid #d5d5d5;padding:10px 24px;border-radius:4px;font-size:14px;text-decoration:none;">取消</a>
                 </div>
             </form>
-            <script>
-            // 编辑申请表单：事件类型切换
-            var editCat=document.querySelector('select[name="edit_category"]');
-            if(editCat){
-                var editForm=editCat.closest('form');
-                var editRange=editForm.querySelector('[id*="event_time_range"]');
-                if(editRange){
-                    var toggleEdit=function(){
-                        editRange.style.display=editCat.value==='events'?'':'none';
-                    };
-                    editCat.addEventListener('change',toggleEdit);
-                    toggleEdit();
-                }
-            }
-            </script>
         <?php elseif ($show_form): ?>
             <!-- New Report Form -->
             <form method="post" style="margin-bottom:40px;">
@@ -580,7 +565,7 @@ get_header();
                     ct.addEventListener('change',function(){if(this.value) setLoc(addrData[selCountry][selProvince][1][selCity][0],addrData[selCountry][selProvince][1][selCity][1]);});
                     // 事件类型切换时间字段（所有表单）
                     (function(){
-                        document.querySelectorAll('select[name="report_category"]').forEach(function(cat){
+                        document.querySelectorAll('select[name="report_category"],select[name="edit_category"]').forEach(function(cat){
                             var form=cat.closest('form');
                             var single=form.querySelector('[id^="event_time_single"]');
                             var range=form.querySelector('[id^="event_time_range"]');
