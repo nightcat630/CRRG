@@ -112,9 +112,9 @@ foreach ($location_posts as $p) {
     <div class="widget">
         <div class="widget-title">📊 威胁分布</div>
         <?php
-        $all_posts = get_posts(['post_type'=>'post','post_status'=>'publish','posts_per_page'=>100,'meta_query'=>[['key'=>'crrg_report_type_name','value'=>'事件'],crrg_get_access_meta_query()]]);
         $counts = ['ren'=>0,'gui'=>0,'mo'=>0,'shen'=>0,'none'=>0];
-        foreach ($all_posts as $ap) {
+        foreach ($location_posts as $ap) {
+            if (!in_array($ap->ID, $visible_ids)) continue;
             $t = get_post_meta($ap->ID, 'crrg_threat_level', true);
             if ($t && isset($counts[$t])) $counts[$t]++; else $counts['none']++;
         }
