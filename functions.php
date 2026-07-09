@@ -442,6 +442,9 @@ add_action('rss_tag_pre', function () {
 add_action('wp_head', function () {
     echo '<link rel="alternate" type="application/rss+xml" title="中央重生抵御小组 RSS" href="' . home_url('/feed/') . '">' . "
 ";
+    if (is_page('guide')) {
+        echo '<style>.gov-content h1.entry-title,.ast-single-post h1{background:linear-gradient(135deg,#1B3A5C,#0F2440);color:#fff!important;padding:28px 32px;border-radius:6px 6px 0 0;font-size:24px!important;margin:-24px -24px 20px!important;text-align:center;}</style>';
+    }
 });
 
 // ─── 文章机密等级水印 ───
