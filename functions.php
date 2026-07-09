@@ -443,7 +443,7 @@ add_action('wp_head', function () {
     echo '<link rel="alternate" type="application/rss+xml" title="中央重生抵御小组 RSS" href="' . home_url('/feed/') . '">' . "
 ";
     if (is_page('guide')) {
-        echo '<style>.entry-title,.ast-entry-title{display:block!important;color:#fff!important;background:#1B3A5C!important;padding:24px 32px!important;border-radius:6px 6px 0 0!important;text-align:center!important;font-size:24px!important;margin:0!important;}</style>';
+        echo '<style>.entry-header{display:none!important;}</style>';
     }
 });
 
