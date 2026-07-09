@@ -208,6 +208,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit']) && wp_
         $edit_lat = $_POST['edit_lat'] ?? '';
         $edit_lng = $_POST['edit_lng'] ?? '';
         if ($edit_lat && $edit_lng) { update_post_meta($post_id, 'crrg_edit_lat', $edit_lat); update_post_meta($post_id, 'crrg_edit_lng', $edit_lng); }
+        // 类型和时间
+        $edit_cat = sanitize_text_field($_POST['edit_category'] ?? '');
+        if ($edit_cat) update_post_meta($post_id, 'crrg_edit_category', $edit_cat);
+        $edit_date = sanitize_text_field($_POST['edit_date'] ?? '');
+        if ($edit_date !== '') update_post_meta($post_id, 'crrg_edit_date', $edit_date);
+        $edit_start = sanitize_text_field($_POST['edit_start'] ?? '');
+        if ($edit_start !== '') update_post_meta($post_id, 'crrg_edit_start', $edit_start);
+        $edit_end = sanitize_text_field($_POST['edit_end'] ?? '');
+        if ($edit_end !== '') update_post_meta($post_id, 'crrg_edit_end', $edit_end);
         $message = '修改申请已提交，等待管理员审核。';
         wp_redirect(add_query_arg('msg', urlencode($message), remove_query_arg(['edit_post','msg'])));
         exit;
@@ -330,6 +339,29 @@ get_header();
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改后标题</label>
                     <input type="text" name="edit_title" value="<?php echo esc_attr($edit_post->post_title); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改档案类型</label>
+                    <select name="edit_category" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                        <?php $cur_cat = get_post_meta($edit_post->ID, 'crrg_report_type', true) ?: 'other'; $types_e=['artifacts'=>'镇物','events'=>'事件','personnel'=>'人物','organizations'=>'组织','research'=>'研究发现','entities'=>'祂们','esoterica'=>'秘术','outstanding'=>'优秀员工','other'=>'其他']; foreach($types_e as $k=>$v) echo '<option value=\"'.$k.'\"'.($k===$cur_cat?' selected':'').'>'.$v.'</option>'; ?>
+                    </select>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;"><span class="time-label-text">报告时间</span></label>
+                    <span id="event_time_single_edit">
+                        <input type="datetime-local" name="edit_date" value="<?php $ed = get_post_meta($edit_post->ID, 'crrg_event_date', true); echo $ed ? esc_attr(date('Y-m-d\TH:i', strtotime($ed))) : ''; ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                        <span style="font-size:11px;color:#999;">对外显示的发布时间，留空不变</span>
+                    </span>
+                    <span id="event_time_range_edit" style="<?php echo $cur_cat==='events'?'':'display:none;'; ?>">
+                        <div class="time-range-label" style="font-weight:bold;color:#333;font-size:14px;margin:12px 0 6px;">事件时间范围 <span style="font-weight:normal;font-size:11px;color:#999;">（地图过滤用）</span></div>
+                        <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+                            <span style="font-size:12px;color:#666;white-space:nowrap;">起始：</span>
+                            <input type="datetime-local" name="edit_start" value="<?php $es = get_post_meta($edit_post->ID, 'crrg_event_start', true); echo $es ? esc_attr(date('Y-m-d\TH:i', strtotime($es))) : ''; ?>" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                            <span style="font-size:12px;color:#666;white-space:nowrap;">结束：</span>
+                            <input type="datetime-local" name="edit_end" value="<?php $ee = get_post_meta($edit_post->ID, 'crrg_event_end', true); echo $ee ? esc_attr(date('Y-m-d\TH:i', strtotime($ee))) : ''; ?>" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                        </div>
+                        <span style="font-size:11px;color:#999;">起始留空=持续至终点；终点留空=起始后持续至今；均留空=常驻事件</span>
+                    </span>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改后内容</label>

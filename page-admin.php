@@ -102,6 +102,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         if ($new_lat) { update_post_meta($target_id, 'crrg_lat', $new_lat); delete_post_meta($target_id, 'crrg_edit_lat'); }
         $new_lng = get_post_meta($target_id, 'crrg_edit_lng', true);
         if ($new_lng) { update_post_meta($target_id, 'crrg_lng', $new_lng); delete_post_meta($target_id, 'crrg_edit_lng'); }
+        // 应用类型修改
+        $new_cat = get_post_meta($target_id, 'crrg_edit_category', true);
+        if ($new_cat) {
+            update_post_meta($target_id, 'crrg_report_type', $new_cat);
+            $cat_names = ['artifacts'=>'镇物','events'=>'事件','personnel'=>'人物','organizations'=>'组织','research'=>'研究发现','entities'=>'祂们','esoterica'=>'秘术','outstanding'=>'优秀员工','other'=>'其他'];
+            update_post_meta($target_id, 'crrg_report_type_name', $cat_names[$new_cat] ?? '其他');
+            delete_post_meta($target_id, 'crrg_edit_category');
+        }
+        // 应用时间修改
+        $new_date = get_post_meta($target_id, 'crrg_edit_date', true);
+        if ($new_date !== '') { update_post_meta($target_id, 'crrg_event_date', $new_date); delete_post_meta($target_id, 'crrg_edit_date'); }
+        $new_start = get_post_meta($target_id, 'crrg_edit_start', true);
+        if ($new_start !== '') { update_post_meta($target_id, 'crrg_event_start', $new_start); delete_post_meta($target_id, 'crrg_edit_start'); }
+        $new_end = get_post_meta($target_id, 'crrg_edit_end', true);
+        if ($new_end !== '') { update_post_meta($target_id, 'crrg_event_end', $new_end); delete_post_meta($target_id, 'crrg_edit_end'); }
         $message = '修改已批准。';
     } elseif ($action === 'add_announcement') {
         $ann_title = sanitize_text_field($_POST['ann_title'] ?? '');
