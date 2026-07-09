@@ -274,6 +274,7 @@ get_header();
                         <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
                         <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
                     </span>
+                    <div class="time-range-label" style="display:none;font-weight:bold;color:#333;font-size:14px;margin:12px 0 6px;">事件时间范围 <span style="font-weight:normal;font-size:11px;color:#999;">（地图过滤用）</span></div>
                     <span id="event_time_range" style="display:none;">
                         <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
                             <span style="font-size:12px;color:#666;white-space:nowrap;">起始：</span>
@@ -442,6 +443,7 @@ get_header();
                         <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
                         <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
                     </span>
+                    <div class="time-range-label" style="display:none;font-weight:bold;color:#333;font-size:14px;margin:12px 0 6px;">事件时间范围 <span style="font-weight:normal;font-size:11px;color:#999;">（地图过滤用）</span></div>
                     <span id="event_time_range3" style="display:none;">
                         <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
                             <span style="font-size:12px;color:#666;white-space:nowrap;">起始：</span>
@@ -537,11 +539,11 @@ get_header();
                             var range=form.querySelector('[id^="event_time_range"]');
                             if(!single||!range)return;
                             var toggle=function(){
-                                if(cat.value==='events'){single.style.display='none';range.style.display='';}
+                                if(cat.value==='events'){single.style.display='';range.style.display='';}
                                 else{single.style.display='';range.style.display='none';}
-                                // 切换标签文字
-                                var label=form.querySelector('.time-label-text');
-                                if(label) label.textContent=cat.value==='events'?'事件时间':'报告时间';
+                                // 范围标签联动
+                                var rlabel=form.querySelector('.time-range-label');
+                                if(rlabel) rlabel.style.display=cat.value==='events'?'':'none';
                             };
                             cat.addEventListener('change',toggle);
                             toggle();
