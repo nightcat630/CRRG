@@ -21,6 +21,8 @@ $coord_map = [
     '沈阳' => [41.8, 123.43],
 ];
 
+$observe_time = $_GET['t'] ?? ''; $now = $observe_time ?: current_time('Y-m-d H:i:s');
+
 $markers = [];
 foreach ($location_posts as $p) {
     $loc = get_post_meta($p->ID, 'crrg_location', true);
@@ -48,7 +50,6 @@ foreach ($location_posts as $p) {
     }
 }
 ?>
-<?php $observe_time = $_GET['t'] ?? ''; $now = $observe_time ?: current_time('Y-m-d H:i:s'); ?>
 <div class="gov-main">
 <div class="gov-content">
     <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">🗺️ 事件态势图</h1>
