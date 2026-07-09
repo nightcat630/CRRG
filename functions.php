@@ -533,7 +533,7 @@ add_filter('the_content', function ($content) {
         if (isset($threat_map[$threat])) {
             $t = $threat_map[$threat];
             $threat_badge = '<div style="margin-bottom:16px;padding:8px 14px;background:'.$t[2].'10;border-left:3px solid '.$t[2].';border-radius:2px;font-size:13px;"><strong>'.$t[1].' '.$t[0].'级威胁</strong> — ';
-            $desc = ['ren'=>'对人类产生影响','gui'=>'对神秘生物/古神眷属产生影响','mo'=>'对次级旧日支配者/旧日支配者/古神产生影响','shen'=>'对旧神产生影响'];
+            $desc = ['ren'=>'对人类产生影响','gui'=>'对神秘生物/古神眷属产生影响','mo'=>'对次级旧日支配者/旧日支配者/古神产生影响','shen'=>'对外神产生影响'];
             $threat_badge .= $desc[$threat] . '</div>';
         }
     }
