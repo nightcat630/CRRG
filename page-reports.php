@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             if ($lat && $lng) { update_post_meta($post_id, 'crrg_lat', $lat); update_post_meta($post_id, 'crrg_lng', $lng); }
             // 标签
             $tags = sanitize_text_field($_POST['report_tags'] ?? '');
-            if ($tags) wp_set_post_tags($post_id, array_filter(array_map('trim', explode(',', $tags))), false);
+            if ($tags) wp_set_post_tags($post_id, array_filter(array_map('trim', preg_split('/[,，]/', $tags))), false);
             $message = $status === 'pending' ? '报告已提交审核！待审批后发布 +15 资历' : '草稿已保存';
         } else $error = '发布失败';
     }
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_draft']) && wp
         $es = sanitize_text_field($_POST['report_event_start'] ?? ''); if ($es) update_post_meta($draft_id, 'crrg_event_start', $es);
         $ee = sanitize_text_field($_POST['report_event_end'] ?? ''); if ($ee) update_post_meta($draft_id, 'crrg_event_end', $ee);
         $loc = sanitize_text_field($_POST['report_location'] ?? ''); if ($loc) update_post_meta($draft_id, 'crrg_location', $loc);
-        $tg = sanitize_text_field($_POST['report_tags'] ?? ''); if ($tg) wp_set_post_tags($draft_id, array_filter(array_map('trim', explode(',', $tg))), false);
+        $tg = sanitize_text_field($_POST['report_tags'] ?? ''); if ($tg) wp_set_post_tags($draft_id, array_filter(array_map('trim', preg_split('/[,，]/', $tg))), false);
         $message = $ns === 'pending' ? '报告已提交审核！' : '草稿已更新';
         $editing_draft = null;
     }
