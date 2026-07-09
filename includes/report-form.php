@@ -43,7 +43,7 @@ function report_form_fields($prefix, $category_val, $access_val, $threat_val, $e
     </div>
     <div style="margin-bottom:16px;">
         <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>
-        <?php $addr = json_decode(file_get_contents(__DIR__ . '/includes/addresses.json'), true); $countries = array_keys($addr); ?>
+        <?php $addr = json_decode(file_get_contents(__DIR__ . '/addresses.json'), true); $countries = array_keys($addr); ?>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <select id="<?php echo $prefix; ?>addr_country" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;">
                 <option value="">国家</option>
@@ -58,3 +58,9 @@ function report_form_fields($prefix, $category_val, $access_val, $threat_val, $e
         <input type="hidden" name="<?php echo $prefix; ?>lat"><input type="hidden" name="<?php echo $prefix; ?>lng">
     </div>
     <div style="margin-bottom:16px;">
+    <div style="margin-bottom:16px;">
+        <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">标签 <span style="font-weight:normal;color:#999;font-size:12px;">（逗号分隔）</span></label>
+        <input type="text" name="<?php echo $prefix; ?>tags" value="<?php echo esc_attr($tags_val); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="调查报告,始源实体">
+    </div>
+    <?php
+}
