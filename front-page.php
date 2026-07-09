@@ -24,8 +24,9 @@ $top = crrg_get_top_member();
             <div id="ann-carousel" style="flex:1;overflow:hidden;position:relative;height:20px;">
                 <?php foreach ($anns as $i => $ann): ?>
                 <div class="ann-item" style="position:absolute;top:0;left:0;right:0;opacity:<?php echo $i===0?1:0; ?>;transition:opacity 0.5s;">
-                    <a href="/notices/" style="color:#991b1b;font-size:12px;text-decoration:none;"><?php echo esc_html($ann['title']); ?></a>
-                    <span style="color:#999;font-size:10px;margin-left:8px;"><?php echo date('m-d', strtotime($ann['time'])); ?></span>
+                    <a href="/notices/" style="color:#991b1b;font-size:13px;text-decoration:none;font-weight:600;"><?php echo esc_html($ann['title']); ?></a>
+                    <span style="color:#666;font-size:11px;margin-left:6px;">— <?php echo esc_html(mb_strlen($ann['content'])>40 ? mb_substr(strip_tags($ann['content']),0,40).'…' : strip_tags($ann['content'])); ?></span>
+                    <span style="color:#999;font-size:10px;margin-left:6px;"><?php echo date('m-d', strtotime($ann['time'])); ?></span>
                 </div>
                 <?php endforeach; ?>
             </div>
