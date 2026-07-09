@@ -85,12 +85,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_edit']) && wp_
         update_post_meta($pid, 'crrg_edit_content', wp_kses_post($_POST['edit_content'] ?? ''));
         update_post_meta($pid, 'crrg_edit_time', current_time('mysql'));
         update_post_meta($pid, 'crrg_edit_tags', sanitize_text_field($_POST['edit_tags'] ?? ''));
-        update_post_meta($pid, 'crrg_edit_access', sanitize_text_field($_POST['edit_access'] ?? ''));
-        update_post_meta($pid, 'crrg_edit_threat', sanitize_text_field($_POST['edit_threat'] ?? ''));
+        update_post_meta($pid, 'crrg_edit_access', sanitize_text_field($_POST['edit_access_level'] ?? ''));
+        update_post_meta($pid, 'crrg_edit_threat', sanitize_text_field($_POST['edit_threat_level'] ?? ''));
         update_post_meta($pid, 'crrg_edit_location', sanitize_text_field($_POST['edit_location'] ?? ''));
-        update_post_meta($pid, 'crrg_edit_date', sanitize_text_field($_POST['edit_date'] ?? ''));
-        update_post_meta($pid, 'crrg_edit_start', sanitize_text_field($_POST['edit_start'] ?? ''));
-        update_post_meta($pid, 'crrg_edit_end', sanitize_text_field($_POST['edit_end'] ?? ''));
+        update_post_meta($pid, 'crrg_edit_date', sanitize_text_field($_POST['edit_event_date'] ?? ''));
+        update_post_meta($pid, 'crrg_edit_start', sanitize_text_field($_POST['edit_event_start'] ?? ''));
+        update_post_meta($pid, 'crrg_edit_end', sanitize_text_field($_POST['edit_event_end'] ?? ''));
         update_post_meta($pid, 'crrg_edit_category', sanitize_text_field($_POST['edit_category'] ?? ''));
         $el = sanitize_text_field($_POST['edit_lat'] ?? ''); $en = sanitize_text_field($_POST['edit_lng'] ?? '');
         if ($el && $en) { update_post_meta($pid, 'crrg_edit_lat', $el); update_post_meta($pid, 'crrg_edit_lng', $en); }
