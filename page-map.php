@@ -24,6 +24,7 @@ $coord_map = [
 $observe_time = $_GET['t'] ?? ''; $now = $observe_time ?: current_time('Y-m-d H:i:s');
 
 $markers = [];
+$visible_ids = [];
 foreach ($location_posts as $p) {
     $loc = get_post_meta($p->ID, 'crrg_location', true);
     $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
@@ -39,6 +40,7 @@ foreach ($location_posts as $p) {
         elseif ($end) $visible = ($now <= $end);
     }
     if ($lat && $lng && $visible) {
+        $visible_ids[] = $p->ID;
         $markers[] = [
             'lat' => (float)$lat, 'lng' => (float)$lng,
             'title' => $p->post_title,
@@ -91,6 +93,7 @@ foreach ($location_posts as $p) {
     <div style="margin-top:20px;">
         <h3 style="font-size:15px;color:#1B3A5C;margin-bottom:10px;">📋 地点清单</h3>
         <?php foreach ($location_posts as $p):
+            if (!in_array($p->ID, $visible_ids)) continue;
             $loc = get_post_meta($p->ID, 'crrg_location', true);
             $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
             $colors = ['ren'=>'#16a34a','gui'=>'#8B5CF6','mo'=>'#C41230','shen'=>'#F0A500'];
