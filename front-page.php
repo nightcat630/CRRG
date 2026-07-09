@@ -48,6 +48,7 @@ $top = crrg_get_top_member();
     </div>
 
     <div class="gov-sidebar">
+        <?php echo crrg_announcement_carousel(); ?>
         <div class="widget">
             <div class="widget-title">⭐ 本周优秀干员</div>
             <div style="font-size:13px;text-align:center;padding:8px 0;">

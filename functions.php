@@ -24,6 +24,7 @@ require_once __DIR__ . '/includes/announcements.php';
 require_once __DIR__ . '/includes/emergency-alert.php';
 require_once __DIR__ . '/includes/messages.php';
 require_once __DIR__ . '/includes/duty-system.php';
+require_once __DIR__ . '/includes/ann-carousel.php';
 
 add_filter('astra_single_post_navigation_enabled', '__return_false');
 

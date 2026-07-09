@@ -96,6 +96,7 @@ $rank_color = $rank_colors[$rank_id] ?? '#999';
 </div>
 
 <div class="gov-sidebar">
+        <?php echo crrg_announcement_carousel(); ?>
     <div class="widget">
         <div class="widget-title">📊 统计数据</div>
         <div style="font-size:13px;color:#666;line-height:2;">

@@ -18,6 +18,7 @@ $announcements = crrg_get_announcements();
     <?php endif; ?>
 </div>
 <div class="gov-sidebar">
+        <?php echo crrg_announcement_carousel(); ?>
     <div class="widget">
         <div class="widget-title">📌 最新通知</div>
         <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2;">
