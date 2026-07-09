@@ -293,6 +293,13 @@ get_header();
                         </div>
                         <span style="font-size:11px;color:#999;">起始留空=持续至终点；终点留空=起始后持续至今；均留空=常驻事件</span>
                     </span>
+                <script>
+                (function(){
+                    var s=document.querySelector('select[name="edit_category"]');
+                    var r=document.getElementById('event_time_range_edit');
+                    if(s&&r&&s.value==='events') r.style.display='';
+                })();
+                </script>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">访问等级 <span style="font-weight:normal;color:#999;font-size:12px;">（不超过自身等级）</span></label>
@@ -342,7 +349,7 @@ get_header();
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">修改档案类型</label>
-                    <select name="edit_category" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
+                    <select name="edit_category" onchange="var f=this.closest('form');var r=f.querySelector('[id^=event_time_range]');var l=f.querySelector('.time-range-label');if(r){r.style.display=this.value==='events'?'':'none';if(l)l.style.display=this.value==='events'?'':'none';}" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
                         <?php $cur_cat = get_post_meta($edit_post->ID, 'crrg_report_type', true) ?: 'other'; $types_e=['artifacts'=>'镇物','events'=>'事件','personnel'=>'人物','organizations'=>'组织','research'=>'研究发现','entities'=>'祂们','esoterica'=>'秘术','outstanding'=>'优秀员工','other'=>'其他']; foreach($types_e as $k=>$v) echo '<option value=\"'.$k.'\"'.($k===$cur_cat?' selected':'').'>'.$v.'</option>'; ?>
                     </select>
                 </div>
