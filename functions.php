@@ -65,7 +65,6 @@ function crrg_custom_header() {
                 <li><a href="/members/">人员名录</a></li>
                 <li><a href="/duty/">值班表</a></li>
                 <li><a href="/map/">事件态势</a></li>
-                <li><a href="/guide/" style="color:#F0A500;">📖 新手指南</a></li>
                 <li class="nav-auth">
                     <?php if (is_user_logged_in()): $u=wp_get_current_user(); $rk=crrg_get_rank_data(crrg_get_rank($u->ID)); ?>
                         <div class="nav-user-dropdown">
@@ -442,9 +441,6 @@ add_action('rss_tag_pre', function () {
 add_action('wp_head', function () {
     echo '<link rel="alternate" type="application/rss+xml" title="中央重生抵御小组 RSS" href="' . home_url('/feed/') . '">' . "
 ";
-    if (is_page('guide')) {
-        echo '<style>.entry-header.ast-no-thumbnail{display:none!important;}</style>';
-    }
 });
 
 // ─── 文章机密等级水印 ───
