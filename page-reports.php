@@ -304,21 +304,6 @@ get_header();
                     </select>
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;"><span class="time-label-text">报告时间</span></label>
-                    <span id="event_time_single2">
-                        <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
-                        <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
-                    </span>
-                    <span id="event_time_range2" style="display:none;">
-                        <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
-                            <input type="datetime-local" name="event_start" placeholder="起始时间" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
-                            <span style="color:#999;">至</span>
-                            <input type="datetime-local" name="event_end" placeholder="终点时间" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
-                        </div>
-                        <span style="font-size:11px;color:#999;">起始留空=持续至终点；终点留空=起始后持续至今；均留空=常驻事件</span>
-                    </span>
-                </div>
-                <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件地点</label>
                     <input type="text" name="report_location" value="<?php echo esc_attr(get_post_meta($editing_draft->ID, 'crrg_location', true)); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="如：广西横州市云表镇">
                 </div>
