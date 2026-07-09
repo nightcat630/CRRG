@@ -455,11 +455,13 @@ get_header();
                 var range=document.getElementById('event_time_range_edit');
                 var rlabel=document.querySelector('#event_time_range_edit .time-range-label');
                 if(cat&&single&&range){
-                    cat.addEventListener('change',function(){
-                        var is=this.value==='events';
+                    var toggle=function(){
+                        var is=cat.value==='events';
                         range.style.display=is?'':'none';
                         if(rlabel) rlabel.style.display=is?'':'none';
-                    });
+                    };
+                    cat.addEventListener('change',toggle);
+                    toggle();
                 }
             })();
             </script>
