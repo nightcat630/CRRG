@@ -5,7 +5,10 @@ get_header();
 $location_posts = get_posts([
     'post_type' => 'post', 'post_status' => 'publish',
     'meta_key' => 'crrg_location', 'posts_per_page' => 50,
-    'meta_query' => [crrg_get_access_meta_query()],
+    'meta_query' => [
+        ['key' => 'crrg_report_type_name', 'value' => '事件'],
+        crrg_get_access_meta_query(),
+    ],
 ]);
 
 // 地点坐标映射
