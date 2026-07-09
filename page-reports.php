@@ -276,9 +276,10 @@ get_header();
                     </span>
                     <span id="event_time_range" style="display:none;">
                         <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
-                            <input type="datetime-local" name="event_start" placeholder="起始时间" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
-                            <span style="color:#999;">至</span>
-                            <input type="datetime-local" name="event_end" placeholder="终点时间" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                            <span style="font-size:12px;color:#666;white-space:nowrap;">起始：</span>
+                            <input type="datetime-local" name="event_start" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                            <span style="font-size:12px;color:#666;white-space:nowrap;">结束：</span>
+                            <input type="datetime-local" name="event_end" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
                         </div>
                         <span style="font-size:11px;color:#999;">起始留空=持续至终点；终点留空=起始后持续至今；均留空=常驻事件</span>
                     </span>
@@ -452,8 +453,19 @@ get_header();
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件时间</label>
-                    <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
-                    <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
+                    <span id="event_time_single3">
+                        <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                        <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
+                    </span>
+                    <span id="event_time_range3" style="display:none;">
+                        <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+                            <span style="font-size:12px;color:#666;white-space:nowrap;">起始：</span>
+                            <input type="datetime-local" name="event_start" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                            <span style="font-size:12px;color:#666;white-space:nowrap;">结束：</span>
+                            <input type="datetime-local" name="event_end" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                        </div>
+                        <span style="font-size:11px;color:#999;">起始留空=持续至终点；终点留空=起始后持续至今；均留空=常驻事件</span>
+                    </span>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">访问等级 <span style="font-weight:normal;color:#999;font-size:12px;">（不超过自身等级）</span></label>
