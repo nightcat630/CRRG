@@ -28,7 +28,6 @@ foreach ($location_posts as $p) {
     $lat = get_post_meta($p->ID, 'crrg_lat', true);
     $lng = get_post_meta($p->ID, 'crrg_lng', true);
     // 时间范围过滤
-    $now = current_time('Y-m-d H:i:s');
     $start = get_post_meta($p->ID, 'crrg_event_start', true);
     $end = get_post_meta($p->ID, 'crrg_event_end', true);
     $visible = true;
@@ -49,10 +48,19 @@ foreach ($location_posts as $p) {
     }
 }
 ?>
+<?php $observe_time = $_GET['t'] ?? ''; $now = $observe_time ?: current_time('Y-m-d H:i:s'); ?>
 <div class="gov-main">
 <div class="gov-content">
     <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">🗺️ 事件态势图</h1>
-    <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">中央重生抵御小组 · 地理信息</div>
+    <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">
+        中央重生抵御小组 · 地理信息
+        <form method="get" style="display:inline;float:right;">
+            <span style="font-size:12px;color:#666;">观测时间：</span>
+            <input type="datetime-local" name="t" value="<?php echo $observe_time ? esc_attr(date('Y-m-d\TH:i', strtotime($observe_time))) : esc_attr(date('Y-m-d\TH:i')); ?>" style="padding:4px 8px;border:1px solid #d5d5d5;border-radius:3px;font-size:12px;">
+            <button type="submit" style="padding:4px 12px;background:#1B3A5C;color:#fff;border:none;border-radius:3px;font-size:12px;cursor:pointer;">观测</button>
+            <?php if ($observe_time): ?><a href="?" style="font-size:11px;color:#C41230;text-decoration:none;margin-left:4px;">重置</a><?php endif; ?>
+        </form>
+    </div>
 
     <div id="china-map" style="width:100%;height:500px;border:1px solid #e0e0e0;border-radius:4px;background:#f0f2f5;"></div>
     <link rel="stylesheet" href="/wp-content/themes/astra-child/assets/leaflet/leaflet.css" />
