@@ -352,7 +352,7 @@ get_header();
                         <input type="datetime-local" name="edit_date" value="<?php $ed = get_post_meta($edit_post->ID, 'crrg_event_date', true); echo $ed ? esc_attr(date('Y-m-d\TH:i', strtotime($ed))) : ''; ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
                         <span style="font-size:11px;color:#999;">对外显示的发布时间，留空不变</span>
                     </span>
-                    <span id="event_time_range_edit" style="<?php echo $cur_cat==='events'?'':'display:none;'; ?>">
+                    <span id="event_time_range_edit" style="display:none;">
                         <div class="time-range-label" style="font-weight:bold;color:#333;font-size:14px;margin:12px 0 6px;">事件时间范围 <span style="font-weight:normal;font-size:11px;color:#999;">（地图过滤用）</span></div>
                         <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
                             <span style="font-size:12px;color:#666;white-space:nowrap;">起始：</span>
