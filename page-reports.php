@@ -447,6 +447,22 @@ get_header();
                     <a href="?" style="background:#f0f0f0;color:#555;border:1px solid #d5d5d5;padding:10px 24px;border-radius:4px;font-size:14px;text-decoration:none;">取消</a>
                 </div>
             </form>
+            <script>
+            // 编辑申请表单：事件类型切换时间范围
+            (function(){
+                var cat=document.querySelector('select[name="edit_category"]');
+                var single=document.getElementById('event_time_single_edit');
+                var range=document.getElementById('event_time_range_edit');
+                var rlabel=document.querySelector('#event_time_range_edit .time-range-label');
+                if(cat&&single&&range){
+                    cat.addEventListener('change',function(){
+                        var is=this.value==='events';
+                        range.style.display=is?'':'none';
+                        if(rlabel) rlabel.style.display=is?'':'none';
+                    });
+                }
+            })();
+            </script>
         <?php elseif ($show_form): ?>
             <!-- New Report Form -->
             <form method="post" style="margin-bottom:40px;">
