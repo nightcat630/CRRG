@@ -116,6 +116,7 @@ if (isset($_GET['req_delete']) && wp_verify_nonce($_GET['_nonce'] ?? '', 'crrg_r
 }
 
 $show_form = isset($_GET['new']) || $edit_post || $editing_draft || (empty(get_posts(['post_type'=>'post','post_status'=>'draft','author'=>$user_id,'posts_per_page'=>1])) && empty(get_posts(['post_type'=>'post','post_status'=>'publish','author'=>$user_id,'posts_per_page'=>1])));
+require_once __DIR__ . '/includes/report-form.php';
 
 // ─── 通用表单字段函数 ───
 function report_form_fields($prefix, $category_val, $access_val, $threat_val, $event_date_val, $event_start_val, $event_end_val, $location_val, $tags_val) {

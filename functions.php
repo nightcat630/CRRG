@@ -25,6 +25,8 @@ require_once __DIR__ . '/includes/emergency-alert.php';
 require_once __DIR__ . '/includes/messages.php';
 require_once __DIR__ . '/includes/duty-system.php';
 require_once __DIR__ . '/includes/ann-carousel.php';
+require_once __DIR__ . '/includes/threats.php';
+require_once __DIR__ . '/includes/report-form.php';
 
 add_filter('astra_single_post_navigation_enabled', '__return_false');
 
@@ -529,13 +531,8 @@ add_filter('the_content', function ($content) {
     $threat = get_post_meta($post_id, 'crrg_threat_level', true);
     $threat_badge = '';
     if ($threat) {
-        $threat_map = ['ren'=>['人','👤','#16a34a'],'gui'=>['鬼','👻','#8B5CF6'],'mo'=>['魔','👿','#C41230'],'shen'=>['神','👼','#F0A500']];
-        if (isset($threat_map[$threat])) {
-            $t = $threat_map[$threat];
-            $threat_badge = '<div style="margin-bottom:16px;padding:8px 14px;background:'.$t[2].'10;border-left:3px solid '.$t[2].';border-radius:2px;font-size:13px;"><strong>'.$t[1].' '.$t[0].'级威胁</strong> — ';
-            $desc = ['ren'=>'对人类产生影响','gui'=>'对神秘生物/古神眷属产生影响','mo'=>'对次级旧日支配者/旧日支配者/古神产生影响','shen'=>'对外神产生影响'];
-            $threat_badge .= $desc[$threat] . '</div>';
-        }
+        $t = CRRG_THREAT_LEVELS[$threat];
+            $threat_badge = crrg_threat_info($threat);
     }
     
     // 地图链接

@@ -96,7 +96,7 @@ foreach ($location_posts as $p) {
             if (!in_array($p->ID, $visible_ids)) continue;
             $loc = get_post_meta($p->ID, 'crrg_location', true);
             $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
-            $colors = ['ren'=>'#16a34a','gui'=>'#8B5CF6','mo'=>'#C41230','shen'=>'#F0A500'];
+            $colors = ['ren'=>'#16a34a','gui'=>'#8B5CF6','mo'=>'#C41230','shen'=>'#F0A500']; // from CRRG_THREAT_LEVELS
             $dot = $colors[$threat] ?? '#999';
         ?>
             <div style="background:#fff;border:1px solid #e0e0e0;border-left:4px solid <?php echo $dot; ?>;border-radius:4px;padding:10px 14px;margin-bottom:6px;">
