@@ -546,6 +546,19 @@ add_filter('the_content', function ($content) {
         $map_link = '<div style="margin-bottom:16px;font-size:13px;">📍 <a href="/map/" style="color:#1B3A5C;">在地图上查看：' . esc_html($loc) . '</a></div>';
     }
     
+    // 事件时间范围
+    $event_range = '';
+    $cat = get_post_meta($post_id, 'crrg_report_type', true);
+    if ($cat === 'events') {
+        $es = get_post_meta($post_id, 'crrg_event_start', true);
+        $ee = get_post_meta($post_id, 'crrg_event_end', true);
+        if ($es || $ee) {
+            $start_str = $es ? date('Y年n月j日 H:i', strtotime($es)) : '不限';
+            $end_str = $ee ? date('Y年n月j日 H:i', strtotime($ee)) : '至今';
+            $event_range = '<div style="margin-bottom:16px;padding:8px 14px;background:#f0f5fa;border-left:3px solid #1B3A5C;border-radius:2px;font-size:13px;"><strong>⏱ 事件时间：</strong>' . $start_str . ' → ' . $end_str . '</div>';
+        }
+    }
+    
     // 面包屑
     $cat_name = get_post_meta($post_id, 'crrg_report_type_name', true);
     $breadcrumb = '<div style="margin-bottom:16px;font-size:12px;color:#999;"><a href="/" style="color:#999;">首页</a> › ';
@@ -558,7 +571,7 @@ add_filter('the_content', function ($content) {
     $breadcrumb .= '<span style="color:#666;">正文</span></div>';
     
     // 把面包屑、威胁、地图加到正文前面
-    $content = $breadcrumb . $threat_badge . $map_link . $content;
+    $content = $breadcrumb . $threat_badge . $map_link . $event_range . $content;
     
     $tags = get_the_tags($post_id);
     if (!$tags || empty($tags)) return $content;
