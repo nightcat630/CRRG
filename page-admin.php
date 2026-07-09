@@ -32,7 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && wp_verify_nonce($_POST['_wpnonce'] 
         $author_id = get_post_field('post_author', $target_id);
         $is_news = get_post_meta($target_id, 'crrg_is_news', true);
         crrg_add_xp($author_id, $is_news ? 10 : 15);
-        $message = '文章已审核通过，作者获得 15 资历。';
+        // 值班加成
+        $duty_bonus = 0;
+        $today_duty = crrg_get_today_duty();
+        $author = get_userdata($author_id);
+        if ($author && in_array($author->display_name, $today_duty)) {
+            $duty_bonus = $is_news ? 5 : 8;
+            crrg_add_xp($author_id, $duty_bonus);
+        }
+        $msg = '文章已审核通过，作者获得 ' . ($is_news ? 10 : 15) . ' 资历';
+        if ($duty_bonus) $msg .= '（含值班加成 +' . $duty_bonus . '）';
+        $msg .= '。';
+        $message = $msg;
     } elseif ($action === 'reject_post') {
         $reason = sanitize_text_field(wp_unslash($_POST['reject_reason'] ?? ''));
         update_post_meta($target_id, 'crrg_reject_reason', $reason);
