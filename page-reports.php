@@ -448,22 +448,19 @@ get_header();
                 </div>
             </form>
             <script>
-            // 编辑申请表单：事件类型切换时间范围
-            (function(){
-                var cat=document.querySelector('select[name="edit_category"]');
-                var single=document.getElementById('event_time_single_edit');
-                var range=document.getElementById('event_time_range_edit');
-                var rlabel=document.querySelector('#event_time_range_edit .time-range-label');
-                if(cat&&single&&range){
-                    var toggle=function(){
-                        var is=cat.value==='events';
-                        range.style.display=is?'':'none';
-                        if(rlabel) rlabel.style.display=is?'':'none';
+            // 编辑申请表单：事件类型切换
+            var editCat=document.querySelector('select[name="edit_category"]');
+            if(editCat){
+                var editForm=editCat.closest('form');
+                var editRange=editForm.querySelector('[id*="event_time_range"]');
+                if(editRange){
+                    var toggleEdit=function(){
+                        editRange.style.display=editCat.value==='events'?'':'none';
                     };
-                    cat.addEventListener('change',toggle);
-                    toggle();
+                    editCat.addEventListener('change',toggleEdit);
+                    toggleEdit();
                 }
-            })();
+            }
             </script>
         <?php elseif ($show_form): ?>
             <!-- New Report Form -->
