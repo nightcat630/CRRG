@@ -48,6 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             // 事件时间
             $event_date = sanitize_text_field($_POST['event_date'] ?? '');
             if ($event_date) update_post_meta($post_id, 'crrg_event_date', $event_date);
+            // 事件起止时间
+            $event_start = sanitize_text_field($_POST['event_start'] ?? '');
+            $event_end = sanitize_text_field($_POST['event_end'] ?? '');
+            if ($event_start) update_post_meta($post_id, 'crrg_event_start', $event_start);
+            if ($event_end) update_post_meta($post_id, 'crrg_event_end', $event_end);
             
             // 事件地点
             $loc_parts = array_filter([
@@ -265,8 +270,18 @@ get_header();
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">事件时间</label>
-                    <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
-                    <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
+                    <span id="event_time_single">
+                        <input type="datetime-local" name="event_date" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                        <span style="font-size:11px;color:#999;">对外显示的发布时间，留空则使用实际提交时间</span>
+                    </span>
+                    <span id="event_time_range" style="display:none;">
+                        <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+                            <input type="datetime-local" name="event_start" placeholder="起始时间" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                            <span style="color:#999;">至</span>
+                            <input type="datetime-local" name="event_end" placeholder="终点时间" style="flex:1;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
+                        </div>
+                        <span style="font-size:11px;color:#999;">起始留空=持续至终点；终点留空=起始后持续至今；均留空=常驻事件</span>
+                    </span>
                 </div>
                 <div style="margin-bottom:16px;">
                     <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">访问等级 <span style="font-weight:normal;color:#999;font-size:12px;">（不超过自身等级）</span></label>
@@ -507,6 +522,20 @@ get_header();
                         if(districts.length>0){ct.disabled=false; districts.forEach(function(d){ct.add(new Option(d,d));});}
                     });
                     ct.addEventListener('change',function(){if(this.value) setLoc(addrData[selCountry][selProvince][1][selCity][0],addrData[selCountry][selProvince][1][selCity][1]);});
+                    // 事件类型切换时间字段
+                    (function(){
+                        var cat=document.querySelector('select[name="report_category"]');
+                        var single=document.getElementById('event_time_single');
+                        var range=document.getElementById('event_time_range');
+                        if(cat&&single&&range){
+                            var toggle=function(){
+                                if(cat.value==='events'){single.style.display='none';range.style.display='';}
+                                else{single.style.display='';range.style.display='none';}
+                            };
+                            cat.addEventListener('change',toggle);
+                            toggle();
+                        }
+                    })();
                     </script>
                 </div>
                 <div style="margin-bottom:16px;">

@@ -27,7 +27,17 @@ foreach ($location_posts as $p) {
     $threat = get_post_meta($p->ID, 'crrg_threat_level', true);
     $lat = get_post_meta($p->ID, 'crrg_lat', true);
     $lng = get_post_meta($p->ID, 'crrg_lng', true);
-    if ($lat && $lng) {
+    // 时间范围过滤
+    $now = current_time('Y-m-d H:i:s');
+    $start = get_post_meta($p->ID, 'crrg_event_start', true);
+    $end = get_post_meta($p->ID, 'crrg_event_end', true);
+    $visible = true;
+    if ($start || $end) {
+        if ($start && $end) $visible = ($now >= $start && $now <= $end);
+        elseif ($start) $visible = ($now >= $start);
+        elseif ($end) $visible = ($now <= $end);
+    }
+    if ($lat && $lng && $visible) {
         $markers[] = [
             'lat' => (float)$lat, 'lng' => (float)$lng,
             'title' => $p->post_title,
