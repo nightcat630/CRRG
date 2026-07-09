@@ -563,24 +563,6 @@ get_header();
                         if(districts.length>0){ct.disabled=false; districts.forEach(function(d){ct.add(new Option(d,d));});}
                     });
                     ct.addEventListener('change',function(){if(this.value) setLoc(addrData[selCountry][selProvince][1][selCity][0],addrData[selCountry][selProvince][1][selCity][1]);});
-                    // 事件类型切换时间字段（所有表单）
-                    (function(){
-                        document.querySelectorAll('select[name="report_category"],select[name="edit_category"]').forEach(function(cat){
-                            var form=cat.closest('form');
-                            var single=form.querySelector('[id^="event_time_single"]');
-                            var range=form.querySelector('[id^="event_time_range"]');
-                            if(!single||!range)return;
-                            var toggle=function(){
-                                if(cat.value==='events'){single.style.display='';range.style.display='';}
-                                else{single.style.display='';range.style.display='none';}
-                                // 范围标签联动
-                                var rlabel=form.querySelector('.time-range-label');
-                                if(rlabel) rlabel.style.display=cat.value==='events'?'':'none';
-                            };
-                            cat.addEventListener('change',toggle);
-                            toggle();
-                        });
-                    })();
                     </script>
                 </div>
                 <div style="margin-bottom:16px;">
@@ -697,5 +679,22 @@ get_header();
         toggle(); // 初始加载时触发
     });
 })();
+</script>
+<script>
+// 所有表单：事件类型切换时间字段
+document.querySelectorAll('select[name="report_category"],select[name="edit_category"]').forEach(function(cat){
+    var form=cat.closest('form');
+    var single=form.querySelector('[id^="event_time_single"]');
+    var range=form.querySelector('[id^="event_time_range"]');
+    var rlabel=form.querySelector('.time-range-label');
+    if(!single||!range)return;
+    var toggle=function(){
+        var is=cat.value==='events';
+        single.style.display='';range.style.display=is?'':'none';
+        if(rlabel) rlabel.style.display=is?'':'none';
+    };
+    cat.addEventListener('change',toggle);
+    toggle();
+});
 </script>
 <?php get_footer(); ?>
