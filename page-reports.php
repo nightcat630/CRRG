@@ -19,25 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_report']) && w
             update_post_meta($post_id, 'crrg_report_type', $category);
             update_post_meta($post_id, 'crrg_report_type_name', $cat_map[$category] ?? '其他');
             // 访问等级
-            $access = sanitize_text_field($_POST['access_level'] ?? 'observer');
+            $access = sanitize_text_field($_POST['report_access_level'] ?? 'observer');
             $my_rank = crrg_get_rank($user_id);
             $allowed = array_column(crrg_get_accessible_ranks($my_rank), 'id');
             update_post_meta($post_id, 'crrg_access_level', in_array($access, $allowed) ? $access : 'observer');
             // 威胁等级
-            $threat = sanitize_text_field($_POST['threat_level'] ?? '');
+            $threat = sanitize_text_field($_POST['report_threat_level'] ?? '');
             if ($threat) update_post_meta($post_id, 'crrg_threat_level', $threat); else delete_post_meta($post_id, 'crrg_threat_level');
             // 时间
-            $event_date = sanitize_text_field($_POST['event_date'] ?? '');
+            $event_date = sanitize_text_field($_POST['report_event_date'] ?? '');
             if ($event_date) update_post_meta($post_id, 'crrg_event_date', $event_date);
-            $event_start = sanitize_text_field($_POST['event_start'] ?? '');
+            $event_start = sanitize_text_field($_POST['report_event_start'] ?? '');
             if ($event_start) update_post_meta($post_id, 'crrg_event_start', $event_start);
-            $event_end = sanitize_text_field($_POST['event_end'] ?? '');
+            $event_end = sanitize_text_field($_POST['report_event_end'] ?? '');
             if ($event_end) update_post_meta($post_id, 'crrg_event_end', $event_end);
             // 地点
             $loc_manual = sanitize_text_field($_POST['report_location'] ?? '');
-            $loc_parts = array_filter([sanitize_text_field($_POST['addr_country']??''), sanitize_text_field($_POST['addr_province']??''), sanitize_text_field($_POST['addr_city']??''), sanitize_text_field($_POST['addr_county']??'')]);
+            $loc_parts = array_filter([sanitize_text_field($_POST['report_addr_country']??''), sanitize_text_field($_POST['report_addr_province']??''), sanitize_text_field($_POST['report_addr_city']??''), sanitize_text_field($_POST['report_addr_county']??'')]);
             $location = $loc_manual ?: implode(' ', $loc_parts);
-            if ($location && ($_POST['addr_country']??'') !== '__other__') update_post_meta($post_id, 'crrg_location', $location);
+            if ($location && ($_POST['report_addr_country']??'') !== '__other__') update_post_meta($post_id, 'crrg_location', $location);
             $lat = $_POST['report_lat'] ?? ''; $lng = $_POST['report_lng'] ?? '';
             if ($lat && $lng) { update_post_meta($post_id, 'crrg_lat', $lat); update_post_meta($post_id, 'crrg_lng', $lng); }
             // 标签
@@ -60,13 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_draft']) && wp
         $cat = sanitize_text_field($_POST['report_category'] ?? 'other');
         $cm = ['artifacts'=>'镇物','events'=>'事件','personnel'=>'人物','organizations'=>'组织','research'=>'研究发现','entities'=>'祂们','esoterica'=>'秘术','outstanding'=>'优秀员工','other'=>'其他'];
         update_post_meta($draft_id, 'crrg_report_type', $cat); update_post_meta($draft_id, 'crrg_report_type_name', $cm[$cat]??'其他');
-        $ac = sanitize_text_field($_POST['access_level'] ?? 'observer');
+        $ac = sanitize_text_field($_POST['report_access_level'] ?? 'observer');
         $mr = crrg_get_rank($user_id); $al = array_column(crrg_get_accessible_ranks($mr), 'id');
         update_post_meta($draft_id, 'crrg_access_level', in_array($ac,$al)?$ac:'observer');
-        $th = sanitize_text_field($_POST['threat_level'] ?? ''); if ($th) update_post_meta($draft_id, 'crrg_threat_level', $th); else delete_post_meta($draft_id, 'crrg_threat_level');
-        $ed = sanitize_text_field($_POST['event_date'] ?? ''); if ($ed) update_post_meta($draft_id, 'crrg_event_date', $ed);
-        $es = sanitize_text_field($_POST['event_start'] ?? ''); if ($es) update_post_meta($draft_id, 'crrg_event_start', $es);
-        $ee = sanitize_text_field($_POST['event_end'] ?? ''); if ($ee) update_post_meta($draft_id, 'crrg_event_end', $ee);
+        $th = sanitize_text_field($_POST['report_threat_level'] ?? ''); if ($th) update_post_meta($draft_id, 'crrg_threat_level', $th); else delete_post_meta($draft_id, 'crrg_threat_level');
+        $ed = sanitize_text_field($_POST['report_event_date'] ?? ''); if ($ed) update_post_meta($draft_id, 'crrg_event_date', $ed);
+        $es = sanitize_text_field($_POST['report_event_start'] ?? ''); if ($es) update_post_meta($draft_id, 'crrg_event_start', $es);
+        $ee = sanitize_text_field($_POST['report_event_end'] ?? ''); if ($ee) update_post_meta($draft_id, 'crrg_event_end', $ee);
         $loc = sanitize_text_field($_POST['report_location'] ?? ''); if ($loc) update_post_meta($draft_id, 'crrg_location', $loc);
         $tg = sanitize_text_field($_POST['report_tags'] ?? ''); if ($tg) wp_set_post_tags($draft_id, array_filter(array_map('trim', explode(',', $tg))), false);
         $message = $ns === 'pending' ? '报告已提交审核！' : '草稿已更新';
@@ -202,7 +202,7 @@ get_header();
         <?php wp_nonce_field('crrg_edit_draft'); ?>
         <input type="hidden" name="draft_id" value="<?php echo $editing_draft->ID; ?>">
         <div style="margin-bottom:16px;"><label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">报告标题</label><input type="text" name="report_title" value="<?php echo esc_attr($editing_draft->post_title); ?>" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;"></div>
-        <?php report_form_fields('', get_post_meta($editing_draft->ID,'crrg_report_type',true)?:'other', get_post_meta($editing_draft->ID,'crrg_access_level',true)?:'observer', get_post_meta($editing_draft->ID,'crrg_threat_level',true)?:'', get_post_meta($editing_draft->ID,'crrg_event_date',true)?:'', get_post_meta($editing_draft->ID,'crrg_event_start',true)?:'', get_post_meta($editing_draft->ID,'crrg_event_end',true)?:'', get_post_meta($editing_draft->ID,'crrg_location',true)?:'', implode(',', wp_get_post_tags($editing_draft->ID,['fields'=>'names']))); ?>
+        <?php report_form_fields('report_', get_post_meta($editing_draft->ID,'crrg_report_type',true)?:'other', get_post_meta($editing_draft->ID,'crrg_access_level',true)?:'observer', get_post_meta($editing_draft->ID,'crrg_threat_level',true)?:'', get_post_meta($editing_draft->ID,'crrg_event_date',true)?:'', get_post_meta($editing_draft->ID,'crrg_event_start',true)?:'', get_post_meta($editing_draft->ID,'crrg_event_end',true)?:'', get_post_meta($editing_draft->ID,'crrg_location',true)?:'', implode(',', wp_get_post_tags($editing_draft->ID,['fields'=>'names']))); ?>
         <div style="margin-bottom:16px;"><label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">报告内容</label><?php wp_editor($editing_draft->post_content, 'report_content', ['textarea_name'=>'report_content','textarea_rows'=>12,'media_buttons'=>true,'teeny'=>false]); ?></div>
         <div style="display:flex;gap:12px;">
             <button type="submit" name="update_draft" value="1" style="background:#C41230;color:#fff;border:none;padding:10px 32px;border-radius:4px;font-size:15px;cursor:pointer;font-weight:bold;">发布报告</button>
@@ -230,7 +230,7 @@ get_header();
     <form method="post">
         <?php wp_nonce_field('crrg_report'); ?>
         <div style="margin-bottom:16px;"><label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">报告标题</label><input type="text" name="report_title" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="输入报告标题..."></div>
-        <?php report_form_fields('', 'other', 'observer', '', '', '', '', '', ''); ?>
+        <?php report_form_fields('report_', 'other', 'observer', '', '', '', '', '', ''); ?>
         <div style="margin-bottom:16px;"><label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">报告内容</label><?php wp_editor('', 'report_content', ['textarea_name'=>'report_content','textarea_rows'=>12,'media_buttons'=>true,'teeny'=>false]); ?></div>
         <div style="display:flex;gap:12px;">
             <button type="submit" name="submit_report" value="1" style="background:#C41230;color:#fff;border:none;padding:10px 32px;border-radius:4px;font-size:15px;cursor:pointer;font-weight:bold;">发布报告</button>
