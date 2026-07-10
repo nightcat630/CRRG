@@ -136,9 +136,9 @@ get_header();
         <?php if ($pending_data): ?>
             <!-- Pending application -->
             <div style="background:#fff8e1;border:1px solid #ffcc02;border-radius:4px;padding:16px;margin-bottom:20px;">
-                <strong>📋 待审批申请</strong><br>
+                <strong> 待审批申请</strong><br>
                 申请等级：<?php echo $pending_data['icon'] . ' ' . $pending_data['name']; ?><br>
-                状态：<?php echo $pending_status === 'pending' ? '⏳ 等待审批' : '❌ 已拒绝'; ?><br>
+                状态：<?php echo $pending_status === 'pending' ? '⏳ 等待审批' : '× 已拒绝'; ?><br>
                 <?php if ($pending_status === 'rejected'): ?>
                     拒绝原因：<?php echo esc_html(get_user_meta($user_id, 'crrg_promotion_reject_reason', true) ?: '未提供'); ?><br>
                 <?php endif; ?>
@@ -169,7 +169,7 @@ get_header();
         <!-- Review queue -->
         <?php if (!empty($pending_apps)): ?>
             <div style="margin-top:32px;border-top:1px solid #eee;padding-top:20px;">
-                <h3 style="font-size:16px;color:#1B3A5C;margin-bottom:12px;">📋 待审批列表（<?php echo count($pending_apps); ?>）</h3>
+                <h3 style="font-size:16px;color:#1B3A5C;margin-bottom:12px;"> 待审批列表（<?php echo count($pending_apps); ?>）</h3>
                 <?php foreach ($pending_apps as $app): ?>
                     <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:12px;">
                         <div style="display:flex;justify-content:space-between;align-items:center;">

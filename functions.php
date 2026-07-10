@@ -80,7 +80,7 @@ function crrg_custom_header() {
                                 <li><a href="/author/<?php echo $u->user_nicename; ?>/">我的主页</a></li>
                                 <li><a href="/profile/">修改个人资料</a></li>
                                 <li><a href="/promotion/">晋升申请</a></li>
-                                <li><a href="/messages/">✉️ 私信 <?php $ur = function_exists('crrg_unread_count') ? crrg_unread_count($u->ID) : 0; if($ur): ?><span style="color:#C41230;font-weight:bold;">(<?php echo $ur; ?>)</span><?php endif; ?></a></li>
+                                <li><a href="/messages/">✉ 私信 <?php $ur = function_exists('crrg_unread_count') ? crrg_unread_count($u->ID) : 0; if($ur): ?><span style="color:#C41230;font-weight:bold;">(<?php echo $ur; ?>)</span><?php endif; ?></a></li>
                                 <li><a href="<?php echo wp_logout_url(home_url()); ?>">登出</a></li>
                             </ul>
                         </div>
@@ -363,7 +363,7 @@ add_action('wp_ajax_crrg_like_topic', function () {
 add_action('bbp_theme_after_topic_title', function () {
     $tid = bbp_get_topic_id(); $likes = get_post_meta($tid, 'crrg_likes', true) ?: [];
     $liked = is_user_logged_in() && get_post_meta($tid, 'crrg_liked_by_'.get_current_user_id(), true);
-    echo '<span class="topic-like-btn" data-topic="'.$tid.'" style="cursor:pointer;font-size:12px;color:'.($liked?'#C41230':'#999').';margin-left:8px;">'.($liked?'❤️':'🤍').' <span class="like-count">'.count($likes).'</span></span>';
+    echo '<span class="topic-like-btn" data-topic="'.$tid.'" style="cursor:pointer;font-size:12px;color:'.($liked?'#C41230':'#999').';margin-left:8px;">'.($liked?'❤':'🤍').' <span class="like-count">'.count($likes).'</span></span>';
 });
 
 add_action('wp_footer', function () {
@@ -375,7 +375,7 @@ add_action('wp_footer', function () {
         var fd=new FormData();fd.append('action','crrg_like_topic');fd.append('topic_id',btn.getAttribute('data-topic'));
         fetch('/wp-admin/admin-ajax.php',{method:'POST',body:fd,credentials:'same-origin'}).then(r=>r.text()).then(res=>{
             var c=res.split('|')[1]||0;btn.querySelector('.like-count').textContent=c;
-            if(res.startsWith('liked')){btn.innerHTML='❤️ <span class="like-count">'+c+'</span>';btn.style.color='#C41230';}
+            if(res.startsWith('liked')){btn.innerHTML='❤ <span class="like-count">'+c+'</span>';btn.style.color='#C41230';}
             else{btn.innerHTML='🤍 <span class="like-count">'+c+'</span>';btn.style.color='#999';}
         });
     });
@@ -575,7 +575,7 @@ add_filter('the_content', function ($content) {
     ob_start();
     ?>
     <div class="crrg-post-tags" style="margin:24px 0;padding:16px;background:#f8f9fa;border:1px solid #e0e0e0;border-radius:4px;">
-        <span style="font-weight:600;color:#1e293b;margin-right:8px;">🏷️ 标签：</span>
+        <span style="font-weight:600;color:#1e293b;margin-right:8px;"> 标签：</span>
         <?php foreach ($tags as $tag): ?>
             <a href="<?php echo get_tag_link($tag); ?>" style="display:inline-block;margin:2px 4px;padding:4px 12px;background:#1B3A5C;color:#fff;border-radius:3px;font-size:13px;text-decoration:none;"><?php echo esc_html($tag->name); ?></a>
         <?php endforeach; ?>
@@ -594,7 +594,7 @@ add_filter('the_content', function ($content) {
     if ($related->have_posts()):
         ?>
         <div class="crrg-related-posts" style="margin:20px 0;padding:16px;background:#f0f5fa;border:1px solid #d1d5db;border-radius:4px;">
-            <h4 style="margin:0 0 12px;color:#1e293b;">📎 相关报告</h4>
+            <h4 style="margin:0 0 12px;color:#1e293b;"> 相关报告</h4>
             <ul style="margin:0;padding:0;list-style:none;">
                 <?php while ($related->have_posts()): $related->the_post(); ?>
                     <li style="margin-bottom:6px;">→ <a href="<?php the_permalink(); ?>" style="color:#046bd2;"><?php the_title(); ?></a></li>

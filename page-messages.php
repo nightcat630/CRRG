@@ -148,7 +148,7 @@ get_header();
             <div style="margin-bottom:16px;display:flex;gap:8px;align-items:center;">
                 <a href="?tab=inbox" style="padding:6px 16px;border-radius:3px;font-size:13px;text-decoration:none;<?php echo $tab==='inbox'?'background:#1B3A5C;color:#fff;':'background:#f0f0f0;color:#333;'; ?>">收件箱<?php echo $unread?' ('.$unread.')':''; ?></a>
                 <a href="?tab=sent" style="padding:6px 16px;border-radius:3px;font-size:13px;text-decoration:none;<?php echo $tab==='sent'?'background:#1B3A5C;color:#fff;':'background:#f0f0f0;color:#333;'; ?>">已发送</a>
-                <a href="?compose=1" style="padding:6px 16px;border-radius:3px;font-size:13px;text-decoration:none;background:#C41230;color:#fff;">✚ 写私信</a>
+                <a href="?compose=1" style="padding:6px 16px;border-radius:3px;font-size:13px;text-decoration:none;background:#C41230;color:#fff;">+ 写私信</a>
             </div>
 
             <?php $list = $tab === 'sent' ? $sent : $inbox; ?>

@@ -29,7 +29,7 @@ get_header();
 <div class="gov-main">
     <div class="gov-content">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">
-            <div><h1 style="font-size:22px;color:#1B3A5C;margin:0;">📝 要闻投稿</h1><div style="color:#999;font-size:12px;">中央重生抵御小组 · 新闻社</div></div>
+            <div><h1 style="font-size:22px;color:#1B3A5C;margin:0;"> 要闻投稿</h1><div style="color:#999;font-size:12px;">中央重生抵御小组 · 新闻社</div></div>
             <a href="/newsroom/" style="color:#1B3A5C;font-size:14px;text-decoration:none;">← 返回列表</a>
         </div>
         <?php if ($message): ?><div style="background:#f0fdf4;border:1px solid #86efac;color:#166534;padding:12px 16px;border-radius:4px;margin-bottom:16px;"><?php echo esc_html($message); ?></div><?php endif; ?>

@@ -4,19 +4,19 @@
 get_header();
 
 $sections = [
-    'artifacts' => ['name' => '镇物', 'page' => '/artifacts/', 'icon' => '📦'],
+    'artifacts' => ['name' => '镇物', 'page' => '/artifacts/', 'icon' => ''],
     'events' => ['name' => '事件', 'page' => '/events/', 'icon' => ''],
     'personnel' => ['name' => '人物', 'page' => '/personnel/', 'icon' => ''],
-    'organizations' => ['name' => '组织', 'page' => '/organizations/', 'icon' => '🏛️'],
+    'organizations' => ['name' => '组织', 'page' => '/organizations/', 'icon' => ''],
     'research' => ['name' => '研究发现', 'page' => '/research/', 'icon' => ''],
-    'entities' => ['name' => '祂们', 'page' => '/entities/', 'icon' => '⚡'],
-    'esoterica' => ['name' => '秘术（仅登记）', 'page' => '/esoterica/', 'icon' => '🔮'],
+    'entities' => ['name' => '祂们', 'page' => '/entities/', 'icon' => ''],
+    'esoterica' => ['name' => '秘术（仅登记）', 'page' => '/esoterica/', 'icon' => ''],
     'outstanding' => ['name' => '优秀员工', 'page' => '/outstanding/', 'icon' => ''],
 ];
 ?>
 <div class="gov-main">
     <div class="gov-content">
-        <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 8px;font-weight:bold;">📚 电子档案馆</h1>
+        <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 8px;font-weight:bold;"> 电子档案馆</h1>
         <div style="color:#999;font-size:12px;margin-bottom:24px;border-bottom:1px solid #eee;padding-bottom:12px;">中央重生抵御小组 · 档案索引</div>
 
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">

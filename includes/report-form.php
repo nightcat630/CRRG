@@ -37,7 +37,7 @@ function report_form_fields($prefix, $category_val, $access_val, $threat_val, $e
         <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">威胁等级</label>
         <select name="<?php echo $prefix; ?>threat_level" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
             <option value="">未评级</option>
-            <?php $tls = ['ren'=>'👤 人 — 对人类产生影响','gui'=>'👻 鬼 — 对神秘生物/古神眷属产生影响','mo'=>'👿 魔 — 对次级旧日支配者/旧日支配者/古神产生影响','shen'=>'👼 神 — 对外神产生影响'];
+            <?php $tls = ['ren'=>' 人 — 对人类产生影响','gui'=>' 鬼 — 对神秘生物/古神眷属产生影响','mo'=>' 魔 — 对次级旧日支配者/旧日支配者/古神产生影响','shen'=>' 神 — 对外神产生影响'];
             foreach ($tls as $k=>$v) echo '<option value="'.$k.'"'.($k===$threat_val?' selected':'').'>'.$v.'</option>'; ?>
         </select>
     </div>

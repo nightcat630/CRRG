@@ -25,12 +25,12 @@ get_header();
 ?>
 <div class="gov-main">
     <div class="gov-content">
-        <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">📬 联系我们</h1>
+        <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;"> 联系我们</h1>
         <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">中央重生抵御小组 · 举报与联络</div>
 
         <?php if ($sent): ?>
             <div style="background:#f0fdf4;border:1px solid #86efac;color:#166534;padding:20px;border-radius:4px;text-align:center;">
-                <div style="font-size:48px;">✅</div>
+                <div style="font-size:48px;">√</div>
                 <h3>消息已发送</h3>
                 <p>我们将尽快回复您的来信。</p>
             </div>

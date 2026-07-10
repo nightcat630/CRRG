@@ -7,7 +7,7 @@ function crrg_announcement_carousel() {
     ob_start();
     ?>
     <div class="ann-carousel-widget">
-        <div class="widget-title">📢 公告</div>
+        <div class="widget-title"> 公告</div>
         <div class="ann-carousel" id="ann-carousel" data-count="<?php echo $count; ?>">
             <?php foreach ($anns as $i => $ann): ?>
                 <div class="ann-slide" style="<?php echo $i>0?'display:none;':''; ?>">

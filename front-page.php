@@ -12,7 +12,7 @@ $top = crrg_get_top_member();
 ?>
 <?php if ($alert['active']): ?>
 <div style="background:<?php echo esc_attr($alert['color']); ?>;color:#fff;padding:10px 20px;text-align:center;font-size:14px;font-weight:bold;">
-    ⚠️ <?php echo esc_html($alert['title']); ?>：<?php echo esc_html($alert['content']); ?>
+    ⚠ <?php echo esc_html($alert['title']); ?>：<?php echo esc_html($alert['content']); ?>
 </div>
 <?php endif; ?>
 <div class="gov-main">
@@ -112,7 +112,7 @@ $top = crrg_get_top_member();
 <!-- 走进抵御小组 -->
 <div style="max-width:1200px;margin:40px auto 0;padding:0 20px;">
     <div style="padding:28px;background:#fff;border:1px solid #e0e0e0;border-radius:4px;border-left:4px solid #1B3A5C;">
-        <h2 style="font-size:20px;color:#1B3A5C;margin:0 0 16px;font-weight:bold;">🏛️ 走进抵御小组</h2>
+        <h2 style="font-size:20px;color:#1B3A5C;margin:0 0 16px;font-weight:bold;"> 走进抵御小组</h2>
         <div style="font-size:14px;color:#555;line-height:2;">
             <p><strong>中央重生抵御小组</strong>（以下简称"小组"），是中华人民共和国境内唯一专门从事高维超自然威胁监测、评估与遏制的国家建制力量。其前身可追溯至二十世纪五十年代，由古秘术集大成者朱陆爻联合官方组建，历经多次改组、裁撤与重建，终以现行体制延续至今。</p>
             
@@ -141,18 +141,18 @@ $top = crrg_get_top_member();
 <!-- 档案馆导航 -->
 <div style="max-width:1200px;margin:30px auto 0;padding:0 20px;">
     <div style="padding:24px;background:#fff;border:1px solid #e0e0e0;border-radius:4px;">
-        <h2 style="font-size:20px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">📂 档案馆导航</h2>
+        <h2 style="font-size:20px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;"> 档案馆导航</h2>
         <p style="color:#999;margin:0 0 20px;font-size:13px;">按报告类型分类检索 · 点击类型名查看全部</p>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
             <?php
             $archive_types = [
-                ['name'=>'镇物','slug'=>'artifacts','icon'=>'🔮','desc'=>'遗蜕与玄造','color'=>'#6B3FA0'],
-                ['name'=>'事件','slug'=>'events','icon'=>'⚡','desc'=>'异常事件记录','color'=>'#C41230'],
+                ['name'=>'镇物','slug'=>'artifacts','icon'=>'','desc'=>'遗蜕与玄造','color'=>'#6B3FA0'],
+                ['name'=>'事件','slug'=>'events','icon'=>'','desc'=>'异常事件记录','color'=>'#C41230'],
                 ['name'=>'人物','slug'=>'personnel','icon'=>'','desc'=>'关键人物档案','color'=>'#1B3A5C'],
-                ['name'=>'组织','slug'=>'organizations','icon'=>'🏢','desc'=>'相关组织情报','color'=>'#2E7D32'],
-                ['name'=>'研究发现','slug'=>'research','icon'=>'🔬','desc'=>'研究成果汇编','color'=>'#E65100'],
-                ['name'=>'祂们','slug'=>'entities','icon'=>'👁️','desc'=>'高维存在名录','color'=>'#880E4F'],
-                ['name'=>'秘术','slug'=>'esoterica','icon'=>'📜','desc'=>'秘术与仪轨','color'=>'#004D40'],
+                ['name'=>'组织','slug'=>'organizations','icon'=>'','desc'=>'相关组织情报','color'=>'#2E7D32'],
+                ['name'=>'研究发现','slug'=>'research','icon'=>'','desc'=>'研究成果汇编','color'=>'#E65100'],
+                ['name'=>'祂们','slug'=>'entities','icon'=>'','desc'=>'高维存在名录','color'=>'#880E4F'],
+                ['name'=>'秘术','slug'=>'esoterica','icon'=>'','desc'=>'秘术与仪轨','color'=>'#004D40'],
                 ['name'=>'优秀员工','slug'=>'outstanding','icon'=>'','desc'=>'优秀员工表彰','color'=>'#F0A500'],
             ];
             foreach ($archive_types as $at):
@@ -206,7 +206,7 @@ $top = crrg_get_top_member();
         <?php if ($hot): foreach ($hot as $t): $likes = count(get_post_meta($t->ID,'crrg_likes',true)?:[]); ?>
             <div style="padding:8px 0;border-bottom:1px solid #f5f5f5;">
                 <a href="<?php echo get_permalink($t); ?>" style="font-size:13px;color:#333;text-decoration:none;"><?php echo esc_html($t->post_title); ?></a>
-                <span style="color:#C41230;font-size:11px;">❤️ <?php echo $likes; ?></span>
+                <span style="color:#C41230;font-size:11px;">❤ <?php echo $likes; ?></span>
             </div>
         <?php endforeach; else: ?><p style="color:#999;font-size:12px;">暂无热议</p><?php endif; ?>
     </div>

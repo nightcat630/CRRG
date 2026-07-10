@@ -253,7 +253,7 @@ get_header();
         <?php endif; ?>
 
         <!-- Pending Applications -->
-        <h3 style="font-size:16px;color:#1B3A5C;margin:24px 0 12px;">📋 待审批 (<?php echo count($pending_apps); ?>)</h3>
+        <h3 style="font-size:16px;color:#1B3A5C;margin:24px 0 12px;"> 待审批 (<?php echo count($pending_apps); ?>)</h3>
         <?php if ($pending_apps): ?>
             <?php foreach ($pending_apps as $app): ?>
                 <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:12px;">
@@ -290,7 +290,7 @@ get_header();
 
         <!-- Article Review -->
         <?php $pending_posts = get_posts(['post_type' => 'post', 'post_status' => 'pending', 'posts_per_page' => 20]); ?>
-        <h3 style="font-size:16px;color:#1B3A5C;margin:24px 0 12px;">📰 文章审核 (<?php echo count($pending_posts); ?>)</h3>
+        <h3 style="font-size:16px;color:#1B3A5C;margin:24px 0 12px;"> 文章审核 (<?php echo count($pending_posts); ?>)</h3>
         <?php if ($pending_posts): ?>
             <?php foreach ($pending_posts as $p): $author = get_userdata($p->post_author); ?>
                 <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:12px;">
@@ -331,7 +331,7 @@ get_header();
         <?php
         $del_requests = get_posts(['post_type' => 'post', 'meta_key' => 'crrg_delete_request', 'posts_per_page' => 20, 'post_status' => 'any']);
         ?>
-        <h3 style="font-size:16px;color:#1B3A5C;margin:32px 0 12px;">🗑️ 删除申请 (<?php echo count($del_requests); ?>)</h3>
+        <h3 style="font-size:16px;color:#1B3A5C;margin:32px 0 12px;"> 删除申请 (<?php echo count($del_requests); ?>)</h3>
         <?php if ($del_requests): ?>
             <?php foreach ($del_requests as $p): $req_user = get_userdata(get_post_meta($p->ID, 'crrg_delete_request', true)); ?>
                 <div style="background:#fff;border:1px solid #fcc;border-radius:4px;padding:16px;margin-bottom:12px;">
@@ -421,13 +421,13 @@ get_header();
         <!-- Announcements -->
         <?php $announcements = crrg_get_announcements(); ?>
         <?php if ($rank === "chairman"): $cur_alert = crrg_get_alert(); ?>
-        <h3 style="font-size:16px;color:#C41230;margin:32px 0 12px;">🚨 紧急预警（仅委员长）</h3>
+        <h3 style="font-size:16px;color:#C41230;margin:32px 0 12px;"> 紧急预警（仅委员长）</h3>
         <?php if ($cur_alert["active"]): ?>
             <div style="background:#fff;border:2px solid #C41230;border-radius:4px;padding:16px;margin-bottom:8px;"><strong><?php echo esc_html($cur_alert["title"]); ?></strong>：<?php echo esc_html($cur_alert["content"]); ?><form method="post" style="margin-top:8px;"><?php wp_nonce_field("crrg_admin"); ?><input type="hidden" name="admin_action" value="close_alert"><button type="submit" style="background:#dc2626;color:#fff;border:none;padding:6px 16px;border-radius:3px;cursor:pointer;">关闭预警</button></form></div>
         <?php endif; ?>
         <form method="post" style="margin-bottom:20px;"><?php wp_nonce_field("crrg_admin"); ?><input type="hidden" name="admin_action" value="set_alert"><div style="margin-bottom:8px;"><input type="text" name="alert_title" placeholder="预警标题" style="width:100%;padding:8px 12px;border:1px solid #d5d5d5;border-radius:3px;font-size:14px;"></div><div style="margin-bottom:8px;"><input type="text" name="alert_content" placeholder="预警内容" style="width:100%;padding:8px 12px;border:1px solid #d5d5d5;border-radius:3px;font-size:14px;"></div><div style="margin-bottom:8px;"><select name="alert_color" style="padding:8px 12px;border:1px solid #d5d5d5;border-radius:3px;"><option value="#C41230">红色（紧急）</option><option value="#E67E22">橙色（警告）</option><option value="#F1C40F">黄色（注意）</option><option value="#1B3A5C">蓝色（通知）</option></select></div><button type="submit" style="background:#C41230;color:#fff;border:none;padding:8px 24px;border-radius:4px;cursor:pointer;">发布预警</button></form>
         <?php endif; ?>
-        <h3 style="font-size:16px;color:#1B3A5C;margin:32px 0 12px;">📢 <?php $edit_ann = isset($_GET['edit_ann']) ? (int)$_GET['edit_ann'] : null; $edit_ann_data = ($edit_ann !== null && isset($announcements[$edit_ann])) ? $announcements[$edit_ann] : null; echo $edit_ann_data ? '编辑公告' : '发布公告'; ?> (<?php echo count($announcements); ?> 条)</h3>
+        <h3 style="font-size:16px;color:#1B3A5C;margin:32px 0 12px;"> <?php $edit_ann = isset($_GET['edit_ann']) ? (int)$_GET['edit_ann'] : null; $edit_ann_data = ($edit_ann !== null && isset($announcements[$edit_ann])) ? $announcements[$edit_ann] : null; echo $edit_ann_data ? '编辑公告' : '发布公告'; ?> (<?php echo count($announcements); ?> 条)</h3>
         <form method="post" style="margin-bottom:20px;">
             <?php wp_nonce_field('crrg_admin'); ?>
             <input type="hidden" name="admin_action" value="<?php echo $edit_ann_data ? 'edit_announcement' : 'add_announcement'; ?>">
@@ -451,7 +451,7 @@ get_header();
             </div>
         <?php endforeach; else: ?><p style="color:#999;">暂无公告。</p><?php endif; ?>
 
-        <h3 style="font-size:16px;color:#1B3A5C;margin:32px 0 12px;">👥 用户管理</h3>
+        <h3 style="font-size:16px;color:#1B3A5C;margin:32px 0 12px;"> 用户管理</h3>
         <form method="get" style="margin-bottom:16px;display:flex;gap:8px;align-items:center;">
             <input type="text" name="user_search" value="<?php echo esc_attr($user_search); ?>" placeholder="搜索用户名、昵称或邮箱..." style="flex:1;max-width:400px;padding:8px 12px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;">
             <button type="submit" style="background:#1B3A5C;color:#fff;border:none;padding:8px 20px;border-radius:4px;cursor:pointer;font-size:14px;">搜索</button>
