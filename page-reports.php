@@ -209,4 +209,31 @@ document.querySelectorAll('form').forEach(function(form){
     ct.addEventListener('change',function(){if(!this.value)return;var cVal=cc.value;var pVal=pp.value;var country=cp.value;if(!addrData[country]||!addrData[country][pVal]||!addrData[country][pVal][1][cVal])return;var cd=addrData[country][pVal][1][cVal];var found=null;cd.slice(2).forEach(function(d){if((typeof d==='string'?d:d[0])===ct.value)found=d;});if(found&&typeof found!=='string')sl(found[1],found[2]);else sl(cd[0],cd[1]);});
 });
 </script>
+<?php if (wp_script_is('leaflet', 'enqueued')): ?>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.map-pick-btn').forEach(function(btn){
+        var div=btn.nextElementSibling;
+        btn.addEventListener('click',function(){
+            var show=div.style.display==='none';
+            div.style.display=show?'':'none';
+            if(show&&!div._mapInited){
+                div._mapInited=true;
+                var map=L.map(div).setView([35,105],4);
+                L.tileLayer('/tile-proxy.php?z={z}&x={x}&y={y}',{maxZoom:18}).addTo(map);
+                map.on('click',function(e){
+                    var f=div.closest('form');
+                    f.querySelector('input[name$=lat]').value=e.latlng.lat.toFixed(6);
+                    f.querySelector('input[name$=lng]').value=e.latlng.lng.toFixed(6);
+                    f.querySelector('input[name$=location]').value=e.latlng.lat.toFixed(4)+', '+e.latlng.lng.toFixed(4);
+                    if(map._marker)map.removeLayer(map._marker);
+                    map._marker=L.marker(e.latlng).addTo(map);
+                });
+                setTimeout(function(){map.invalidateSize();},200);
+            }
+        });
+    });
+});
+</script>
+<?php endif; ?>
 <?php get_footer(); ?>

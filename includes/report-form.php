@@ -56,6 +56,8 @@ function report_form_fields($prefix, $category_val, $access_val, $threat_val, $e
         </div>
         <input type="text" name="<?php echo $prefix; ?>location" value="<?php echo esc_attr($location_val); ?>" style="width:100%;margin-top:8px;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="手动输入或上方选择...">
         <input type="hidden" name="<?php echo $prefix; ?>lat"><input type="hidden" name="<?php echo $prefix; ?>lng">
+        <button type="button" class="map-pick-btn" style="font-size:12px;padding:4px 12px;background:#1B3A5C;color:#fff;border:none;border-radius:3px;cursor:pointer;">📍 在地图上选点</button>
+        <div class="map-pick-div" style="display:none;width:100%;height:300px;margin-top:6px;border:1px solid #d5d5d5;border-radius:4px;"></div>
     </div>
     <div style="margin-bottom:16px;">
     <div style="margin-bottom:16px;">

@@ -15,6 +15,10 @@ add_filter('show_admin_bar', '__return_false');
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('astra-parent', get_template_directory_uri() . '/style.css');
     wp_enqueue_style('astra-child', get_stylesheet_uri(), ['astra-parent'], '1.0');
+    if (is_page('reports')) {
+        wp_enqueue_style('leaflet', get_stylesheet_directory_uri() . '/assets/leaflet/leaflet.css');
+        wp_enqueue_script('leaflet', get_stylesheet_directory_uri() . '/assets/leaflet/leaflet.js', [], null, true);
+    }
 }, 999);
 
 // ─── 加载功能模块 ───
