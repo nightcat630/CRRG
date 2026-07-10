@@ -54,7 +54,7 @@ function report_form_fields($prefix, $category_val, $access_val, $threat_val, $e
             <select id="<?php echo $prefix; ?>addr_city" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;" disabled><option value="">市/州</option></select>
             <select id="<?php echo $prefix; ?>addr_county" style="flex:1;min-width:100px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:4px;font-size:13px;background:#fff;" disabled><option value="">区/县</option></select>
         </div>
-        <input type="text" name="<?php echo $prefix; ?>location" value="<?php echo esc_attr($location_val); ?>" style="display:none;width:100%;margin-top:8px;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="手动输入完整地点...">
+        <input type="text" name="<?php echo $prefix; ?>location" value="<?php echo esc_attr($location_val); ?>" style="width:100%;margin-top:8px;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;" placeholder="手动输入或上方选择...">
         <input type="hidden" name="<?php echo $prefix; ?>lat"><input type="hidden" name="<?php echo $prefix; ?>lng">
     </div>
     <div style="margin-bottom:16px;">
