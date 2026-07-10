@@ -20,7 +20,7 @@ $top = crrg_get_top_member();
         <!-- 公告轮播 -->
         <?php $anns = crrg_get_announcements(); if ($anns): ?>
         <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:4px;padding:8px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-            <span style="color:#C41230;font-weight:bold;font-size:13px;white-space:nowrap;">📢 公告</span>
+            <span style="color:#C41230;font-weight:bold;font-size:13px;white-space:nowrap;"> 公告</span>
             <div id="ann-carousel" style="flex:1;overflow:hidden;position:relative;height:20px;">
                 <?php foreach ($anns as $i => $ann): ?>
                 <div class="ann-item" style="position:absolute;top:0;left:0;right:0;opacity:<?php echo $i===0?1:0; ?>;transition:opacity 0.5s;">
@@ -37,7 +37,7 @@ $top = crrg_get_top_member();
         <?php endif; ?>
         <!-- 今日要闻 -->
         <div style="padding:16px 0;border-bottom:1px solid #eee;margin-bottom:24px;">
-            <h2 style="font-size:20px;color:#1B3A5C;margin:0;font-weight:bold;">📰 今日要闻</h2>
+            <h2 style="font-size:20px;color:#1B3A5C;margin:0;font-weight:bold;"> 今日要闻</h2>
             <p style="color:#999;margin:4px 0 0;font-size:13px;">超自然现象每日简报</p>
         </div>
         <?php if ($news_items): $first = array_shift($news_items); $thumb = ''; preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"]/', $first->post_content, $m); if($m) $thumb=$m[1]; ?>
@@ -77,7 +77,7 @@ $top = crrg_get_top_member();
             </div>
         </div>
         <div class="widget">
-            <div class="widget-title"><a href="/notices/" style="color:inherit;text-decoration:none;">📌 最新通知</a></div>
+            <div class="widget-title"><a href="/notices/" style="color:inherit;text-decoration:none;"> 最新通知</a></div>
             <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2;">
                 <?php $anns = crrg_get_announcements(); if ($anns): foreach (array_slice($anns,0,5) as $ann): ?>
                     <li>· <a href="/notices/" style="color:#333;text-decoration:none;"><?php echo esc_html($ann['title']); ?></a></li>
@@ -85,7 +85,7 @@ $top = crrg_get_top_member();
             </ul>
         </div>
         <div class="widget">
-            <div class="widget-title"><a href="/reports/" style="color:inherit;text-decoration:none;">📝 报告</a></div>
+            <div class="widget-title"><a href="/reports/" style="color:inherit;text-decoration:none;"> 报告</a></div>
             <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2;">
                 <li><a href="/reports/" style="color:#333;">→ 提交新报告</a></li>
                 <li><a href="/reports/" style="color:#333;">→ 我的草稿</a></li>
@@ -93,7 +93,7 @@ $top = crrg_get_top_member();
             </ul>
         </div>
         <div class="widget">
-            <div class="widget-title">📊 数据统计</div>
+            <div class="widget-title"> 数据统计</div>
             <div style="font-size:13px;line-height:2.2;">
                 <?php global $wpdb; $counts=[]; $types=['镇物','事件','人物','组织','研究发现','祂们','秘术','优秀员工'];
                 foreach ($types as $t) { $c=$wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->postmeta} pm JOIN {$wpdb->posts} p ON p.ID=pm.post_id WHERE pm.meta_key='crrg_report_type_name' AND pm.meta_value=%s AND p.post_status='publish'",$t)); $counts[$t]=(int)$c; }
@@ -148,12 +148,12 @@ $top = crrg_get_top_member();
             $archive_types = [
                 ['name'=>'镇物','slug'=>'artifacts','icon'=>'🔮','desc'=>'遗蜕与玄造','color'=>'#6B3FA0'],
                 ['name'=>'事件','slug'=>'events','icon'=>'⚡','desc'=>'异常事件记录','color'=>'#C41230'],
-                ['name'=>'人物','slug'=>'personnel','icon'=>'👤','desc'=>'关键人物档案','color'=>'#1B3A5C'],
+                ['name'=>'人物','slug'=>'personnel','icon'=>'','desc'=>'关键人物档案','color'=>'#1B3A5C'],
                 ['name'=>'组织','slug'=>'organizations','icon'=>'🏢','desc'=>'相关组织情报','color'=>'#2E7D32'],
                 ['name'=>'研究发现','slug'=>'research','icon'=>'🔬','desc'=>'研究成果汇编','color'=>'#E65100'],
                 ['name'=>'祂们','slug'=>'entities','icon'=>'👁️','desc'=>'高维存在名录','color'=>'#880E4F'],
                 ['name'=>'秘术','slug'=>'esoterica','icon'=>'📜','desc'=>'秘术与仪轨','color'=>'#004D40'],
-                ['name'=>'优秀员工','slug'=>'outstanding','icon'=>'🏅','desc'=>'优秀员工表彰','color'=>'#F0A500'],
+                ['name'=>'优秀员工','slug'=>'outstanding','icon'=>'','desc'=>'优秀员工表彰','color'=>'#F0A500'],
             ];
             foreach ($archive_types as $at):
                 $atype_posts = get_posts([
@@ -193,7 +193,7 @@ $top = crrg_get_top_member();
 <!-- 最新文章 + 组员热议 双列 -->
 <div style="max-width:1200px;margin:30px auto;padding:0 20px;display:flex;gap:24px;">
     <div style="flex:1;background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:20px;">
-        <h3 style="font-size:16px;color:#1B3A5C;margin:0 0 12px;border-bottom:2px solid #C41230;padding-bottom:8px;">📄 最新文章</h3>
+        <h3 style="font-size:16px;color:#1B3A5C;margin:0 0 12px;border-bottom:2px solid #C41230;padding-bottom:8px;"> 最新文章</h3>
         <?php if ($recent): foreach ($recent as $r): $rt = get_post_meta($r->ID,'crrg_report_type_name',true)?:'未分类'; ?>
             <div style="padding:8px 0;border-bottom:1px solid #f5f5f5;">
                 <a href="<?php echo get_permalink($r); ?>" style="font-size:13px;color:#333;text-decoration:none;"><?php echo esc_html($r->post_title); ?></a>
@@ -202,7 +202,7 @@ $top = crrg_get_top_member();
         <?php endforeach; else: ?><p style="color:#999;font-size:12px;">暂无文章</p><?php endif; ?>
     </div>
     <div style="flex:1;background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:20px;">
-        <h3 style="font-size:16px;color:#1B3A5C;margin:0 0 12px;border-bottom:2px solid #C41230;padding-bottom:8px;">🔥 组员热议</h3>
+        <h3 style="font-size:16px;color:#1B3A5C;margin:0 0 12px;border-bottom:2px solid #C41230;padding-bottom:8px;"> 组员热议</h3>
         <?php if ($hot): foreach ($hot as $t): $likes = count(get_post_meta($t->ID,'crrg_likes',true)?:[]); ?>
             <div style="padding:8px 0;border-bottom:1px solid #f5f5f5;">
                 <a href="<?php echo get_permalink($t); ?>" style="font-size:13px;color:#333;text-decoration:none;"><?php echo esc_html($t->post_title); ?></a>

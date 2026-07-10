@@ -9,14 +9,14 @@ $today_duty = $schedule['schedule'][$today] ?? [];
 ?>
 <div class="gov-main">
 <div class="gov-content">
-    <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">🕐 值班表</h1>
+    <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;"> 值班表</h1>
     <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">
         中央重生抵御小组 · <?php echo $schedule['week_start']; ?> 起一周 · <?php echo date('n月j日'); ?> <?php echo $day_names[$today]; ?>
     </div>
 
     <!-- 今日值班 -->
     <div style="background:#f0f5fa;border:1px solid #d1d5db;border-radius:4px;padding:16px 20px;margin-bottom:24px;">
-        <h3 style="margin:0 0 12px;font-size:15px;color:#1B3A5C;">📌 今日值班（<?php echo $day_names[$today]; ?>）</h3>
+        <h3 style="margin:0 0 12px;font-size:15px;color:#1B3A5C;"> 今日值班（<?php echo $day_names[$today]; ?>）</h3>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
             <?php foreach (CRRG_DUTY_ROLES as $rid => $role):
                 $person = $today_duty[$rid] ?? '—';
@@ -60,11 +60,11 @@ $today_duty = $schedule['schedule'][$today] ?? [];
     </table>
     </div>
     <p style="margin-top:16px;font-size:12px;color:#999;">⚠️ 排班每周一0点自动更新。如有临时调整，请联系委员长。</p>
-    <p style="font-size:12px;color:#666;background:#fefce8;border:1px solid #fde68a;padding:10px 14px;border-radius:4px;">🌟 <strong>值班激励：</strong>当日值班人员提交报告审批通过后，额外获得 <strong>+8 资历</strong>（报告）或 <strong>+5 资历</strong>（新闻）的加成。</p>
+    <p style="font-size:12px;color:#666;background:#fefce8;border:1px solid #fde68a;padding:10px 14px;border-radius:4px;"> <strong>值班激励：</strong>当日值班人员提交报告审批通过后，额外获得 <strong>+8 资历</strong>（报告）或 <strong>+5 资历</strong>（新闻）的加成。</p>
 </div>
 <div class="gov-sidebar">
     <div class="widget">
-        <div class="widget-title">📋 今日值班</div>
+        <div class="widget-title"> 今日值班</div>
         <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2.2;">
             <?php foreach ($today_duty as $rid => $person):
                 $role = CRRG_DUTY_ROLES[$rid];

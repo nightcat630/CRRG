@@ -2,10 +2,10 @@
 // 威胁等级统一定义（全站唯一来源）
 
 define('CRRG_THREAT_LEVELS', [
-    'ren'  => ['name' => '人', 'icon' => '👤', 'color' => '#16a34a', 'desc' => '对人类产生影响'],
-    'gui'  => ['name' => '鬼', 'icon' => '👻', 'color' => '#8B5CF6', 'desc' => '对神秘生物/古神眷属产生影响'],
-    'mo'   => ['name' => '魔', 'icon' => '👿', 'color' => '#C41230', 'desc' => '对次级旧日支配者/旧日支配者/古神产生影响'],
-    'shen' => ['name' => '神', 'icon' => '👼', 'color' => '#F0A500', 'desc' => '对外神产生影响'],
+    'ren'  => ['name' => '人', 'icon' => '', 'color' => '#16a34a', 'desc' => '对人类产生影响'],
+    'gui'  => ['name' => '鬼', 'icon' => '', 'color' => '#8B5CF6', 'desc' => '对神秘生物/古神眷属产生影响'],
+    'mo'   => ['name' => '魔', 'icon' => '', 'color' => '#C41230', 'desc' => '对次级旧日支配者/旧日支配者/古神产生影响'],
+    'shen' => ['name' => '神', 'icon' => '', 'color' => '#F0A500', 'desc' => '对外神产生影响'],
 ]);
 
 function crrg_threat_badge($threat_id, $size = 'small') {

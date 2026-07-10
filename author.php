@@ -40,7 +40,7 @@ $rank_color = $rank_colors[$rank_id] ?? '#999';
 <div class="gov-content">
 
     <div style="display:flex;gap:24px;align-items:flex-start;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #e0e0e0;">
-        <img src="<?php echo esc_url($avatar); ?>" alt="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid <?php echo $rank_color; ?>;flex-shrink:0;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2240%22>👤</text></svg>'">
+        <img src="<?php echo esc_url($avatar); ?>" alt="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid <?php echo $rank_color; ?>;flex-shrink:0;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2240%22></text></svg>'">
         <div style="flex:1;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                 <h1 style="font-size:22px;color:#1B3A5C;margin:0;font-weight:bold;"><?php echo esc_html($author->display_name); ?></h1>
@@ -51,17 +51,17 @@ $rank_color = $rank_colors[$rank_id] ?? '#999';
                 <div style="font-size:14px;color:#555;margin-bottom:12px;line-height:1.7;padding:12px 16px;background:#f8f9fa;border-radius:4px;border-left:3px solid <?php echo $rank_color; ?>;"><?php echo nl2br(esc_html($bio)); ?></div>
             <?php endif; ?>
             <div style="font-size:13px;color:#999;margin-bottom:10px;line-height:1.8;">
-                📊 资历：<strong style="color:#1B3A5C;"><?php echo $xp; ?></strong>
-                &nbsp;·&nbsp; 📄 报告：<strong style="color:#1B3A5C;"><?php echo $report_count; ?></strong>
+                 资历：<strong style="color:#1B3A5C;"><?php echo $xp; ?></strong>
+                &nbsp;·&nbsp;  报告：<strong style="color:#1B3A5C;"><?php echo $report_count; ?></strong>
                 &nbsp;·&nbsp; ⭐ 收藏：<strong style="color:#1B3A5C;"><?php echo $fav_count; ?></strong>
-                &nbsp;·&nbsp; 💬 评论：<strong style="color:#1B3A5C;"><?php echo $comment_count; ?></strong>
-                <br>🕐 入职：<?php echo date('Y年m月d日', $joined); ?> · 编号 CRRG-<?php echo str_pad($user_id, 4, '0', STR_PAD_LEFT); ?>
+                &nbsp;·&nbsp;  评论：<strong style="color:#1B3A5C;"><?php echo $comment_count; ?></strong>
+                <br> 入职：<?php echo date('Y年m月d日', $joined); ?> · 编号 CRRG-<?php echo str_pad($user_id, 4, '0', STR_PAD_LEFT); ?>
             </div>
         </div>
     </div>
 
     <?php if ($reports): ?>
-        <h2 style="font-size:16px;color:#1B3A5C;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #C41230;">📄 发布的报告 (<?php echo $report_count; ?>)</h2>
+        <h2 style="font-size:16px;color:#1B3A5C;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #C41230;"> 发布的报告 (<?php echo $report_count; ?>)</h2>
         <?php foreach ($reports as $p):
             $thumb = ''; preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"]/', $p->post_content, $m);
             if ($m) $thumb = $m[1];
@@ -74,10 +74,10 @@ $rank_color = $rank_colors[$rank_id] ?? '#999';
                 <?php endif; ?>
                 <div style="flex:1;min-width:0;">
                     <a href="<?php echo get_permalink($p); ?>" style="font-size:15px;font-weight:bold;color:#1B3A5C;text-decoration:none;"><?php echo esc_html($p->post_title); ?></a>
-                    <?php $threat = get_post_meta($p->ID, 'crrg_threat_level', true); $threat_map = ['ren'=>['人','👤','#16a34a'],'gui'=>['鬼','👻','#8B5CF6'],'mo'=>['魔','👿','#C41230'],'shen'=>['神','👼','#F0A500']]; if ($threat && isset($threat_map[$threat])): ?>
+                    <?php $threat = get_post_meta($p->ID, 'crrg_threat_level', true); $threat_map = ['ren'=>['人','','#16a34a'],'gui'=>['鬼','','#8B5CF6'],'mo'=>['魔','','#C41230'],'shen'=>['神','','#F0A500']]; if ($threat && isset($threat_map[$threat])): ?>
                         <span style="display:inline-block;margin-left:6px;padding:1px 8px;border-radius:2px;font-size:11px;font-weight:600;background:<?php echo $threat_map[$threat][2]; ?>;color:#fff;"><?php echo $threat_map[$threat][1]; ?> <?php echo $threat_map[$threat][0]; ?></span>
                     <?php endif; ?>
-                    <div style="font-size:12px;color:#999;margin:4px 0;"><?php echo get_the_date('Y-m-d', $p); ?> · 💬 <?php echo $comments; ?></div>
+                    <div style="font-size:12px;color:#999;margin:4px 0;"><?php echo get_the_date('Y-m-d', $p); ?> ·  <?php echo $comments; ?></div>
                     <?php if ($tags): ?>
                         <div style="margin-bottom:4px;">
                             <?php foreach ($tags as $tag): ?>
@@ -97,7 +97,7 @@ $rank_color = $rank_colors[$rank_id] ?? '#999';
 
 <div class="gov-sidebar">
     <div class="widget">
-        <div class="widget-title">📊 统计数据</div>
+        <div class="widget-title"> 统计数据</div>
         <div style="font-size:13px;color:#666;line-height:2;">
             <div>等级：<?php echo $rank['icon']; ?> <?php echo esc_html($rank['name']); ?></div>
             <div>资历：<?php echo $xp; ?></div>
@@ -108,7 +108,7 @@ $rank_color = $rank_colors[$rank_id] ?? '#999';
         </div>
     </div>
     <div class="widget">
-        <div class="widget-title">📌 最新通知</div>
+        <div class="widget-title"> 最新通知</div>
         <ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:2;">
             <?php $anns = crrg_get_announcements(); if ($anns): foreach (array_slice($anns,0,4) as $ann): ?>
                 <li>· <a href="/notices/" style="color:#333;text-decoration:none;"><?php echo esc_html($ann['title']); ?></a></li>

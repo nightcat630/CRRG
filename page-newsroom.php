@@ -8,11 +8,11 @@ $news = get_posts(['post_type'=>'post','post_status'=>'publish','meta_key'=>'crr
     <div class="gov-content">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">
             <div>
-                <h1 style="font-size:22px;color:#1B3A5C;margin:0;font-weight:bold;">📰 新闻归档</h1>
+                <h1 style="font-size:22px;color:#1B3A5C;margin:0;font-weight:bold;"> 新闻归档</h1>
                 <div style="color:#999;font-size:12px;">中央重生抵御小组 · 要闻列表</div>
             </div>
             <?php if (is_user_logged_in()): ?>
-                <a href="/newsroom-submit/" style="background:#C41230;color:#fff;padding:8px 20px;border-radius:4px;text-decoration:none;font-size:14px;">📝 要闻投稿</a>
+                <a href="/newsroom-submit/" style="background:#C41230;color:#fff;padding:8px 20px;border-radius:4px;text-decoration:none;font-size:14px;"> 要闻投稿</a>
             <?php endif; ?>
         </div>
         <?php if ($news): foreach ($news as $p): $a=get_userdata($p->post_author); $thumb=''; preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"]/',$p->post_content,$m); if($m)$thumb=$m[1]; ?>

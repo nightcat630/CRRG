@@ -157,7 +157,7 @@ function report_form_fields($prefix, $category_val, $access_val, $threat_val, $e
         <label style="display:block;font-weight:bold;margin-bottom:6px;color:#333;">威胁等级</label>
         <select name="<?php echo $prefix; ?>threat_level" style="width:100%;padding:10px 14px;border:1px solid #d5d5d5;border-radius:4px;font-size:14px;background:#fff;">
             <option value="">未评级</option>
-            <?php $tls = ['ren'=>'👤 人 — 对人类产生影响','gui'=>'👻 鬼 — 对神秘生物/古神眷属产生影响','mo'=>'👿 魔 — 对次级旧日支配者/旧日支配者/古神产生影响','shen'=>'👼 神 — 对外神产生影响'];
+            <?php $tls = ['ren'=>' 人 — 对人类产生影响','gui'=>' 鬼 — 对神秘生物/古神眷属产生影响','mo'=>' 魔 — 对次级旧日支配者/旧日支配者/古神产生影响','shen'=>' 神 — 对外神产生影响'];
             foreach ($tls as $k=>$v) echo '<option value="'.$k.'"'.($k===$threat_val?' selected':'').'>'.$v.'</option>'; ?>
         </select>
     </div>
@@ -187,7 +187,7 @@ function report_form_fields($prefix, $category_val, $access_val, $threat_val, $e
 get_header();
 ?>
 <div class="gov-main"><div class="gov-content">
-<h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">📝 报告管理</h1>
+<h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;"> 报告管理</h1>
 <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">
     中央重生抵御小组 · 档案提交系统
     <?php if ($edit_post): ?><a href="?" style="float:right;color:#1B3A5C;font-size:12px;">← 返回列表</a>
@@ -241,7 +241,7 @@ get_header();
 
 <?php else: ?>
     <?php $drafts = get_posts(['post_type'=>'post','post_status'=>'draft','author'=>$user_id,'posts_per_page'=>10]); $published = get_posts(['post_type'=>'post','post_status'=>'publish','author'=>$user_id,'posts_per_page'=>10]); ?>
-    <?php if ($drafts): ?><h3 style="font-size:16px;color:#1B3A5C;margin:20px 0 12px;">📄 草稿</h3><?php foreach($drafts as $d): ?><div style="background:#fff8e1;border:1px solid #ffe082;border-radius:4px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;"><div><strong><?php echo esc_html($d->post_title?:'无标题'); ?></strong><span style="color:#999;font-size:12px;margin-left:8px;"><?php echo get_the_date('m-d H:i',$d); ?></span></div><div><a href="?edit_draft=<?php echo $d->ID; ?>" style="color:#1B3A5C;font-size:12px;margin-right:12px;">编辑</a><a href="?delete=<?php echo $d->ID; ?>&_nonce=<?php echo wp_create_nonce('crrg_delete_report'); ?>" style="color:#c00;font-size:12px;" onclick="return confirm('确定删除？')">删除</a></div></div><?php endforeach; ?><?php endif; ?>
+    <?php if ($drafts): ?><h3 style="font-size:16px;color:#1B3A5C;margin:20px 0 12px;"> 草稿</h3><?php foreach($drafts as $d): ?><div style="background:#fff8e1;border:1px solid #ffe082;border-radius:4px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;"><div><strong><?php echo esc_html($d->post_title?:'无标题'); ?></strong><span style="color:#999;font-size:12px;margin-left:8px;"><?php echo get_the_date('m-d H:i',$d); ?></span></div><div><a href="?edit_draft=<?php echo $d->ID; ?>" style="color:#1B3A5C;font-size:12px;margin-right:12px;">编辑</a><a href="?delete=<?php echo $d->ID; ?>&_nonce=<?php echo wp_create_nonce('crrg_delete_report'); ?>" style="color:#c00;font-size:12px;" onclick="return confirm('确定删除？')">删除</a></div></div><?php endforeach; ?><?php endif; ?>
     <?php if ($published): ?><h3 style="font-size:16px;color:#1B3A5C;margin:24px 0 12px;">✅ 已发布</h3><?php foreach($published as $p): $cats=get_the_category($p->ID); ?><div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;"><div><strong><a href="<?php echo get_permalink($p); ?>" style="color:#1B3A5C;text-decoration:none;"><?php echo esc_html($p->post_title); ?></a></strong><span style="color:#999;font-size:12px;margin-left:8px;"><?php echo get_the_date('Y-m-d',$p); ?></span></div><div><a href="?edit_post=<?php echo $p->ID; ?>" style="color:#1B3A5C;font-size:12px;">申请修改</a> <a href="?req_delete=<?php echo $p->ID; ?>&_nonce=<?php echo wp_create_nonce('crrg_req_delete'); ?>" style="color:#c00;font-size:12px;margin-left:8px;" onclick="return confirm('确定申请删除？')">申请删除</a></div></div><?php endforeach; ?><?php endif; ?>
     <?php if (empty($drafts) && empty($published)): ?><p style="color:#999;text-align:center;padding:40px;">暂无报告，<a href="?new=1">点击新建</a></p><?php endif; ?>
 <?php endif; ?>

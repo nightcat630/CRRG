@@ -126,7 +126,7 @@ function crrg_custom_footer() {
             <a href="https://www.chinafxj.cn/" target="_blank">中国反邪教网</a>
         </div>
         <p>中央重生抵御小组 © 2026 | 仅供内部人员查阅 | 未经授权禁止传播</p>
-        <p>备案号：CRRG-2026-001 · 信息安全管理等级：机密 · <a href="/contact/" style="color:rgba(255,255,255,0.5);">联系我们 / 举报信箱</a> · <a href="/feed/" style="color:rgba(255,255,255,0.5);">📡 RSS 订阅</a> <span style="color:rgba(255,255,255,0.3);font-size:10px;">（建议使用 RSS 阅读器打开）</span></p>
+        <p>备案号：CRRG-2026-001 · 信息安全管理等级：机密 · <a href="/contact/" style="color:rgba(255,255,255,0.5);">联系我们 / 举报信箱</a> · <a href="/feed/" style="color:rgba(255,255,255,0.5);"> RSS 订阅</a> <span style="color:rgba(255,255,255,0.3);font-size:10px;">（建议使用 RSS 阅读器打开）</span></p>
     </div>
     <?php
 }
@@ -340,7 +340,7 @@ add_action('wp_footer', function () {
         delete_user_meta($uid, 'crrg_xp_toast');
         $xp = crrg_get_xp($uid);
         $rank = crrg_get_rank_data(crrg_get_rank($uid));
-        echo '<div id="xp-toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B3A5C;color:#fff;padding:12px 24px;border-radius:6px;font-size:14px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);animation:xpToastIn 0.4s ease,xpToastOut 0.4s ease 2.5s forwards;">🎉 每日签到 +2 资历！当前：'.$rank['icon'].' '.$rank['name'].' · '.$xp.' 资历</div>';
+        echo '<div id="xp-toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B3A5C;color:#fff;padding:12px 24px;border-radius:6px;font-size:14px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);animation:xpToastIn 0.4s ease,xpToastOut 0.4s ease 2.5s forwards;"> 每日签到 +2 资历！当前：'.$rank['icon'].' '.$rank['name'].' · '.$xp.' 资历</div>';
         echo '<style>@keyframes xpToastIn{from{opacity:0;transform:translateX(-50%) translateY(20px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}@keyframes xpToastOut{from{opacity:1;}to{opacity:0;}}</style>';
     }
 }, 999);

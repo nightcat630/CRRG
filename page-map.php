@@ -54,7 +54,7 @@ foreach ($location_posts as $p) {
 ?>
 <div class="gov-main">
 <div class="gov-content">
-    <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;">🗺️ 事件态势图</h1>
+    <h1 style="font-size:22px;color:#1B3A5C;margin:0 0 4px;font-weight:bold;"> 事件态势图</h1>
     <div style="color:#999;font-size:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">
         中央重生抵御小组 · 地理信息
         <form method="get" style="display:inline;float:right;">
@@ -91,7 +91,7 @@ foreach ($location_posts as $p) {
 
     <?php if ($location_posts): ?>
     <div style="margin-top:20px;">
-        <h3 style="font-size:15px;color:#1B3A5C;margin-bottom:10px;">📋 地点清单</h3>
+        <h3 style="font-size:15px;color:#1B3A5C;margin-bottom:10px;"> 地点清单</h3>
         <?php foreach ($location_posts as $p):
             if (!in_array($p->ID, $visible_ids)) continue;
             $loc = get_post_meta($p->ID, 'crrg_location', true);
@@ -110,7 +110,7 @@ foreach ($location_posts as $p) {
 </div>
 <div class="gov-sidebar">
     <div class="widget">
-        <div class="widget-title">📊 威胁分布</div>
+        <div class="widget-title"> 威胁分布</div>
         <?php
         $counts = ['ren'=>0,'gui'=>0,'mo'=>0,'shen'=>0,'none'=>0];
         foreach ($location_posts as $ap) {
@@ -120,10 +120,10 @@ foreach ($location_posts as $p) {
         }
         ?>
         <div style="font-size:13px;line-height:2.2;">
-            <div>👤 人：<?php echo $counts['ren']; ?> 件</div>
-            <div>👻 鬼：<?php echo $counts['gui']; ?> 件</div>
-            <div>👿 魔：<?php echo $counts['mo']; ?> 件</div>
-            <div>👼 神：<?php echo $counts['shen']; ?> 件</div>
+            <div> 人：<?php echo $counts['ren']; ?> 件</div>
+            <div> 鬼：<?php echo $counts['gui']; ?> 件</div>
+            <div> 魔：<?php echo $counts['mo']; ?> 件</div>
+            <div> 神：<?php echo $counts['shen']; ?> 件</div>
             <div style="color:#999;">未评级：<?php echo $counts['none']; ?> 件</div>
         </div>
     </div>

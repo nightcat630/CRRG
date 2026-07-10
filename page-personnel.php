@@ -52,7 +52,7 @@ uksort($grouped, function($a, $b) use ($rank_order) {
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:12px;">
     <div>
-        <h1 style="font-size:22px;color:#1B3A5C;margin:0;font-weight:bold;">👥 人员名录</h1>
+        <h1 style="font-size:22px;color:#1B3A5C;margin:0;font-weight:bold;"> 人员名录</h1>
         <div style="color:#999;font-size:12px;">中央重生抵御小组 · 在编人员 <?php echo count($user_data); ?> 人</div>
     </div>
 </div>
@@ -67,7 +67,7 @@ uksort($grouped, function($a, $b) use ($rank_order) {
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
     <?php foreach ($group['users'] as $u): ?>
         <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:16px;display:flex;align-items:center;gap:14px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
-            <img src="<?php echo esc_url($u['avatar']); ?>" alt="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid <?php echo $rid === 'chairman' ? '#C41230' : ($rid === 'deputy' ? '#F0A500' : '#e0e0e0'); ?>;flex-shrink:0;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2240%22>👤</text></svg>'">
+            <img src="<?php echo esc_url($u['avatar']); ?>" alt="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid <?php echo $rid === 'chairman' ? '#C41230' : ($rid === 'deputy' ? '#F0A500' : '#e0e0e0'); ?>;flex-shrink:0;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2240%22></text></svg>'">
             <div style="flex:1;min-width:0;">
                 <div style="font-size:15px;font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><a href="/author/<?php echo get_the_author_meta('user_nicename', $u['id']); ?>/" style="color:#1e293b;text-decoration:none;"><?php echo esc_html($u['name']); ?></a></div>
                 <div style="font-size:12px;color:#999;margin:3px 0;">
@@ -75,7 +75,7 @@ uksort($grouped, function($a, $b) use ($rank_order) {
                     <span style="margin-left:8px;">· <?php echo $u['xp']; ?> 资历</span>
                 </div>
                 <div style="font-size:11px;color:#bbb;">
-                    📄 <?php echo $u['reports']; ?> 份报告 · 🕐 <?php echo date('Y-m', $u['joined']); ?> 入职
+                     <?php echo $u['reports']; ?> 份报告 ·  <?php echo date('Y-m', $u['joined']); ?> 入职
                 </div>
             </div>
         </div>
@@ -86,7 +86,7 @@ uksort($grouped, function($a, $b) use ($rank_order) {
 
 <?php if (empty($user_data)): ?>
 <div style="text-align:center;padding:60px 20px;color:#999;">
-    <div style="font-size:48px;margin-bottom:12px;">👥</div>
+    <div style="font-size:48px;margin-bottom:12px;"></div>
     <p>暂无在编人员记录</p>
 </div>
 <?php endif; ?>
