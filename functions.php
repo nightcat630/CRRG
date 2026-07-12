@@ -71,6 +71,7 @@ function crrg_custom_header() {
                 <li><a href="/members/">人员名录</a></li>
                 <li><a href="/duty/">值班表</a></li>
                 <li><a href="/map/">事件态势</a></li>
+                <li><a href="/base/">基地俯瞰</a></li>
                 <li class="nav-auth">
                     <?php if (is_user_logged_in()): $u=wp_get_current_user(); $rk=crrg_get_rank_data(crrg_get_rank($u->ID)); ?>
                         <div class="nav-user-dropdown">
