@@ -1,0 +1,31 @@
+# 备份文件
+*.bak
+*.bak.*
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+
+# WordPress 上传和缓存
+wp-content/uploads/*
+wp-content/cache/*
+wp-content/wflogs/*
+wp-content/upgrade/*
+wp-content/backup/*
+
+# 日志
+*.log
+
+# 敏感配置
+wp-config.php
+.htaccess

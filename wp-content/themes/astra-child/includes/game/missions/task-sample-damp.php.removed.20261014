@@ -1,0 +1,128 @@
+<?php
+/**
+ * 样例任务（用模板写的，可跑）：B3 的返潮
+ * ── 2026-10-14 · 演示引擎全套：触发 / 阶段 / 线索→结论 / 多解法+检定+失败代价 /
+ *    任务期新人物（分阶段对话）/ 老人物插支线 / NPC 时段移动 / 载入节拍 / 结算 / 善后 ──
+ */
+if (!defined('ABSPATH')) exit;
+
+add_action('init', function () {
+    if (!function_exists('crrg_task_define')) return;
+
+    crrg_task_define('m_tpl_damp', [
+        'name' => 'B3 返潮', 'level' => '低', 'kind' => 'base', 'min_lv' => 1,
+        'scene' => 'base', 'brief_room' => 'b2b_hall', 'brief_name' => '值班板',
+        'depart_room' => 'b2b_hall', 'entry_room' => 'b3_water',
+        'deadline_h' => 96,
+        'prompt' => 'B3 西段地面反潮三天了，水表却不走字。值班板把这条挂成单子：查清从哪来。',
+        'steps' => [
+            ['flag' => 'damp_start', 'text' => '到 B3 水务间看一眼（听声、摸管子）', 'hint_room' => 'b3_water'],
+            ['flag' => 'damp_second', 'text' => '顺着管线或往来的人查下去', 'hint_room' => 'b3_water'],
+            ['flag' => 'damp_settle', 'text' => '回值班板交代', 'hint_room' => 'b2b_hall'],
+        ],
+        'reward' => ['credits' => 5, 'money' => 120], 'rep' => ['base' => 2],
+        'settle_note' => '返潮的原因写进了维修记录，末尾一行："夜间有过用水记录，人不是我们的。"',
+
+        'trigger' => ['room' => 'b3_water'],
+
+        'stages' => [
+            's1_到场' => ['name' => '到场', 'text' => '听见了那阵返潮的声'],
+            's2_查明' => ['name' => '查明', 'text' => '知道水从哪来'],
+            's3_处置' => ['name' => '处置', 'text' => '把这条线交给值班室'],
+        ],
+
+        /* 三线索规则：三条互相能印证，够 2 条就能立结论 ✓ */
+        'clues' => [
+            'wet'   => ['title' => '地面返潮的走向', 'point' => '潮气是从**西墙脚下**往外渗的，不是从天花板滴的。',
+                        'src' => 'B3 水务间（自己看的）', 'where' => 'B3 西段地面', 'to' => 'src'],
+            'patch' => ['title' => '管线上的旧补丁', 'point' => '管身有一处不是基地惯用的补法——手法像是外面的人干的。',
+                        'src' => '管线本体', 'where' => 'B3 水务间的管线', 'to' => 'src', 'link' => ['wet']],
+            'ledger'=> ['title' => '少掉的两页维修单', 'point' => '上个月的维修单缺了两页，编号跳号；缺的正好是西段。',
+                        'src' => '后勤保管（老周）', 'where' => '后备仓库／管档案的人', 'to' => 'src', 'link' => ['wet', 'patch']],
+        ],
+        'concl' => [
+            'src' => ['name' => '有人夜里用过这条水路', 'need' => 2, 'of' => ['wet', 'patch', 'ledger'],
+                      'text' => '三条线里两条对上了：返潮、外来补丁、缺页的维修单——指向同一个人。'],
+        ],
+
+        'paths' => [
+            'kneel' => ['name' => '蹲下来看（摸管子、量走向）', 'type' => 'check',
+                'check' => ['skill' => '侦查'],
+                'cost'  => ['minutes' => 20],
+                'gain'  => ['clues' => ['wet'], 'stage' => 's2_查明', 'stage_text' => '看清了潮气的来路'],
+                'text'  => ['你顺着潮痕摸过去，指尖是凉的。']],
+            'pry'   => ['name' => '撬开管卡看一眼', 'type' => 'brute', 'hp' => 1,
+                'check' => ['skill' => '机械维修'],
+                'cost'  => ['minutes' => 40, 'expose' => 1],
+                'gain'  => ['clues' => ['patch'], 'stage' => 's2_查明', 'stage_text' => '看到了那处补丁'],
+                'gain_on_fail' => ['stage' => 's2_查明'],
+                'text'  => ['管卡锈住了，你用劲的时候蹭破了一块皮。']],
+            'ask'   => ['name' => '找老周要上个月的维修单', 'type' => 'npc',
+                'need'  => ['who' => 'zhou', 'fav' => 0],
+                'cost'  => ['minutes' => 15],
+                'gain'  => ['clues' => ['ledger'], 'stage' => 's3_处置', 'stage_text' => '单据缺了两页'],
+                'text'  => ['老周把台账摊开，手指停在跳号的那一页上。']],
+        ],
+
+        /* 任务期新人物：水道工老聂（上午/下午在 B3 水务间；任务善后即失去对话 ✓） */
+        'newcomers' => [
+            'tpl_nie' => ['name' => '老聂', 'role' => '水道工',
+                'room' => 'b3_water', 'phases' => ['上午', '下午'], 'entry' => 'n1',
+                'nodes' => [
+                    'n1' => ['text' => ['「你也是来看那声响的？」老聂把手电往西墙上一照。',
+                                        '「这管子二十年前铺的，我熟。」'],
+                        'choices' => [
+                            ['label' => '问他：西边这一段谁动过', 'goto' => 'n2'],
+                            ['label' => '把潮气的走向说给他听', 'goto' => 'n3', 'cond' => ['flag' => 'clue_m_tpl_damp_wet']],
+                            ['label' => '先不打扰他', 'goto' => 'end'],
+                        ]],
+                    'n2' => ['text' => ['他想了想：「上个月有个生面孔来借过工具，说是「修管子」。」',
+                                        '「我问他哪个单位的，他没答。」'],
+                        'choices' => [['label' => '（记下来）', 'goto' => 'end']],
+                        'effect' => ['clue' => ['m_tpl_damp', 'patch']]],
+                    'n3' => ['text' => ['他蹲下去摸了一把墙根：「这儿是回水，不是漏水。有人夜里放过水。」',
+                                        '「放水要开总阀——总阀在后勤那儿锁着。」'],
+                        'choices' => [['label' => '（记下来）', 'goto' => 'end']],
+                        'effect' => ['clue' => ['m_tpl_damp', 'ledger']]],
+                    'end' => ['text' => ['老聂把手电别回腰上，接着去巡管了。'], 'choices' => []],
+                ]],
+        ],
+
+        /* 老人物插支线：老周（有线索 patch 之后才出现这条追问 ✓） */
+        'dlg' => [
+            'zhou' => ['ask_ledger' => [
+                'label' => '追问：上个月的维修单',
+                'stage' => 's2_查明',
+                'cond'  => ['flag' => 'clue_m_tpl_damp_patch'],
+                'node'  => ['text' => ['老周把台账翻到上个月，手指停在跳号的地方：「两页……不在了。」',
+                                       '「我那天下午不在，钥匙给过一个人。」'],
+                            'choices' => [['label' => '（记下来）', 'goto' => 'end']],
+                            'effect' => ['clue' => ['m_tpl_damp', 'ledger']]],
+            ]],
+        ],
+
+        /* 任务期 NPC 时段移动：老周下午不在仓库，在西段现场（善后复原 ✓） */
+        'actors' => [
+            'zhou' => ['room' => 'b3_water', 'phases' => ['下午']],
+        ],
+
+        /* 载入节拍：玩家不动，局面也在变（幂等） */
+        'beats' => [
+            'spread' => ['when' => ['clues' => ['wet']],
+                'do' => ['narrate' => ['（西段的潮痕比昨天宽了一掌——夜里又走过一次水。）'],
+                         'fact' => 'base.西段返潮加重']],
+            'ledger' => ['when' => ['concl' => 'src'],
+                'do' => ['narrate' => ['（值班室把这条记进了本周的巡查重点。）'],
+                         'stage' => 's3_处置']],
+        ],
+
+        'outcome' => ['done' => [
+            'personal' => ['credits' => 6, 'money' => 150, 'rep' => ['base' => 2], 'flags' => ['damp_done']],
+            'facts'    => [['base.西段水路查过了', true, 'once'], ['base.有人夜里用过水', true, 'once']],
+            'actors'   => ['zhou' => ['fav' => 1], 'tpl_nie' => ['fav' => 1]],
+            'world'    => ['note' => 'B3 西段的水路查清了：晚间有外人用过水。'],
+            'archive'  => ['title' => '【任务档案】B3 返潮', 'type' => '事件', 'level' => 'operative'],
+        ]],
+        'cleanup' => true,
+    ]);
+}, 31);
