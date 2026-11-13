@@ -34,3 +34,6 @@ wp-config.php
 dl/
 *.zip
 emotes/
+
+# 运行时生成
+latest-changes.json
