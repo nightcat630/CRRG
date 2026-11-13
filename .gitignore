@@ -29,3 +29,8 @@ wp-content/backup/*
 # 敏感配置
 wp-config.php
 .htaccess
+
+# 临时下载与二进制资源（体积大，不入库）
+dl/
+*.zip
+emotes/

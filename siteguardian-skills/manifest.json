@@ -1,0 +1,60 @@
+{
+  "name": "siteguardian-skills",
+  "version": "1.0.0",
+  "description": "SiteGuardian 网站运维技能包 — WordPress/Nginx 诊断、修复、监控",
+  "author": "SiteGuardian",
+  "skills": [
+    {
+      "id": "health-check",
+      "name": "综合健康检查",
+      "script": "scripts/health-check.sh",
+      "usage": "bash scripts/health-check.sh [域名]",
+      "description": "检查服务状态、可达性、SSL证书、磁盘内存、文件权限、RSS Feed、备份状态，输出评分",
+      "triggers": ["网站打不开了", "检查一下网站状态", "网站健康检查"]
+    },
+    {
+      "id": "fix-permissions",
+      "name": "权限修复",
+      "script": "scripts/fix-permissions.sh",
+      "usage": "bash scripts/fix-permissions.sh [--dry-run]",
+      "description": "修复 WordPress 文件/目录的属主和权限，敏感文件设400，缓存目录设775",
+      "triggers": ["权限错误", "Permission denied", "file_put_contents失败", "上传失败"]
+    },
+    {
+      "id": "rss-diagnose",
+      "name": "RSS Feed 诊断",
+      "script": "scripts/rss-diagnose.sh",
+      "usage": "bash scripts/rss-diagnose.sh [域名]",
+      "description": "检查 RSS Feed 的 HTTP 状态、Content-Type、XSL 引用、XML 合法性、XSL 文件、页脚链接",
+      "triggers": ["RSS打不开", "RSS报错", "订阅失败", "feed出问题"]
+    },
+    {
+      "id": "nginx-safe-reload",
+      "name": "Nginx 安全重载",
+      "script": "scripts/nginx-safe-reload.sh",
+      "usage": "bash scripts/nginx-safe-reload.sh",
+      "description": "修改 Nginx 配置后的标准流程：备份 → 语法检查 → 平滑重载",
+      "triggers": ["nginx配置改了", "重载nginx", "nginx -s reload"]
+    },
+    {
+      "id": "scan-logs",
+      "name": "紧急日志扫描",
+      "script": "scripts/scan-logs.sh",
+      "usage": "bash scripts/scan-logs.sh [行数]",
+      "description": "扫描 WordPress、Nginx、PHP 错误日志和系统 OOM 记录",
+      "triggers": ["看看日志", "报错了", "error log", "网站报错"]
+    },
+    {
+      "id": "backup-verify",
+      "name": "备份验证",
+      "script": "scripts/backup-verify.sh",
+      "usage": "bash scripts/backup-verify.sh",
+      "description": "检查备份文件存在性、时效性、完整性（大小>1K）",
+      "triggers": ["备份正常吗", "检查备份", "备份验证"]
+    }
+  ],
+  "templates": {
+    "nginx-rss-override": "templates/nginx-rss-content-type.conf",
+    "wordpress-xsl-inject": "templates/wp-rss-xsl.php"
+  }
+}

@@ -50,5 +50,5 @@ if (empty($news)) {
 }
 
 $result = json_encode(array_slice($news, 0, 15), JSON_UNESCAPED_UNICODE);
-file_put_contents($cache_file, $result);
+@file_put_contents($cache_file, $result);
 echo $result;
